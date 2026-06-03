@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Processing // Java Mode — Course Home</title>
+
+<!-- ============================================================
+     FONTS (Google Fonts) — terminal / sci-fi monospace pairing
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ================================================================
+   THEME VARIABLES  —  tweak the whole look from right here
+   ================================================================ */
+:root{
+  --green:        #19ff7a;          /* bright phosphor green (accents/glow) */
+  --green-dim:    #14c25e;          /* dimmer green                          */
+  --green-deep:   #0a3d22;          /* dark green (borders/shadows)          */
+  --cyan:         #5fe6d3;          /* faint teal echo of the building light */
+  --ink:          #c8ffdd;          /* readable body text (soft green-white) */
+  --panel:        rgba(3, 13, 8, 0.70);   /* terminal panel — lower = more building */
+  --panel-edge:   rgba(25, 255, 122, 0.35);
+  --card:         rgba(4, 17, 10, 0.65);
+  --bg-image:     url("background.jpg");   /* <-- the background photo        */
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html, body{ height:100%; }
+
+body{
+  min-height:100vh;
+  font-family:'IBM Plex Mono', monospace;
+  color:var(--ink);
+  background:#02060a;
+  display:flex;
+  align-items:flex-end;       /* anchors the panel to the bottom */
+  justify-content:center;
+  padding:0;
+  overflow-x:hidden;
+}
+
+/* ----- LAYER 1: the background photograph ----------------------- */
+#bg{
+  position:fixed; inset:0; z-index:0;
+  background:var(--bg-image) center/cover no-repeat;
+}
+
+/* ----- LAYER 2: gentle vignette only — lets the building breathe -- */
+#darken{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(ellipse 120% 100% at 50% 40%, rgba(2,8,5,0.0) 0%, rgba(2,8,5,0.50) 100%);
+}
+
+/* ----- LAYER 3: a faint LIVE matrix rain (adds motion) ---------- */
+#rain{ position:fixed; inset:0; z-index:2; opacity:0.22; pointer-events:none; }
+
+/* ----- LAYER 4: CRT scanlines + glow flicker -------------------- */
+#scanlines{
+  position:fixed; inset:0; z-index:3; pointer-events:none;
+  background:repeating-linear-gradient(
+     to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+     rgba(0,0,0,0.18) 3px, rgba(0,0,0,0) 4px);
+  mix-blend-mode:multiply;
+  animation:flicker 6s infinite steps(60);
+}
+@keyframes flicker{ 0%,97%{opacity:.6;} 98%{opacity:.35;} 99%{opacity:.7;} 100%{opacity:.55;} }
+
+/* ================================================================
+   THE TERMINAL WINDOW (main content panel)
+   ================================================================ */
+.terminal{
+  position:relative; z-index:10;
+  width:100%; max-width:100%;        /* full-width HUD bar */
+  background:var(--panel);
+  border:1px solid var(--panel-edge);
+  border-bottom:none;
+  border-radius:10px 10px 0 0;      /* only round the top corners */
+  backdrop-filter:blur(3px);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.5),
+    0 -20px 60px rgba(0,0,0,0.4),
+    0 0 60px rgba(25,255,122,0.10),
+    inset 0 0 120px rgba(25,255,122,0.05);
+  overflow:hidden;
+}
+
+/* window title bar ------------------------------------------------ */
+.titlebar{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 16px;
+  background:linear-gradient(180deg, rgba(10,30,18,0.95), rgba(6,20,12,0.95));
+  border-bottom:1px solid var(--panel-edge);
+  font-family:'Share Tech Mono', monospace;
+  font-size:14px; letter-spacing:.5px;
+  color:var(--green-dim);
+}
+.dot{ width:12px; height:12px; border-radius:50%; box-shadow:0 0 6px currentColor; }
+.dot.r{ background:#ff5f57; color:#ff5f57; }
+.dot.y{ background:#febc2e; color:#febc2e; }
+.dot.g{ background:#28c840; color:#28c840; }
+.titlebar .path{ margin-left:14px; opacity:.85; }
+.titlebar .path b{ color:var(--green); }
+
+/* screen / content ------------------------------------------------ */
+.screen{ padding:16px 48px 20px; max-width:1280px; margin:0 auto; }
+
+/* the typed "boot" line ------------------------------------------- */
+.boot{
+  font-family:'Share Tech Mono', monospace;
+  font-size:14px; color:var(--green-dim);
+  min-height:20px; margin-bottom:8px; letter-spacing:.5px;
+}
+.boot .ok{ color:var(--green); text-shadow:0 0 8px var(--green); }
+.cursor{
+  display:inline-block; width:10px; height:18px; margin-left:3px;
+  background:var(--green); vertical-align:middle;
+  box-shadow:0 0 8px var(--green);
+  animation:blink 1s steps(2) infinite;
+}
+@keyframes blink{ 50%{opacity:0;} }
+
+/* main title ------------------------------------------------------ */
+.title{
+  font-family:'Share Tech Mono', monospace;
+  font-size:36px; line-height:1.05; letter-spacing:2px;
+  color:#eafff2;
+  text-shadow:0 0 14px rgba(25,255,122,.55), 0 0 40px rgba(25,255,122,.25);
+  margin-bottom:6px;
+  opacity:0; transform:translateY(14px);
+  animation:rise .7s ease .9s forwards, glitch 7s infinite 2s;
+}
+.title .accent{ color:var(--green); }
+@keyframes glitch{
+  0%,92%,100%{ text-shadow:0 0 14px rgba(25,255,122,.55), 0 0 40px rgba(25,255,122,.25);}
+  93%{ text-shadow:2px 0 var(--cyan), -2px 0 #ff3b3b, 0 0 14px rgba(25,255,122,.55);}
+  94%{ text-shadow:-2px 0 var(--cyan), 2px 0 #ff3b3b, 0 0 14px rgba(25,255,122,.55);}
+  95%{ text-shadow:0 0 14px rgba(25,255,122,.55);}
+}
+/* *** THIS was the missing keyframe — caused everything to stay invisible *** */
+@keyframes rise{
+  from{ opacity:0; transform:translateY(18px); }
+  to{   opacity:1; transform:translateY(0); }
+}
+
+.tagline{
+  font-size:14px; color:var(--cyan); letter-spacing:1px;
+  margin-bottom:18px; opacity:0;
+  animation:rise .7s ease 1.15s forwards;
+}
+.tagline::before{ content:"// "; color:var(--green-dim); }
+
+/* ================================================================
+   MODULE CARDS (the navigation links)
+   ================================================================ */
+.modules{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:20px;
+}
+.module{
+  position:relative;
+  display:block; text-decoration:none; color:inherit;
+  background:var(--card);
+  border:1px solid rgba(25,255,122,0.22);
+  border-radius:8px;
+  padding:16px 18px 14px;
+  overflow:hidden;
+  opacity:0; transform:translateY(18px);
+  animation:rise .6s ease forwards;
+  transition:border-color .25s, box-shadow .25s, transform .25s, background .25s;
+}
+/* staggered entrance for each card */
+.module:nth-child(1){ animation-delay:1.35s; }
+.module:nth-child(2){ animation-delay:1.5s; }
+.module:nth-child(3){ animation-delay:1.65s; }
+.module:nth-child(4){ animation-delay:1.8s; }
+.module:nth-child(5){ animation-delay:1.95s; }
+.module:nth-child(6){ animation-delay:2.1s; }
+
+.module:hover{
+  border-color:var(--green);
+  background:rgba(8,28,16,0.88);
+  transform:translateY(-5px);
+  box-shadow:0 12px 30px rgba(0,0,0,.5), 0 0 26px rgba(25,255,122,.28);
+}
+/* a light sweep that crosses the card on hover */
+.module::after{
+  content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+  background:linear-gradient(100deg, transparent, rgba(25,255,122,.12), transparent);
+  transform:skewX(-18deg); transition:left .5s ease;
+}
+.module:hover::after{ left:130%; }
+
+.module .sym{
+  font-family:'Share Tech Mono', monospace;
+  font-size:22px; color:var(--green);
+  text-shadow:0 0 12px rgba(25,255,122,.6);
+  margin-bottom:10px;
+}
+.module .idx{
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px; color:var(--green-dim); opacity:.7;
+  letter-spacing:1px; margin-bottom:6px;
+}
+.module h2{
+  font-family:'Share Tech Mono', monospace;
+  font-size:17px; letter-spacing:.5px; color:#eafff2; margin-bottom:7px;
+}
+.module p{ font-size:13px; line-height:1.5; color:var(--ink); opacity:.85; }
+.module .open{
+  margin-top:16px; font-family:'Share Tech Mono', monospace;
+  font-size:13px; color:var(--green-dim); letter-spacing:.5px;
+  opacity:0; transform:translateX(-6px); transition:opacity .25s, transform .25s, color .25s;
+}
+.module:hover .open{ opacity:1; transform:translateX(0); color:var(--green); }
+.module .open::before{ content:"> "; }
+
+/* footer ---------------------------------------------------------- */
+.footer{
+  margin-top:16px; padding-top:12px;
+  border-top:1px solid rgba(25,255,122,0.18);
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px; color:var(--green-dim); letter-spacing:.5px;
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+}
+.footer .blink{ animation:blink 1s steps(2) infinite; }
+
+/* respect users who prefer no motion */
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; }
+  .title, .tagline, .module{ opacity:1 !important; transform:none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- background layers -->
+<div id="bg"></div>
+<div id="darken"></div>
+<canvas id="rain"></canvas>
+<div id="scanlines"></div>
+
+<!-- ================== MAIN TERMINAL WINDOW ================== -->
+<main class="terminal">
+
+  <!-- window chrome / title bar -->
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <!-- EDIT: the little terminal path label -->
+    <span class="path">student@cs:~/<b>course</b>$</span>
+  </div>
+
+  <div class="screen">
+
+    <!-- typed boot line (animated by JS) -->
+    <div class="boot" id="boot"></div>
+
+    <!-- ============================================================
+         EDIT YOUR CLASS NAME + TAGLINE HERE
+         ============================================================ -->
+    <h1 class="title">PROCESSING <span class="accent">//</span> JAVA MODE</h1>
+    <p class="tagline">Course modules &middot; pick a topic to begin</p>
+
+    <!-- the cards are generated from the MODULES list in the script below -->
+    <div class="modules" id="modules"></div>
+
+    <!-- ============================================================
+         EDIT FOOTER HERE
+         ============================================================ -->
+    <div class="footer">
+      <span>// more modules coming online<span class="blink">_</span></span>
+      <span>v1.0</span>
+    </div>
+
+  </div>
+</main>
+
+<script>
+/* ================================================================
+   ★ EDIT YOUR LINKS HERE ★
+   ----------------------------------------------------------------
+   To ADD a topic:    copy one { ... } block and change the values.
+   To REMOVE a topic: delete its { ... } block.
+   To REORDER:        drag blocks up/down in the list.
+
+     sym   = the little code symbol shown on the card
+     title = the heading
+     desc  = one-line description
+     href  = the page it links to (a file in this same folder)
+   ================================================================ */
+const MODULES = [
+  {
+    sym:   "101",
+    title: "Number Systems",
+    desc:  "Binary, decimal & hexadecimal — how computers count and store everything.",
+    href:  "number-systems.html"
+  },
+  {
+    sym:   "int x",
+    title: "Data Types &amp; Variables",
+    desc:  "int, float, boolean, String — storing, naming and using values in your sketches.",
+    href:  "data_types_variables.html"
+  },
+  {
+    sym:   "f()",
+    title: "Functions",
+    desc:  "Reusable blocks of code — define once, call anywhere. setup(), draw() and your own.",
+    href:  "functions.html"
+  }
+  /* ,{
+    sym:   "{ }",
+    title: "New Topic",
+    desc:  "Short description of the new topic goes here.",
+    href:  "new-page.html"
+  } */
+];
+
+/* --- build the cards (no need to edit below this line) ----------- */
+(function renderModules(){
+  const wrap = document.getElementById('modules');
+  MODULES.forEach((m, i) => {
+    const a = document.createElement('a');
+    a.className = 'module';
+    a.href = m.href;
+    a.innerHTML =
+      '<div class="sym">' + m.sym + '</div>' +
+      '<div class="idx">MODULE ' + String(i + 1).padStart(2, '0') + '</div>' +
+      '<h2>' + m.title + '</h2>' +
+      '<p>' + m.desc + '</p>' +
+      '<div class="open">open_module</div>';
+    wrap.appendChild(a);
+  });
+})();
+
+/* --- typewriter for the boot line -------------------------------- */
+(function typeBoot(){
+  const el = document.getElementById('boot');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const msg = '> loading course modules ...';
+  if (reduce){ el.innerHTML = msg + ' <span class="ok">[ ok ]</span>'; return; }
+  let i = 0;
+  const cur = '<span class="cursor"></span>';
+  (function step(){
+    el.innerHTML = msg.slice(0, i) + cur;
+    if (i++ < msg.length){ setTimeout(step, 38); }
+    else { setTimeout(()=>{ el.innerHTML = msg + ' <span class="ok">[ ok ]</span>'; }, 250); }
+  })();
+})();
+
+/* --- faint live matrix rain -------------------------------------- */
+(function matrixRain(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const c = document.getElementById('rain');
+  const ctx = c.getContext('2d');
+  let cols, drops, fontSize = 16;
+  const glyphs = 'ｱｲｳｴｵｶｷｸｹｺ01001011ABCDEF<>{}=+'.split('');
+  function resize(){
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    cols = Math.floor(c.width / fontSize);
+    drops = new Array(cols).fill(0).map(() => Math.random() * -50);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  function draw(){
+    ctx.fillStyle = 'rgba(2,6,4,0.12)';
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < cols; i++){
+      const ch = glyphs[(Math.random() * glyphs.length) | 0];
+      const x = i * fontSize, y = drops[i] * fontSize;
+      ctx.fillStyle = Math.random() > 0.97 ? '#c8ffdd' : '#19ff7a';
+      ctx.fillText(ch, x, y);
+      if (y > c.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.5;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
