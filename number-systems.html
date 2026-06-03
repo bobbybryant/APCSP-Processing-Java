@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Number Systems — AP CSP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf0;
+  --ink:#26323d;
+  --ink-soft:#5a6976;
+  --red:#c0392b;          /* teacher's red pen */
+  --blue:#2563a6;         /* BINARY */
+  --sky:#6ab0de;
+  --green:#2e7d4f;        /* DECIMAL */
+  --amber:#b0701f;        /* HEX */
+  --magenta:#9b2d6e;
+  --grid-fine:rgba(45,106,159,.10);
+  --grid-bold:rgba(45,106,159,.18);
+  --highlight:#fff39e;
+  --card:#fffdf6;
+  --line-strong:#d7d2bd;
+  --bin-soft:#eef4fb;
+  --dec-soft:#ecf6ef;
+  --hex-soft:#f8efdd;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"DM Sans",sans-serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-bold) 1px, transparent 1px);
+  background-size:25px 25px, 25px 25px, 125px 125px, 125px 125px;
+  line-height:1.6;
+  padding-bottom:120px;
+}
+
+/* ---------- fixed left table of contents ---------- */
+.toc{
+  position:fixed;left:0;top:0;width:248px;height:100vh;
+  background:rgba(251,250,240,.94);
+  border-right:2px solid var(--line-strong);
+  box-shadow:2px 0 0 rgba(38,50,61,.04);
+  padding:30px 22px;overflow-y:auto;z-index:20;
+}
+.toc .toc-brand{
+  font-family:"Fraunces",serif;font-weight:700;font-size:21px;line-height:1.1;
+  color:var(--ink);margin-bottom:2px;
+}
+.toc .toc-brand .dot{color:var(--red);}
+.toc .toc-sub{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:22px;}
+.toc a{
+  display:block;text-decoration:none;color:var(--ink-soft);
+  font-size:14px;font-weight:500;padding:8px 12px;margin:3px 0;
+  border-radius:6px;border-left:3px solid transparent;transition:.13s;
+}
+.toc a .tnum{font-family:"JetBrains Mono",monospace;font-size:11px;color:#b9b49c;margin-right:8px;font-weight:700;}
+.toc a:hover{background:#f0eedd;color:var(--ink);}
+.toc a.active{background:#fff;color:var(--ink);border-left-color:var(--red);font-weight:700;box-shadow:1px 1px 0 rgba(38,50,61,.08);}
+.toc a.active .tnum{color:var(--red);}
+.toc .toc-foot{margin-top:26px;font-family:"Caveat",cursive;font-size:19px;color:var(--ink-soft);transform:rotate(-2deg);}
+
+.content{margin-left:248px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 40px;}
+section{scroll-margin-top:24px;}
+
+/* ---------- header ---------- */
+header.hero{ text-align:center; padding:64px 0 28px; position:relative; }
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;letter-spacing:.32em;text-transform:uppercase;
+  font-size:12px;color:var(--blue);font-weight:700;
+}
+h1{ font-family:"Fraunces",serif;font-weight:700;font-size:60px;line-height:1.02;margin:14px 0 10px;color:var(--ink); }
+h1 .accent{color:var(--red);font-style:italic;}
+.subtitle{ font-size:19px;color:var(--ink-soft);max-width:640px;margin:0 auto; }
+.margin-note{ font-family:"Caveat",cursive;font-size:25px;color:var(--red);transform:rotate(-3deg);display:inline-block; }
+
+/* ---------- section ---------- */
+section{margin:54px 0;}
+.section-tag{
+  display:inline-block;font-family:"JetBrains Mono",monospace;
+  font-size:12.5px;font-weight:700;letter-spacing:.12em;
+  color:#fff;background:var(--ink);padding:5px 12px;border-radius:3px 12px 3px 12px;margin-bottom:14px;
+}
+h2{ font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1.15;margin:6px 0 8px; }
+h3{font-family:"Fraunces",serif;font-weight:600;font-size:22px;margin:22px 0 6px;}
+p{margin:10px 0;}
+.lead{font-size:18px;}
+.hl{background:linear-gradient(transparent 55%, var(--highlight) 55%);padding:0 2px;font-weight:600;}
+code.inline{
+  font-family:"JetBrains Mono",monospace;font-size:.9em;
+  background:#f0eedd;border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;color:var(--ink);
+}
+
+/* ---------- cards & callouts ---------- */
+.card{
+  background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;
+  padding:24px 26px;box-shadow:3px 4px 0 rgba(38,50,61,.06);margin:18px 0;
+}
+.callout{ border-left:6px solid var(--red);background:#fff6f4;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0; }
+.callout.blue{border-left-color:var(--blue);background:#f1f7fc;}
+.callout.green{border-left-color:var(--green);background:#f1faf3;}
+.callout.amber{border-left-color:var(--amber);background:#fbf5ea;}
+.callout b{color:var(--red);}
+.callout.blue b{color:var(--blue);}
+.callout.green b{color:var(--green);}
+.callout.amber b{color:var(--amber);}
+
+/* ---------- worked-example blocks (reuse code-block look) ---------- */
+pre{
+  margin:14px 0;background:#fcfbf3;border:1.5px solid var(--line-strong);
+  border-left:5px solid #e9b3ab;border-radius:8px;
+  padding:16px 18px 16px 20px;overflow-x:auto;
+}
+pre code{font-family:"JetBrains Mono",monospace;font-size:14.5px;line-height:1.9;white-space:pre;display:block;}
+.t-com{color:#7d9b6e;font-style:italic;}
+.t-bin{color:var(--blue);font-weight:700;}
+.t-dec{color:var(--green);font-weight:700;}
+.t-hex{color:var(--amber);font-weight:700;}
+.t-dim{color:var(--ink-soft);}
+
+/* ---------- badges ---------- */
+.badge{ font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:700;letter-spacing:.06em;
+  padding:3px 9px;border-radius:4px 9px 4px 9px;text-transform:uppercase;border:1.5px solid;display:inline-block; }
+.b-bin{color:var(--blue);background:var(--bin-soft);border-color:#cfe0f0;}
+.b-dec{color:var(--green);background:var(--dec-soft);border-color:#cfe7d6;}
+.b-hex{color:var(--amber);background:var(--hex-soft);border-color:#ecdcbe;}
+
+/* ---------- tables ---------- */
+table.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin:8px 0;}
+table.tbl th,table.tbl td{text-align:left;padding:9px 12px;border:1px solid var(--line-strong);vertical-align:middle;}
+table.tbl th{font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;background:#f6f4e6;}
+table.tbl td.num{font-family:"JetBrains Mono",monospace;}
+
+/* ---------- place-value strip ---------- */
+.pv{display:flex;border:1.5px solid var(--line-strong);border-radius:8px;overflow:hidden;font-family:"JetBrains Mono",monospace;margin:14px 0;background:#fcfbf3;}
+.pv .cell{flex:1;text-align:center;border-right:1px solid var(--line-strong);}
+.pv .cell:last-child{border-right:none;}
+.pv .power{font-size:11px;color:var(--ink-soft);padding:7px 0 4px;background:#f6f4e6;font-weight:700;}
+.pv .bit{font-size:20px;font-weight:700;padding:8px 0;}
+.pv .bit.on{color:var(--blue);background:var(--bin-soft);}
+.pv .bit.off{color:#c2bca8;}
+.pv .val{font-size:12px;color:var(--ink-soft);padding:5px 0 8px;border-top:1px solid var(--line-strong);}
+
+/* ---------- nibble lookup ---------- */
+.nibgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-family:"JetBrains Mono",monospace;margin-top:6px;}
+.nibgrid .nb{display:flex;justify-content:space-between;gap:8px;background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:7px;padding:8px 11px;font-size:13.5px;}
+.nibgrid .nb .h{color:var(--amber);font-weight:700;}
+.nibgrid .nb .b{color:var(--blue);}
+.nibgrid .nb .d{color:var(--ink-soft);}
+
+/* ---------- color swatches ---------- */
+.swatchgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px;}
+.swatch{border:1.5px solid var(--line-strong);border-radius:10px;overflow:hidden;background:var(--card);box-shadow:3px 4px 0 rgba(38,50,61,.06);}
+.swatch .chip{height:84px;border-bottom:1.5px solid var(--line-strong);}
+.swatch .meta{padding:12px 14px;font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.85;}
+.swatch .meta .name{font-family:"Fraunces",serif;font-weight:600;font-size:15px;margin-bottom:6px;color:var(--ink);}
+.swatch .meta .row{display:flex;justify-content:space-between;gap:8px;}
+.swatch .meta .row .k{color:var(--ink-soft);}
+
+/* ---------- controls / buttons ---------- */
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+.stage{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.controls{display:flex;flex-direction:column;gap:14px;}
+.ctrl-row{display:flex;align-items:center;gap:12px;}
+.ctrl-row label{font-family:"JetBrains Mono",monospace;font-size:13px;width:54px;color:var(--ink);font-weight:700;}
+input[type=range]{flex:1;accent-color:var(--blue);}
+.val{font-family:"JetBrains Mono",monospace;font-weight:700;width:46px;text-align:right;}
+.btn{
+  font-family:"DM Sans",sans-serif;font-weight:700;font-size:14px;
+  border:2px solid var(--ink);background:var(--ink);color:#fff;
+  border-radius:7px;padding:9px 16px;cursor:pointer;transition:.12s;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(38,50,61,.25);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff;}
+.btn:active{transform:translate(0,0);box-shadow:none;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+label.fld{display:block;font-family:"JetBrains Mono",monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+select,input[type=text],input[type=number]{
+  font-family:"JetBrains Mono",monospace;font-size:15px;padding:10px 12px;
+  border:1.5px solid var(--line-strong);border-radius:7px;background:#fff;color:var(--ink);width:100%;
+}
+select:focus,input[type=text]:focus,input[type=number]:focus{outline:none;border-color:var(--blue);box-shadow:2px 2px 0 rgba(37,99,166,.18);}
+
+/* ---------- dark console output ---------- */
+.console{
+  font-family:"JetBrains Mono",monospace;font-size:15px;
+  background:#1f2730;color:#e9e6d6;border-radius:8px;padding:14px 16px;border:1.5px solid #11171d;
+}
+.console .cprompt{color:var(--sky);font-weight:700;margin-right:8px;}
+.console .cval{color:#ffd27a;font-weight:700;}
+
+/* ---------- practice ---------- */
+.panel-title{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+.prompt-box{text-align:center;padding:24px 18px;background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:8px;margin:16px 0;}
+.prompt-box .convo{font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:12px;}
+.prompt-box .big{font-family:"JetBrains Mono",monospace;font-size:38px;font-weight:700;letter-spacing:.04em;color:var(--ink);}
+.feedback{min-height:24px;font-weight:700;margin-top:12px;font-size:15px;}
+.feedback.good{color:var(--green);}
+.feedback.bad{color:var(--red);}
+.feedback.neutral{color:var(--ink-soft);font-weight:500;}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px;}
+.stat{text-align:center;background:#26323d;color:#f3f1e3;border-radius:10px;padding:14px 8px;border:1.5px solid #11171d;}
+.stat .v{font-family:"JetBrains Mono",monospace;font-size:26px;font-weight:700;color:#ffd27a;}
+.stat .l{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin-top:3px;}
+
+/* ---------- step-through lab ---------- */
+.steplist{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.stepitem{border:1.5px solid var(--line-strong);background:#fcfbf3;border-radius:8px;padding:11px 15px;opacity:.4;transition:.18s;}
+.stepitem.shown{opacity:1;}
+.stepitem.current{background:var(--highlight);box-shadow:inset 4px 0 0 var(--red);border-color:#e7d98b;}
+.stepitem .slab{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:3px;}
+.stepitem .stxt{font-family:"JetBrains Mono",monospace;font-size:14px;color:var(--ink);}
+.stepitem .stxt b{background:#fff;border:1px solid var(--line-strong);padding:0 5px;border-radius:4px;}
+.stepnav{display:flex;align-items:center;gap:12px;margin-top:14px;}
+.stepnav .counter{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink-soft);font-weight:700;}
+
+/* ---------- recipe / cheat sheet ---------- */
+.recipe{background:#26323d;color:#f3f1e3;border-radius:12px;padding:28px 30px;margin:18px 0;}
+.recipe h2{color:#fff;margin-top:0;}
+.recipe .section-tag{background:var(--sky);color:#1b2730;}
+.recipe table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px;}
+.recipe td,.recipe th{border:1px solid #44525e;padding:9px 12px;text-align:left;vertical-align:top;}
+.recipe th{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);}
+.recipe code{font-family:"JetBrains Mono",monospace;color:#ffd27a;}
+.recipe .b-bin,.recipe .b-dec,.recipe .b-hex{background:transparent;}
+
+footer{text-align:center;color:var(--ink-soft);font-family:"Caveat",cursive;font-size:22px;margin-top:50px;}
+.divider{height:2px;background:repeating-linear-gradient(90deg,var(--line-strong),var(--line-strong) 8px,transparent 8px,transparent 16px);margin:8px 0;}
+</style>
+</head>
+<body>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <div class="toc-brand">Number Systems<span class="dot">.</span></div>
+  <div class="toc-sub">AP CSP · Processing</div>
+  <a href="#s1"><span class="tnum">01</span>The big idea</a>
+  <a href="#s2"><span class="tnum">02</span>The three systems</a>
+  <a href="#s3"><span class="tnum">03</span>Place value</a>
+  <a href="#s4"><span class="tnum">04</span>Binary → Decimal</a>
+  <a href="#s5"><span class="tnum">05</span>Decimal → Binary</a>
+  <a href="#s6"><span class="tnum">06</span>Hex → Binary</a>
+  <a href="#s7"><span class="tnum">07</span>Binary → Hex</a>
+  <a href="#s8"><span class="tnum">08</span>Colors, 3 ways</a>
+  <a href="#s9"><span class="tnum">09</span>How many combos?</a>
+  <a href="#s10"><span class="tnum">10</span>Other bases</a>
+  <a href="#s11"><span class="tnum">11</span>Practice zone</a>
+  <a href="#s12"><span class="tnum">12</span>Step-through lab</a>
+  <a href="#s13"><span class="tnum">★</span>Cheat sheet</a>
+  <div class="toc-foot">jump anywhere ↑</div>
+</nav>
+
+<div class="content">
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">AP Computer Science Principles · Number Systems</div>
+    <h1>Binary, Decimal <span class="accent">&amp;</span> Hexadecimal</h1>
+    <p class="subtitle">Every value inside a computer is just on/off switches. This page shows how the same number can wear three different outfits — and how to change its clothes by hand.</p>
+    <p style="margin-top:18px;"><span class="margin-note">same number — three different outfits! ✓</span></p>
+  </header>
+
+  <!-- ============ 01 THE BIG IDEA ============ -->
+  <section id="s1">
+    <span class="section-tag">01 · THE BIG IDEA</span>
+    <h2>A "number system" is just a set of symbols + a place-value rule</h2>
+    <p class="lead">We count in <span class="hl">base 10</span> because we have ten fingers. Computers only have two states — <code class="inline">on</code> and <code class="inline">off</code> — so they count in <span class="hl">base 2</span>. <b>Hexadecimal</b> (base 16) is the shorthand programmers use so they don't go cross-eyed reading long strings of bits.</p>
+
+    <div class="card">
+      <p style="margin-top:0;">Throughout this page we'll follow one value through all three systems as our running example:</p>
+      <pre><code><span class="t-dec">182</span>  <span class="t-dim">=</span>  <span class="t-bin">1011 0110</span>  <span class="t-dim">=</span>  <span class="t-hex">B6</span>
+<span class="t-com"># decimal       binary           hex</span></code></pre>
+      <p style="margin-bottom:0;">Same number, three costumes. Once you can move between them, hexadecimal stops looking scary.</p>
+    </div>
+  </section>
+
+  <!-- ============ 02 THE THREE SYSTEMS ============ -->
+  <section id="s2">
+    <span class="section-tag">02 · THE THREE SYSTEMS</span>
+    <h2>Meet the cast</h2>
+    <p>The number of distinct symbols a system uses is its <span class="hl">base</span>. That's the only thing that really changes between them.</p>
+
+    <div class="card">
+      <table class="tbl">
+        <tr><th>System</th><th>Base</th><th>Digits used</th><th>Where you meet it</th></tr>
+        <tr><td><span class="badge b-dec">Decimal</span></td><td class="num">10</td><td class="num">0 1 2 3 4 5 6 7 8 9</td><td>Everyday math</td></tr>
+        <tr><td><span class="badge b-bin">Binary</span></td><td class="num">2</td><td class="num">0 1</td><td>How all data is stored (on/off)</td></tr>
+        <tr><td><span class="badge b-hex">Hex</span></td><td class="num">16</td><td class="num">0–9 then A B C D E F</td><td>Colors, memory addresses</td></tr>
+      </table>
+    </div>
+
+    <div class="callout blue">
+      <b>Vocabulary to memorize.</b> One binary digit is a <b>bit</b>. Four bits is a <b>nibble</b> — and one nibble is exactly one hex digit. Eight bits is a <b>byte</b> — exactly two hex digits, holding values <code class="inline">0–255</code>.
+    </div>
+    <p><span class="margin-note">1 nibble = 4 bits = 1 hex digit</span></p>
+  </section>
+
+  <!-- ============ 03 PLACE VALUE ============ -->
+  <section id="s3">
+    <span class="section-tag">03 · PLACE VALUE</span>
+    <h2>The one idea behind all of it</h2>
+    <p class="lead">Every system works the same way: each position is worth <code class="inline">base<sup>position</sup></code>, counting from <code class="inline">0</code> on the right. Multiply each digit by its position value, then add.</p>
+
+    <div class="demo">
+      <pre><code><span class="t-com"># decimal — powers of 10</span>
+<span class="t-dec">182</span>
+= 1×10² + 8×10¹ + 2×10⁰
+= 100 + 80 + 2
+= <span class="t-dec">182</span></code></pre>
+      <pre><code><span class="t-com"># binary — powers of 2</span>
+<span class="t-bin">10110110</span>
+= 1×2⁷ + 1×2⁵ + 1×2⁴ + 1×2² + 1×2¹
+= 128 + 32 + 16 + 4 + 2
+= <span class="t-dec">182</span></code></pre>
+    </div>
+    <p>If you understand the decimal box, you already understand binary and hex. <b>Only the base changes.</b></p>
+  </section>
+
+  <!-- ============ 04 BIN -> DEC ============ -->
+  <section id="s4">
+    <span class="section-tag">04 · BINARY → DECIMAL</span>
+    <h2>Add up the "on" columns</h2>
+    <p class="lead">Write the place values above the bits, then add the place values wherever you see a <span class="t-bin">1</span>. Ignore the zeros.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0;">The powers of two (memorize these eight)</h3>
+      <div class="pv">
+        <div class="cell"><div class="power">2⁷</div><div class="bit on">1</div><div class="val">128</div></div>
+        <div class="cell"><div class="power">2⁶</div><div class="bit off">0</div><div class="val">—</div></div>
+        <div class="cell"><div class="power">2⁵</div><div class="bit on">1</div><div class="val">32</div></div>
+        <div class="cell"><div class="power">2⁴</div><div class="bit on">1</div><div class="val">16</div></div>
+        <div class="cell"><div class="power">2³</div><div class="bit off">0</div><div class="val">—</div></div>
+        <div class="cell"><div class="power">2²</div><div class="bit on">1</div><div class="val">4</div></div>
+        <div class="cell"><div class="power">2¹</div><div class="bit on">1</div><div class="val">2</div></div>
+        <div class="cell"><div class="power">2⁰</div><div class="bit off">0</div><div class="val">—</div></div>
+      </div>
+      <pre><code><span class="t-com"># convert 10110110 — add the lit columns</span>
+128 + 32 + 16 + 4 + 2 = <span class="t-dec">182</span></code></pre>
+      <p style="margin-bottom:0;color:var(--ink-soft);">The leftmost bit is the biggest. An 8-bit number maxes out at <code class="inline">128+64+32+16+8+4+2+1 = 255</code>.</p>
+    </div>
+  </section>
+
+  <!-- ============ 05 DEC -> BIN ============ -->
+  <section id="s5">
+    <span class="section-tag">05 · DECIMAL → BINARY</span>
+    <h2>Divide by two, collect the remainders</h2>
+    <p class="lead">Repeatedly divide by 2 and write down each remainder. The remainders, read <b>bottom to top</b>, are your binary digits.</p>
+
+    <div class="card">
+      <pre><code><span class="t-com"># convert 182 to binary</span>
+182 ÷ 2 = 91  remainder <span class="t-bin">0</span>
+ 91 ÷ 2 = 45  remainder <span class="t-bin">1</span>
+ 45 ÷ 2 = 22  remainder <span class="t-bin">1</span>
+ 22 ÷ 2 = 11  remainder <span class="t-bin">0</span>
+ 11 ÷ 2 =  5  remainder <span class="t-bin">1</span>
+  5 ÷ 2 =  2  remainder <span class="t-bin">1</span>
+  2 ÷ 2 =  1  remainder <span class="t-bin">0</span>
+  1 ÷ 2 =  0  remainder <span class="t-bin">1</span>
+<span class="t-com"># read upward ↑</span>      → <span class="t-bin">1011 0110</span></code></pre>
+    </div>
+    <div class="callout green">
+      <b>Shortcut: subtract the biggest power of two.</b> Largest power that fits in 182 is 128 → write a 1, leaves 54. 64 is too big → 0. 32 fits → 1, leaves 22 … building <span class="t-bin">10110110</span> left to right. Use whichever method clicks for you.
+    </div>
+  </section>
+
+  <!-- ============ 06 HEX -> BIN ============ -->
+  <section id="s6">
+    <span class="section-tag">06 · HEX → BINARY</span>
+    <h2>The easiest conversion there is</h2>
+    <p class="lead">Here's the magic fact that makes hex and binary best friends: <span class="hl">16 = 2⁴</span>. That means every single hex digit is worth <b>exactly 4 bits</b>.</p>
+
+    <div class="callout amber">
+      <b>★ The mini sub-problem trick.</b> Never convert a long hex number all at once. Instead, treat each hex digit as its own tiny 4-bit puzzle, solve each separately, then snap the nibbles together like LEGO. A 6-digit hex number becomes six trivial 4-bit problems.
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0;">The only table you need — each hex digit → 4 bits</h3>
+      <div class="nibgrid" id="nibtable"></div>
+      <pre><code><span class="t-com"># convert B6 — one mini-problem per digit</span>
+<span class="t-hex">B</span> = 11 = <span class="t-bin">1011</span>
+<span class="t-hex">6</span> =  6 = <span class="t-bin">0110</span>
+<span class="t-com"># snap together →</span>  <span class="t-bin">1011 0110</span></code></pre>
+    </div>
+    <p><span class="margin-note">16 = 2⁴ — that's the whole trick!</span></p>
+  </section>
+
+  <!-- ============ 07 BIN -> HEX ============ -->
+  <section id="s7">
+    <span class="section-tag">07 · BINARY → HEX</span>
+    <h2>Same trick, run backwards</h2>
+    <p class="lead">Slice the bits into <b>groups of 4, starting from the right</b>. Pad the leftmost group with zeros if needed. Convert each nibble to a single hex digit.</p>
+
+    <div class="card">
+      <pre><code><span class="t-com"># convert 10110110 — group into 4s from the right</span>
+<span class="t-bin">1011</span>  <span class="t-bin">0110</span>
+<span class="t-bin">1011</span> = 11 = <span class="t-hex">B</span>
+<span class="t-bin">0110</span> =  6 = <span class="t-hex">6</span>
+<span class="t-com"># read left to right →</span>  <span class="t-hex">B6</span></code></pre>
+      <p style="margin-bottom:0;color:var(--ink-soft);">Padding example: <span class="t-bin">110110</span> has 6 bits → pad to <span class="t-bin">0011 0110</span> → <span class="t-hex">36</span>.</p>
+    </div>
+    <div class="callout blue">
+      <b>Why this matters.</b> Hex is just a <i>shorthand for binary that humans can read</i>. Two hex digits compress eight bits into something you can say out loud — which is why programmers write colors and memory addresses in hex, not raw binary.
+    </div>
+  </section>
+
+  <!-- ============ 08 COLORS ============ -->
+  <section id="s8">
+    <span class="section-tag">08 · COLORS, THREE WAYS</span>
+    <h2>The same color in binary, decimal, and hex</h2>
+    <p class="lead">Screen colors mix <b>Red, Green, Blue</b>. Each channel is one byte — 8 bits, values <code class="inline">0–255</code>, two hex digits. String three bytes together and you get a 24-bit color: the <code class="inline">#RRGGBB</code> codes you've seen in CSS and Processing's <code class="inline">color()</code>.</p>
+
+    <div class="card">
+      <h3 style="margin-top:0;">Worked examples</h3>
+      <div class="swatchgrid">
+        <div class="swatch">
+          <div class="chip" style="background:#FF0000;"></div>
+          <div class="meta">
+            <div class="name">Pure Red</div>
+            <div class="row"><span class="k">hex</span><span class="t-hex">FF 00 00</span></div>
+            <div class="row"><span class="k">dec</span><span class="t-dec">255 · 0 · 0</span></div>
+            <div class="row"><span class="k">bin</span><span class="t-bin">11111111</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">00000000</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">00000000</span></div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#708090;"></div>
+          <div class="meta">
+            <div class="name">Slate Gray</div>
+            <div class="row"><span class="k">hex</span><span class="t-hex">70 80 90</span></div>
+            <div class="row"><span class="k">dec</span><span class="t-dec">112 · 128 · 144</span></div>
+            <div class="row"><span class="k">bin</span><span class="t-bin">01110000</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">10000000</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">10010000</span></div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="chip" style="background:#9B59B6;"></div>
+          <div class="meta">
+            <div class="name">Amethyst</div>
+            <div class="row"><span class="k">hex</span><span class="t-hex">9B 59 B6</span></div>
+            <div class="row"><span class="k">dec</span><span class="t-dec">155 · 89 · 182</span></div>
+            <div class="row"><span class="k">bin</span><span class="t-bin">10011011</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">01011001</span></div>
+            <div class="row"><span class="k"></span><span class="t-bin">10110110</span></div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-bottom:0;color:var(--ink-soft);">Notice Amethyst's blue channel is <span class="t-hex">B6</span> = <span class="t-bin">10110110</span> = <span class="t-dec">182</span> — our running example, hiding inside a color.</p>
+    </div>
+
+    <h3>Try it: drag the channels and watch all three representations move</h3>
+    <div class="card">
+      <div class="demo">
+        <div class="controls">
+          <div class="ctrl-row"><label style="color:var(--red);">R =</label><input type="range" id="rSlide" min="0" max="255" value="155" style="accent-color:#c0392b;"><span class="val" id="rVal" style="color:var(--red);">155</span></div>
+          <div class="ctrl-row"><label style="color:var(--green);">G =</label><input type="range" id="gSlide" min="0" max="255" value="89" style="accent-color:#2e7d4f;"><span class="val" id="gVal" style="color:var(--green);">89</span></div>
+          <div class="ctrl-row"><label style="color:var(--blue);">B =</label><input type="range" id="bSlide" min="0" max="255" value="182" style="accent-color:#2563a6;"><span class="val" id="bVal" style="color:var(--blue);">182</span></div>
+          <div class="console" style="margin-top:6px;"><span class="cprompt">color</span><span class="cval" id="allHex">#9B59B6</span></div>
+        </div>
+        <div class="stage">
+          <div id="colorChip" style="height:150px;width:100%;border-radius:8px;border:2px solid var(--ink);"></div>
+          <span class="caption" style="font-family:'Caveat',cursive;font-size:18px;color:var(--ink-soft);">that's <span id="capDec">rgb(155, 89, 182)</span></span>
+        </div>
+      </div>
+      <table class="tbl" style="margin-top:18px;">
+        <tr><th>System</th><th>Red</th><th>Green</th><th>Blue</th></tr>
+        <tr><td><span class="badge b-hex">Hex</span></td><td class="num t-hex" id="rHex"></td><td class="num t-hex" id="gHex"></td><td class="num t-hex" id="bHex"></td></tr>
+        <tr><td><span class="badge b-dec">Dec</span></td><td class="num t-dec" id="rDec"></td><td class="num t-dec" id="gDec"></td><td class="num t-dec" id="bDec"></td></tr>
+        <tr><td><span class="badge b-bin">Bin</span></td><td class="num t-bin" id="rBin"></td><td class="num t-bin" id="gBin"></td><td class="num t-bin" id="bBin"></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 09 COMBINATIONS ============ -->
+  <section id="s9">
+    <span class="section-tag">09 · HOW MANY COMBINATIONS?</span>
+    <h2>With <i>n</i> positions, how many values can you make?</h2>
+    <p class="lead">The rule is delightfully simple:</p>
+
+    <div class="card">
+      <pre style="text-align:center;"><code>number of values = <span class="t-dec">base</span><span class="t-bin">^digits</span></code></pre>
+      <p>A 24-bit color has 24 binary positions → <code class="inline">2²⁴</code> possible values. But 24 bits is <b>also</b> 6 hex digits, and <b>also</b> 3 bytes. So the <i>same count</i> can be written three ways:</p>
+      <pre><code><span class="t-bin">2²⁴</span>  =  <span class="t-hex">16⁶</span>  =  <span class="t-dec">256³</span>  =  16,777,216
+<span class="t-com"># because 16 = 2⁴, so 16⁶ = (2⁴)⁶ = 2²⁴</span>
+<span class="t-com"># and    256 = 2⁸, so 256³ = (2⁸)³ = 2²⁴</span></code></pre>
+      <p style="margin-bottom:0;color:var(--ink-soft);">Grouping bits never changes how many values exist — it only changes how you write them down.</p>
+    </div>
+
+    <h3>Calculator: pick any base and number of digits</h3>
+    <div class="card">
+      <div class="btnrow">
+        <div style="flex:1;"><label class="fld">Base</label><input type="number" id="comboBase" value="2" min="2" max="256"></div>
+        <div style="flex:1;"><label class="fld">Number of digits</label><input type="number" id="comboDigits" value="8" min="1" max="64"></div>
+        <button class="btn" id="comboGo">Calculate</button>
+      </div>
+      <div class="console" style="margin-top:16px;">
+        <span class="cprompt">›</span><span id="comboExpr">2^8</span> = <span class="cval" id="comboResult">256</span> possible values
+        <div style="color:#9fb0bb;font-size:13px;margin-top:6px;" id="comboNote">An 8-bit value (one byte) → 0 to 255.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10 OTHER BASES ============ -->
+  <section id="s10">
+    <span class="section-tag">10 · OTHER BASES EXIST TOO</span>
+    <h2>A quick tour past the big three</h2>
+    <p class="lead">Binary, decimal, and hex are the headliners, but <i>any</i> whole number ≥ 2 can be a base — you just need that many distinct symbols. A few you might bump into:</p>
+
+    <div class="card">
+      <table class="tbl">
+        <tr><th>Base</th><th>Name</th><th>What's interesting</th></tr>
+        <tr><td class="num">8</td><td>Octal</td><td>Digits 0–7. Since <code class="inline">8 = 2³</code>, each digit is 3 bits. You've seen it in Unix file permissions like <code class="inline">chmod 755</code>.</td></tr>
+        <tr><td class="num">64</td><td>Base64</td><td>Uses 64 symbols (A–Z, a–z, 0–9, + /) to pack binary data into plain text — email attachments, data URLs. More an <i>encoding</i> than arithmetic.</td></tr>
+        <tr><td class="num">5</td><td>Base 5</td><td>Digits 0–4. Works perfectly, just rarely useful. Proof the rule is general.</td></tr>
+        <tr><td class="num">83</td><td>Base 83</td><td>Real systems use it (BlurHash, which encodes blurry image previews). You'd need 83 distinct symbols for a single digit.</td></tr>
+      </table>
+      <p style="margin-bottom:0;color:var(--ink-soft);">Why does computing love 2, 8, and 16 specifically? Because 8 and 16 are powers of 2, so they group bits cleanly with nothing lost. Base 10 is the odd one out — handy for humans, awkward for hardware.</p>
+    </div>
+  </section>
+
+  <!-- ============ 11 PRACTICE ============ -->
+  <section id="s11">
+    <span class="section-tag">11 · PRACTICE ZONE</span>
+    <h2>Prove it to yourself</h2>
+    <p class="lead">Pick a conversion, type your answer, and hit <b>Check</b>. You won't be shown the answer — you have to earn it. Your running score is below. (Different lengths of the same value still count as correct.)</p>
+
+    <div class="card">
+      <div class="btnrow" style="margin-bottom:4px;">
+        <div style="flex:1;">
+          <label class="fld">Conversion type</label>
+          <select id="pMode">
+            <option value="bin2dec">Binary → Decimal</option>
+            <option value="dec2bin">Decimal → Binary</option>
+            <option value="hex2bin">Hex → Binary</option>
+            <option value="bin2hex">Binary → Hex</option>
+            <option value="mixed">Mixed (surprise me)</option>
+          </select>
+        </div>
+        <button class="btn ghost" id="pNew">↻ New problem</button>
+      </div>
+
+      <div class="prompt-box">
+        <div class="convo" id="pConvo">Binary → Decimal</div>
+        <div class="big" id="pPrompt">—</div>
+      </div>
+
+      <div class="btnrow">
+        <div style="flex:1;">
+          <label class="fld" id="pAnsLabel">Your answer (decimal)</label>
+          <input type="text" id="pInput" autocomplete="off" placeholder="type here…">
+        </div>
+        <button class="btn red" id="pCheck">Check</button>
+      </div>
+      <div class="feedback neutral" id="pFeedback">Choose a type and start converting.</div>
+
+      <div class="scoreboard">
+        <div class="stat"><div class="v" id="sCorrect">0</div><div class="l">Correct</div></div>
+        <div class="stat"><div class="v" id="sAttempts">0</div><div class="l">Attempts</div></div>
+        <div class="stat"><div class="v" id="sStreak">0</div><div class="l">Streak</div></div>
+        <div class="stat"><div class="v" id="sBest">0</div><div class="l">Best</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12 STEP-THROUGH LAB ============ -->
+  <section id="s12">
+    <span class="section-tag">12 · STEP-THROUGH LAB</span>
+    <h2>Watch a conversion unfold, one move at a time</h2>
+    <p class="lead">Enter a number (or randomize one) and step through every move with <b>Next</b> / <b>Back</b>, or hit <b>Play</b> to auto-advance. Unlike the drills, this lab shows the full working — answer included. Great on the projector while students drill on their own devices.</p>
+
+    <div class="card">
+      <div class="btnrow">
+        <div style="flex:1;">
+          <label class="fld">Conversion type</label>
+          <select id="lMode">
+            <option value="bin2dec">Binary → Decimal</option>
+            <option value="dec2bin">Decimal → Binary</option>
+            <option value="hex2bin">Hex → Binary</option>
+            <option value="bin2hex">Binary → Hex</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <label class="fld" id="lInputLabel">Binary value</label>
+          <input type="text" id="lInput" autocomplete="off" placeholder="e.g. 10110110">
+        </div>
+        <button class="btn ghost" id="lRand">🎲 Random</button>
+        <button class="btn" id="lBuild">Build steps</button>
+      </div>
+      <div class="feedback bad" id="lError" style="min-height:0;"></div>
+
+      <div class="steplist" id="lSteps"></div>
+
+      <div class="stepnav" id="lNavWrap" style="display:none;">
+        <button class="btn ghost" id="lPrev">‹ Back</button>
+        <button class="btn" id="lNext">Next ›</button>
+        <button class="btn red" id="lPlay">▶ Play</button>
+        <span class="counter" id="lCounter"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 13 CHEAT SHEET ============ -->
+  <section id="s13">
+    <div class="recipe">
+      <span class="section-tag">★ · CHEAT SHEET</span>
+      <h2>Everything on one card</h2>
+      <table>
+        <tr><th>Conversion</th><th>Method</th></tr>
+        <tr><td><span class="badge b-bin" style="color:#9ec9f0;border-color:#3b6e9e;">Bin</span> → <span class="badge b-dec" style="color:#9fd9b6;border-color:#3a7d56;">Dec</span></td><td>Add the place values (powers of 2) wherever a bit is <code>1</code>.</td></tr>
+        <tr><td><span class="badge b-dec" style="color:#9fd9b6;border-color:#3a7d56;">Dec</span> → <span class="badge b-bin" style="color:#9ec9f0;border-color:#3b6e9e;">Bin</span></td><td>Divide by 2 repeatedly; read the remainders <b>bottom → top</b>.</td></tr>
+        <tr><td><span class="badge b-hex" style="color:#e7c894;border-color:#9a772f;">Hex</span> → <span class="badge b-bin" style="color:#9ec9f0;border-color:#3b6e9e;">Bin</span></td><td>Each hex digit becomes its own 4-bit group; then join them.</td></tr>
+        <tr><td><span class="badge b-bin" style="color:#9ec9f0;border-color:#3b6e9e;">Bin</span> → <span class="badge b-hex" style="color:#e7c894;border-color:#9a772f;">Hex</span></td><td>Group bits into 4s from the right; each nibble → one hex digit.</td></tr>
+        <tr><td>Key facts</td><td>1 nibble = 4 bits = 1 hex digit · 1 byte = 8 bits = 2 hex digits = <code>0–255</code> · values = <code>base^digits</code> · <code>2²⁴ = 16⁶ = 256³</code></td></tr>
+      </table>
+    </div>
+    <div class="divider"></div>
+  </section>
+
+  <footer>keep the lab on the projector — drills on the devices ✦</footer>
+
+</div>
+</div>
+
+<script>
+/* ===== shared helpers ===== */
+var HEXD = "0123456789ABCDEF";
+function pad(s,n,ch){ ch = ch || '0'; s = String(s); while(s.length < n) s = ch + s; return s; }
+function toBin(n,bits){ return bits ? pad(n.toString(2),bits) : n.toString(2); }
+function toHex(n,d){ return d ? pad(n.toString(16).toUpperCase(),d) : n.toString(16).toUpperCase(); }
+function groupBy4(b){ var p=b; while(p.length%4!==0) p='0'+p; return p.match(/.{4}/g).join(' '); }
+function rnd(lo,hi){ return Math.floor(Math.random()*(hi-lo+1))+lo; }
+
+/* ===== nibble lookup table ===== */
+(function(){
+  var html='';
+  for(var i=0;i<16;i++){
+    html += '<div class="nb"><span class="h">'+toHex(i)+'</span><span class="d">'+pad(i,2,' ')+'</span><span class="b">'+toBin(i,4)+'</span></div>';
+  }
+  document.getElementById('nibtable').innerHTML = html;
+})();
+
+/* ===== live color explorer ===== */
+(function(){
+  var ids=['r','g','b'];
+  var slides={r:document.getElementById('rSlide'),g:document.getElementById('gSlide'),b:document.getElementById('bSlide')};
+  function render(){
+    var v={r:+slides.r.value,g:+slides.g.value,b:+slides.b.value};
+    ids.forEach(function(c){ document.getElementById(c+'Val').textContent=v[c]; });
+    document.getElementById('colorChip').style.background='rgb('+v.r+','+v.g+','+v.b+')';
+    ids.forEach(function(c){
+      document.getElementById(c+'Hex').textContent=toHex(v[c],2);
+      document.getElementById(c+'Dec').textContent=v[c];
+      document.getElementById(c+'Bin').textContent=toBin(v[c],8);
+    });
+    document.getElementById('allHex').textContent='#'+toHex(v.r,2)+toHex(v.g,2)+toHex(v.b,2);
+    document.getElementById('capDec').textContent='rgb('+v.r+', '+v.g+', '+v.b+')';
+  }
+  ids.forEach(function(c){ slides[c].addEventListener('input',render); });
+  render();
+})();
+
+/* ===== combinations calculator ===== */
+(function(){
+  var baseEl=document.getElementById('comboBase'), digEl=document.getElementById('comboDigits');
+  var out=document.getElementById('comboResult'), note=document.getElementById('comboNote'), expr=document.getElementById('comboExpr');
+  function fmt(big){ return big.toString().replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+  function calc(){
+    var base=Math.max(2,Math.min(256,parseInt(baseEl.value)||2));
+    var dig=Math.max(1,Math.min(64,parseInt(digEl.value)||1));
+    var total=BigInt(base)**BigInt(dig);
+    expr.textContent=base+'^'+dig;
+    out.textContent=fmt(total);
+    note.textContent=dig+' digit'+(dig>1?'s':'')+' in base '+base+' → values 0 to '+fmt(total-1n)+'.';
+  }
+  document.getElementById('comboGo').addEventListener('click',calc);
+  [baseEl,digEl].forEach(function(e){ e.addEventListener('keydown',function(ev){ if(ev.key==='Enter') calc(); }); });
+  calc();
+})();
+
+/* ===== practice zone ===== */
+(function(){
+  var modeEl=document.getElementById('pMode'), promptEl=document.getElementById('pPrompt'),
+      convoEl=document.getElementById('pConvo'), inputEl=document.getElementById('pInput'),
+      ansLabel=document.getElementById('pAnsLabel'), fb=document.getElementById('pFeedback');
+  var correct=0,attempts=0,streak=0,best=0,current=null;
+  var META={
+    bin2dec:{src:2, tgt:10,convo:'Binary → Decimal',ans:'decimal',           allow:'0123456789'},
+    dec2bin:{src:10,tgt:2, convo:'Decimal → Binary',ans:'binary (0s and 1s)', allow:'01'},
+    hex2bin:{src:16,tgt:2, convo:'Hex → Binary',    ans:'binary (0s and 1s)', allow:'01'},
+    bin2hex:{src:2, tgt:16,convo:'Binary → Hex',    ans:'hex (0–9, A–F)',     allow:'0123456789ABCDEF'}
+  };
+  function newProblem(){
+    var mode=modeEl.value;
+    if(mode==='mixed'){ var k=['bin2dec','dec2bin','hex2bin','bin2hex']; mode=k[rnd(0,3)]; }
+    var m=META[mode], value=rnd(0,255), shown;
+    if(m.src===2) shown=toBin(value);
+    if(m.src===10) shown=String(value);
+    if(m.src===16) shown=toHex(value, value<16?1:2);
+    current={targetBase:m.tgt,value:value,allow:m.allow};
+    convoEl.textContent=m.convo; promptEl.textContent=shown;
+    ansLabel.textContent='Your answer ('+m.ans+')';
+    inputEl.value=''; inputEl.focus();
+    fb.className='feedback neutral'; fb.textContent='Convert it, then press Check.';
+  }
+  function check(){
+    if(!current) return;
+    var raw=inputEl.value.trim().toUpperCase();
+    if(raw===''){ fb.className='feedback neutral'; fb.textContent='Type an answer first.'; return; }
+    for(var i=0;i<raw.length;i++){
+      if(current.allow.indexOf(raw[i])===-1){
+        fb.className='feedback bad'; fb.textContent='Hmm — that has a symbol that doesn\u2019t belong in this base. Check your digits.'; return;
+      }
+    }
+    var guess=parseInt(raw,current.targetBase);
+    attempts++;
+    if(guess===current.value){
+      correct++; streak++; best=Math.max(best,streak);
+      var yay=['✓ Correct!','✓ Nailed it!','✓ That\u2019s right!','✓ Spot on!'][rnd(0,3)];
+      fb.className='feedback good'; fb.textContent=yay+' Press New problem to keep going.';
+    }else{
+      streak=0; fb.className='feedback bad'; fb.textContent='✗ Not quite. Re-check your work and try again — or grab a new problem.';
+    }
+    render();
+  }
+  function render(){
+    document.getElementById('sCorrect').textContent=correct;
+    document.getElementById('sAttempts').textContent=attempts;
+    document.getElementById('sStreak').textContent=streak;
+    document.getElementById('sBest').textContent=best;
+  }
+  document.getElementById('pNew').addEventListener('click',newProblem);
+  document.getElementById('pCheck').addEventListener('click',check);
+  modeEl.addEventListener('change',newProblem);
+  inputEl.addEventListener('keydown',function(ev){ if(ev.key==='Enter') check(); });
+  newProblem();
+})();
+
+/* ===== step-through lab ===== */
+(function(){
+  var modeEl=document.getElementById('lMode'), inputEl=document.getElementById('lInput'),
+      inputLabel=document.getElementById('lInputLabel'), errEl=document.getElementById('lError'),
+      list=document.getElementById('lSteps'), navWrap=document.getElementById('lNavWrap'),
+      counter=document.getElementById('lCounter');
+  var steps=[], idx=0, timer=null;
+  var LABELS={bin2dec:'Binary value',dec2bin:'Decimal value',hex2bin:'Hex value',bin2hex:'Binary value'};
+  var ALLOW={bin2dec:'01',dec2bin:'0123456789',hex2bin:'0123456789ABCDEF',bin2hex:'01'};
+
+  function setLabel(){ inputLabel.textContent=LABELS[modeEl.value]; }
+  function randomize(){
+    var v=rnd(0,255), mode=modeEl.value;
+    if(mode==='bin2dec'||mode==='bin2hex') inputEl.value=toBin(v);
+    else if(mode==='dec2bin') inputEl.value=String(v);
+    else inputEl.value=toHex(v, v<16?1:2);
+    errEl.textContent='';
+  }
+
+  function sBinToDec(bin){
+    var out=[{lab:'Setup',txt:'Each bit\u2019s value is a power of 2. Add the place values where the bit is <b>1</b>.'}];
+    var len=bin.length, sum=0;
+    for(var i=0;i<len;i++){
+      var p=len-1-i, place=Math.pow(2,p), bit=bin[i];
+      if(bit==='1'){ sum+=place; out.push({lab:'Position 2^'+p,txt:'Bit is <b>1</b> → add 2^'+p+' = '+place+'. &nbsp;Running total: <b>'+sum+'</b>'}); }
+      else out.push({lab:'Position 2^'+p,txt:'Bit is 0 → add nothing. &nbsp;Running total: <b>'+sum+'</b>'});
+    }
+    out.push({lab:'Result',txt:'Decimal value = <b>'+sum+'</b>'});
+    return out;
+  }
+  function sDecToBin(n){
+    var out=[{lab:'Setup',txt:'Repeatedly divide by 2 and record each remainder.'}];
+    if(n===0){ out.push({lab:'Special case',txt:'0 in binary is simply <b>0</b>.'}); return out; }
+    var cur=n, rems=[];
+    while(cur>0){ var q=Math.floor(cur/2), r=cur%2; rems.push(r); out.push({lab:cur+' ÷ 2',txt:cur+' ÷ 2 = '+q+' &nbsp;remainder <b>'+r+'</b>'}); cur=q; }
+    out.push({lab:'Read upward',txt:'Remainders bottom→top: <b>'+groupBy4(rems.slice().reverse().join(''))+'</b>'});
+    return out;
+  }
+  function sHexToBin(hex){
+    var out=[{lab:'Setup',txt:'Mini sub-problem trick: turn each hex digit into its own 4-bit group, then join.'}];
+    var parts=[];
+    for(var i=0;i<hex.length;i++){ var d=hex[i], v=parseInt(d,16), nib=toBin(v,4); parts.push(nib); out.push({lab:'Digit '+d,txt:d+' = '+v+' = <b>'+nib+'</b>'}); }
+    out.push({lab:'Combine',txt:'Snap the nibbles together: <b>'+parts.join(' ')+'</b>'});
+    return out;
+  }
+  function sBinToHex(bin){
+    var out=[{lab:'Setup',txt:'Group bits into 4s from the right; each nibble becomes one hex digit.'}];
+    var p=bin, added=0; while(p.length%4!==0){ p='0'+p; added++; }
+    if(added) out.push({lab:'Pad left',txt:'Add '+added+' leading zero'+(added>1?'s':'')+' so the length is a multiple of 4: <b>'+p+'</b>'});
+    var groups=p.match(/.{4}/g);
+    out.push({lab:'Split',txt:'Nibbles: <b>'+groups.join(' ')+'</b>'});
+    var hx='';
+    groups.forEach(function(g){ var v=parseInt(g,2), h=v.toString(16).toUpperCase(); hx+=h; out.push({lab:g,txt:g+' = '+v+' = <b>'+h+'</b>'}); });
+    out.push({lab:'Result',txt:'Read left→right: <b>'+hx+'</b>'});
+    return out;
+  }
+
+  function build(){
+    stopPlay(); errEl.textContent='';
+    var mode=modeEl.value, raw=inputEl.value.trim().toUpperCase();
+    if(raw===''){ errEl.textContent='Enter a value (or press Random).'; return; }
+    var allow=ALLOW[mode];
+    for(var i=0;i<raw.length;i++){ if(allow.indexOf(raw[i])===-1){ errEl.textContent='\u201C'+raw[i]+'\u201D isn\u2019t a valid digit for this input.'; return; } }
+    if(mode==='bin2dec'){ if(raw.length>16){ errEl.textContent='Keep it to 16 bits or fewer for a readable walkthrough.'; return; } steps=sBinToDec(raw); }
+    else if(mode==='dec2bin'){ var n=parseInt(raw,10); if(n>4095){ errEl.textContent='Try a value of 4095 or less.'; return; } steps=sDecToBin(n); }
+    else if(mode==='hex2bin'){ if(raw.length>4){ errEl.textContent='Keep it to 4 hex digits or fewer.'; return; } steps=sHexToBin(raw); }
+    else { if(raw.length>16){ errEl.textContent='Keep it to 16 bits or fewer.'; return; } steps=sBinToHex(raw); }
+    idx=0; renderSteps(); navWrap.style.display='flex';
+  }
+  function renderSteps(){
+    var html='';
+    for(var i=0;i<steps.length;i++){
+      var cls='stepitem'+(i<=idx?' shown':'')+(i===idx?' current':'');
+      html+='<div class="'+cls+'"><div class="slab">Step '+(i+1)+' · '+steps[i].lab+'</div><div class="stxt">'+steps[i].txt+'</div></div>';
+    }
+    list.innerHTML=html;
+    counter.textContent='Step '+(idx+1)+' of '+steps.length;
+    document.getElementById('lPrev').disabled=(idx===0);
+    document.getElementById('lNext').disabled=(idx===steps.length-1);
+    var cur=list.children[idx]; if(cur) cur.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+  function next(){ if(idx<steps.length-1){ idx++; renderSteps(); } }
+  function prev(){ if(idx>0){ idx--; renderSteps(); } }
+  function play(){
+    if(idx>=steps.length-1) idx=-1;
+    document.getElementById('lPlay').textContent='⏸ Pause';
+    timer=setInterval(function(){ if(idx>=steps.length-1){ stopPlay(); return; } next(); }, 1200);
+  }
+  function stopPlay(){ if(timer){ clearInterval(timer); timer=null; } var b=document.getElementById('lPlay'); if(b) b.textContent='▶ Play'; }
+
+  document.getElementById('lBuild').addEventListener('click',build);
+  document.getElementById('lRand').addEventListener('click',function(){ randomize(); build(); });
+  document.getElementById('lNext').addEventListener('click',function(){ stopPlay(); next(); });
+  document.getElementById('lPrev').addEventListener('click',function(){ stopPlay(); prev(); });
+  document.getElementById('lPlay').addEventListener('click',function(){ if(timer) stopPlay(); else play(); });
+  modeEl.addEventListener('change',function(){ setLabel(); list.innerHTML=''; navWrap.style.display='none'; errEl.textContent=''; stopPlay(); });
+  inputEl.addEventListener('keydown',function(ev){ if(ev.key==='Enter') build(); });
+  setLabel(); randomize(); build();
+})();
+
+/* ===== table-of-contents scrollspy ===== */
+(function(){
+  var links=Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map={};
+  links.forEach(function(a){ var id=a.getAttribute('href').slice(1); var sec=document.getElementById(id); if(sec) map[id]=a; });
+  var sections=Object.keys(map).map(function(id){ return document.getElementById(id); });
+  function setActive(id){ links.forEach(function(a){ a.classList.remove('active'); }); if(map[id]) map[id].classList.add('active'); }
+  if('IntersectionObserver' in window){
+    var visible={};
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ visible[en.target.id]=en.isIntersecting?en.intersectionRatio:0; });
+      var best=null,bestR=0;
+      sections.forEach(function(s){ var r=visible[s.id]||0; if(r>bestR){ bestR=r; best=s.id; } });
+      if(best) setActive(best);
+    }, {rootMargin:'-15% 0px -70% 0px', threshold:[0,0.25,0.5,1]});
+    sections.forEach(function(s){ obs.observe(s); });
+  } else {
+    window.addEventListener('scroll',function(){
+      var top=window.scrollY+120, current=sections[0].id;
+      sections.forEach(function(s){ if(s.offsetTop<=top) current=s.id; });
+      setActive(current);
+    });
+  }
+  setActive(sections[0].id);
+})();
+</script>
+</body>
+</html>
