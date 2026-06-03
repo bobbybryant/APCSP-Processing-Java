@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Functions in Processing — AP CSP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf0;
+  --ink:#26323d;
+  --ink-soft:#5a6976;
+  --red:#c0392b;          /* teacher's red pen */
+  --blue:#2563a6;
+  --sky:#6ab0de;
+  --green:#2e7d4f;
+  --amber:#b0701f;
+  --magenta:#9b2d6e;
+  --grid-fine:rgba(45,106,159,.10);
+  --grid-bold:rgba(45,106,159,.18);
+  --highlight:#fff39e;
+  --card:#fffdf6;
+  --line-strong:#d7d2bd;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"DM Sans",sans-serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-bold) 1px, transparent 1px);
+  background-size:25px 25px, 25px 25px, 125px 125px, 125px 125px;
+  line-height:1.6;
+  padding-bottom:120px;
+}
+
+/* ---------- fixed left table of contents ---------- */
+.toc{
+  position:fixed;left:0;top:0;width:248px;height:100vh;
+  background:rgba(251,250,240,.94);
+  border-right:2px solid var(--line-strong);
+  box-shadow:2px 0 0 rgba(38,50,61,.04);
+  padding:30px 22px;overflow-y:auto;z-index:20;
+}
+.toc .toc-brand{
+  font-family:"Fraunces",serif;font-weight:700;font-size:21px;line-height:1.1;
+  color:var(--ink);margin-bottom:2px;
+}
+.toc .toc-brand .dot{color:var(--red);}
+.toc .toc-sub{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:22px;}
+.toc a{
+  display:block;text-decoration:none;color:var(--ink-soft);
+  font-size:14px;font-weight:500;padding:8px 12px;margin:3px 0;
+  border-radius:6px;border-left:3px solid transparent;transition:.13s;
+}
+.toc a .tnum{font-family:"JetBrains Mono",monospace;font-size:11px;color:#b9b49c;margin-right:8px;font-weight:700;}
+.toc a:hover{background:#f0eedd;color:var(--ink);}
+.toc a.active{background:#fff;color:var(--ink);border-left-color:var(--red);font-weight:700;box-shadow:1px 1px 0 rgba(38,50,61,.08);}
+.toc a.active .tnum{color:var(--red);}
+.toc .toc-foot{margin-top:26px;font-family:"Caveat",cursive;font-size:19px;color:var(--ink-soft);transform:rotate(-2deg);}
+
+.content{margin-left:248px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 40px;}
+section{scroll-margin-top:24px;}
+
+/* ---------- header ---------- */
+header.hero{
+  text-align:center;
+  padding:64px 0 28px;
+  position:relative;
+}
+.eyebrow{
+  font-family:"JetBrains Mono",monospace;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  font-size:12px;
+  color:var(--blue);
+  font-weight:700;
+}
+h1{
+  font-family:"Fraunces",serif;
+  font-weight:700;
+  font-size:60px;
+  line-height:1.02;
+  margin:14px 0 10px;
+  color:var(--ink);
+}
+h1 .accent{color:var(--red);font-style:italic;}
+.subtitle{
+  font-size:19px;color:var(--ink-soft);max-width:620px;margin:0 auto;
+}
+.margin-note{
+  font-family:"Caveat",cursive;
+  font-size:25px;
+  color:var(--red);
+  transform:rotate(-3deg);
+  display:inline-block;
+}
+
+/* ---------- section ---------- */
+section{margin:54px 0;}
+.section-tag{
+  display:inline-block;
+  font-family:"JetBrains Mono",monospace;
+  font-size:12.5px;font-weight:700;letter-spacing:.12em;
+  color:#fff;background:var(--ink);
+  padding:5px 12px;border-radius:3px 12px 3px 12px;
+  margin-bottom:14px;
+}
+h2{
+  font-family:"Fraunces",serif;font-weight:600;
+  font-size:34px;line-height:1.15;margin:6px 0 8px;
+}
+h3{font-family:"Fraunces",serif;font-weight:600;font-size:22px;margin:22px 0 6px;}
+p{margin:10px 0;}
+.lead{font-size:18px;}
+.hl{background:linear-gradient(transparent 55%, var(--highlight) 55%);padding:0 2px;font-weight:600;}
+code.inline{
+  font-family:"JetBrains Mono",monospace;font-size:.9em;
+  background:#f0eedd;border:1px solid var(--line-strong);
+  border-radius:4px;padding:1px 6px;color:var(--ink);
+}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--card);
+  border:1.5px solid var(--line-strong);
+  border-radius:10px;
+  padding:24px 26px;
+  box-shadow:3px 4px 0 rgba(38,50,61,.06);
+  margin:18px 0;
+}
+.callout{
+  border-left:6px solid var(--red);
+  background:#fff6f4;
+  padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;
+}
+.callout.blue{border-left-color:var(--blue);background:#f1f7fc;}
+.callout.green{border-left-color:var(--green);background:#f1faf3;}
+.callout b{color:var(--red);}
+.callout.blue b{color:var(--blue);}
+.callout.green b{color:var(--green);}
+
+/* ---------- code blocks ---------- */
+pre{
+  margin:14px 0;background:#fcfbf3;border:1.5px solid var(--line-strong);
+  border-left:5px solid #e9b3ab;border-radius:8px;
+  padding:16px 18px 16px 20px;overflow-x:auto;position:relative;
+}
+pre code{font-family:"JetBrains Mono",monospace;font-size:14px;line-height:1.7;white-space:pre;display:block;}
+.t-com{color:#7d9b6e;font-style:italic;}
+.t-type{color:var(--red);font-weight:700;}
+.t-kw{color:var(--magenta);font-weight:700;}
+.t-builtin{color:var(--blue);}
+.t-fn{color:var(--amber);font-weight:700;}
+.t-num{color:var(--green);}
+.t-str{color:var(--green);}
+.t-var{color:var(--ink);}
+
+/* ---------- layout helpers ---------- */
+.demo{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;}
+.demo .stage{display:flex;flex-direction:column;align-items:center;gap:10px;}
+canvas{border-radius:8px;border:2px solid var(--ink);background:#fff;display:block;}
+.caption{font-family:"Caveat",cursive;font-size:20px;color:var(--ink-soft);}
+
+/* ---------- anatomy ---------- */
+.anatomy{
+  font-family:"JetBrains Mono",monospace;font-size:25px;font-weight:700;
+  text-align:center;padding:30px 10px 12px;letter-spacing:.5px;
+}
+.anatomy .part{position:relative;padding:2px 4px;border-radius:4px;cursor:default;transition:.15s;}
+.anatomy .p-ret{color:var(--red);}
+.anatomy .p-name{color:var(--amber);}
+.anatomy .p-param{color:var(--blue);}
+.anatomy .p-body{color:var(--ink-soft);}
+.anatomy .part:hover{background:var(--highlight);}
+.legend{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px;}
+.legend div{font-size:13.5px;border-top:3px solid;padding-top:8px;}
+.legend .l-ret{border-color:var(--red);}
+.legend .l-name{border-color:var(--amber);}
+.legend .l-param{border-color:var(--blue);}
+.legend .l-body{border-color:var(--ink-soft);}
+.legend b{display:block;font-family:"JetBrains Mono",monospace;font-size:13px;margin-bottom:2px;}
+
+/* ---------- controls ---------- */
+.controls{display:flex;flex-direction:column;gap:14px;}
+.ctrl-row{display:flex;align-items:center;gap:12px;}
+.ctrl-row label{font-family:"JetBrains Mono",monospace;font-size:13px;width:54px;color:var(--ink);font-weight:700;}
+input[type=range]{flex:1;accent-color:var(--blue);}
+.val{font-family:"JetBrains Mono",monospace;font-weight:700;color:var(--blue);width:46px;text-align:right;}
+.btn{
+  font-family:"DM Sans",sans-serif;font-weight:700;font-size:14px;
+  border:2px solid var(--ink);background:var(--ink);color:#fff;
+  border-radius:7px;padding:9px 16px;cursor:pointer;transition:.12s;
+}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(38,50,61,.25);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn.red{background:var(--red);border-color:var(--red);}
+.btn:active{transform:translate(0,0);box-shadow:none;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* generated call log */
+.callcode{
+  font-family:"JetBrains Mono",monospace;font-size:13.5px;
+  background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:8px;
+  padding:14px 16px;min-height:120px;line-height:1.8;
+}
+.callcode .muted{color:var(--ink-soft);}
+.callcode .added{color:var(--amber);font-weight:700;}
+
+/* return demo */
+.retout{font-family:"JetBrains Mono",monospace;font-size:15px;margin-top:8px;}
+.retout .badge{
+  background:var(--green);color:#fff;border-radius:20px;padding:3px 12px;
+  font-weight:700;display:inline-block;
+}
+.bartrack{height:34px;background:#f0eedd;border:1.5px solid var(--line-strong);border-radius:6px;margin-top:14px;overflow:hidden;}
+.barfill{height:100%;background:linear-gradient(90deg,var(--sky),var(--blue));width:0;transition:width .35s cubic-bezier(.2,.9,.3,1);}
+.console{
+  font-family:"JetBrains Mono",monospace;font-size:13.5px;
+  background:#1f2730;color:#e9e6d6;border-radius:8px;padding:12px 14px;
+  border:1.5px solid #11171d;
+}
+.console .cprompt{color:var(--sky);font-weight:700;margin-right:8px;}
+.console #consoleVal{color:#ffd27a;font-weight:700;}
+
+/* ---------- order of execution stepper ---------- */
+.stepper{display:grid;grid-template-columns:1.15fr .85fr;gap:20px;}
+.codepanel{
+  font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.65;
+  background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:8px;
+  padding:10px 0;overflow:hidden;
+}
+.codeline{display:flex;padding:1px 14px;white-space:pre;transition:background .15s;}
+.codeline .ln{color:#b9b49c;width:26px;display:inline-block;text-align:right;margin-right:14px;user-select:none;}
+.codeline.active{background:var(--highlight);box-shadow:inset 4px 0 0 var(--red);}
+.codeline.defhint{background:rgba(37,99,166,.10);}
+.right-col{display:flex;flex-direction:column;gap:14px;}
+.panel-title{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+.stack{min-height:120px;display:flex;flex-direction:column-reverse;gap:5px;justify-content:flex-end;}
+.frame{
+  font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700;
+  border:1.5px solid var(--blue);background:#eaf3fb;color:var(--blue);
+  border-radius:6px;padding:7px 12px;animation:pop .2s ease;
+}
+.frame.base{border-color:var(--ink);background:#eee;color:var(--ink);}
+@keyframes pop{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+.log{
+  font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.55;
+  background:#26323d;color:#e9e6d6;border-radius:8px;padding:12px 14px;
+  height:150px;overflow-y:auto;
+}
+.log div{margin-bottom:5px;}
+.log .step-n{color:var(--sky);}
+.order-stage{display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:6px;}
+
+/* ---------- quiz ---------- */
+.quiz .q{margin:18px 0;padding:20px 22px;background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;}
+.quiz .qtext{font-weight:700;font-size:17px;margin-bottom:12px;}
+.quiz .qtext .num{color:var(--red);font-family:"Fraunces",serif;margin-right:8px;}
+.opt{
+  display:block;width:100%;text-align:left;font-family:"DM Sans",sans-serif;
+  font-size:15px;border:1.5px solid var(--line-strong);background:#fff;
+  border-radius:7px;padding:11px 14px;margin:7px 0;cursor:pointer;transition:.12s;
+}
+.opt:hover{border-color:var(--ink);}
+.opt code{font-family:"JetBrains Mono",monospace;font-size:13.5px;}
+.opt.correct{background:#e7f7ec;border-color:var(--green);color:var(--green);font-weight:700;}
+.opt.wrong{background:#fdecea;border-color:var(--red);color:var(--red);}
+.opt.disabled{pointer-events:none;opacity:.65;}
+.explain{margin-top:10px;font-size:14px;color:var(--ink-soft);display:none;border-top:1px dashed var(--line-strong);padding-top:10px;}
+.explain.show{display:block;}
+.explain b{color:var(--green);}
+
+/* ---------- recipe card ---------- */
+.recipe{background:#26323d;color:#f3f1e3;border-radius:12px;padding:28px 30px;}
+.recipe h2{color:#fff;}
+.recipe .section-tag{background:var(--sky);color:#1b2730;}
+.recipe table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14.5px;}
+.recipe td,.recipe th{border:1px solid #44525e;padding:9px 12px;text-align:left;vertical-align:top;}
+.recipe th{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);}
+.recipe code{font-family:"JetBrains Mono",monospace;color:#ffd27a;}
+
+footer{text-align:center;color:var(--ink-soft);font-family:"Caveat",cursive;font-size:22px;margin-top:50px;}
+.divider{height:2px;background:repeating-linear-gradient(90deg,var(--line-strong),var(--line-strong) 8px,transparent 8px,transparent 16px);margin:8px 0;}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <div class="toc-brand">Functions<span class="dot">.</span></div>
+  <div class="toc-sub">AP CSP · Processing</div>
+  <a href="#s1"><span class="tnum">01</span>The big shift</a>
+  <a href="#s2"><span class="tnum">02</span>Anatomy of a function</a>
+  <a href="#s3"><span class="tnum">03</span>No params, no return</a>
+  <a href="#s4"><span class="tnum">04</span>With parameters</a>
+  <a href="#s5"><span class="tnum">05</span>Return &amp; printing</a>
+  <a href="#s6"><span class="tnum">06</span>Order of execution</a>
+  <a href="#s7"><span class="tnum">07</span>Check understanding</a>
+  <a href="#s8"><span class="tnum">★</span>Cheat sheet</a>
+  <div class="toc-foot">jump anywhere ↑</div>
+</nav>
+
+<div class="content">
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">AP Computer Science Principles · Processing</div>
+    <h1>Functions <span class="accent">&amp;</span> the Anatomy of a Program</h1>
+    <p class="subtitle">A function is a named block of code that does one job. Once you learn them, <b>every</b> line of code you write will live inside one.</p>
+    <p style="margin-top:18px;"><span class="margin-note">no more loose code — it all goes in a function now! ✓</span></p>
+  </header>
+
+  <!-- ============ SECTION 1: THE NEW RULE ============ -->
+  <section id="s1">
+    <span class="section-tag">01 · THE BIG SHIFT</span>
+    <h2>Everything now lives inside a function</h2>
+    <p class="lead">Up to now you could write commands one after another and they'd just run. From here on, Processing needs your code organized into <span class="hl">functions</span>. The program always begins in a special function called <code class="inline">void setup()</code>.</p>
+
+    <div class="demo">
+      <div>
+        <p style="font-weight:700;color:var(--red);margin-top:0;">✗ Old way (loose code)</p>
+        <pre><code class="proc">size(400, 300);
+background(135, 206, 235);
+ellipse(200, 150, 80, 80);
+// floating commands — not allowed anymore</code></pre>
+      </div>
+      <div>
+        <p style="font-weight:700;color:var(--green);margin-top:0;">✓ New way (inside setup)</p>
+        <pre><code class="proc">void setup() {
+  size(400, 300);
+  background(135, 206, 235);
+  ellipse(200, 150, 80, 80);
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="callout blue">
+      <b>Where it all starts: setup().</b> <code class="inline">void setup()</code> is the special function Processing runs automatically when your sketch begins. It runs <b>once</b>, top to bottom — perfect for a drawing that's set up a single time. Every other function you write gets <b>called</b> from inside <code class="inline">setup()</code> (or from another function that <code class="inline">setup()</code> called).
+    </div>
+  </section>
+
+  <!-- ============ SECTION 2: ANATOMY ============ -->
+  <section id="s2">
+    <span class="section-tag">02 · ANATOMY</span>
+    <h2>The four parts of a function</h2>
+    <p>Every function you define has the same skeleton. Hover each piece to see what it does:</p>
+
+    <div class="card">
+      <div class="anatomy">
+        <span class="part p-ret" title="Return type">void</span>
+        <span class="part p-name" title="Name">drawCloud</span><span class="p-body">(</span><span class="part p-param" title="Parameters">float x, float y</span><span class="p-body">)</span>
+        <span class="part p-body" title="Body">{ ... }</span>
+      </div>
+      <div class="legend">
+        <div class="l-ret"><b>void</b> Return type — what the function gives back. <code class="inline">void</code> = nothing.</div>
+        <div class="l-name"><b>drawCloud</b> Name — how you call the function later.</div>
+        <div class="l-param"><b>(float x, float y)</b> Parameters — the inputs the function accepts.</div>
+        <div class="l-body"><b>{ ... }</b> Body — the actual job, run top to bottom.</div>
+      </div>
+    </div>
+    <p><span class="margin-note">return type · name · parameters · body</span></p>
+
+    <div class="callout green">
+      <b>The return type can be any of the 9 data types from the variables unit</b> — <code class="inline">int</code>, <code class="inline">float</code>, <code class="inline">double</code>, <code class="inline">boolean</code>, <code class="inline">char</code>, <code class="inline">String</code>, <code class="inline">byte</code>, <code class="inline">short</code>, <code class="inline">long</code> — plus <code class="inline">void</code>, for <b>10 total options</b>. The type you choose just has to match what the function actually hands back: a whole number → <code class="inline">int</code>, true or false → <code class="inline">boolean</code>, text → <code class="inline">String</code>, and so on. If it hands back nothing at all, that's <code class="inline">void</code>.
+    </div>
+
+    <h3>How to decide what kind of function you need</h3>
+    <p style="font-size:15px;color:var(--ink-soft);">Ask yourself two questions. Every possible answer leads to one of the four combinations covered in sections 03–05.</p>
+
+    <div class="card" style="padding:22px 16px 18px;">
+      <svg viewBox="0 0 760 490" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:760px;display:block;margin:0 auto;font-family:'DM Sans',sans-serif;">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#26323d"/>
+          </marker>
+          <marker id="arr-blue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#2563a6"/>
+          </marker>
+          <marker id="arr-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#2e7d4f"/>
+          </marker>
+        </defs>
+
+        <!-- ===== START ===== -->
+        <rect x="265" y="10" width="230" height="44" rx="22" fill="#26323d"/>
+        <text x="380" y="37" text-anchor="middle" fill="#fbfaf0" font-size="15" font-weight="700">Design your function</text>
+
+        <!-- Start → Q1 -->
+        <line x1="380" y1="54" x2="380" y2="71" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- ===== Q1: parameters? ===== -->
+        <polygon points="380,72 568,115 380,158 192,115" fill="#fffbf0" stroke="#b0701f" stroke-width="2.5"/>
+        <text x="380" y="108" text-anchor="middle" fill="#26323d" font-size="13.5" font-weight="600">Need different inputs</text>
+        <text x="380" y="127" text-anchor="middle" fill="#26323d" font-size="13.5" font-weight="600">each time it&#x2019;s called?</text>
+
+        <!-- Q1 NO: left to Q2-left -->
+        <polyline points="192,115 128,115 128,234" fill="none" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="104" y="100" width="38" height="22" rx="4" fill="#eaf3fb"/>
+        <text x="123" y="115" text-anchor="middle" fill="#2563a6" font-size="13" font-weight="700">NO</text>
+
+        <!-- Q1 YES: right to Q2-right -->
+        <polyline points="568,115 612,115 612,234" fill="none" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="590" y="100" width="44" height="22" rx="4" fill="#fef0ef"/>
+        <text x="612" y="115" text-anchor="middle" fill="#c0392b" font-size="13" font-weight="700">YES</text>
+
+        <!-- ===== Q2-LEFT: return value? ===== -->
+        <polygon points="128,235 244,270 128,305 12,270" fill="#eaf3fb" stroke="#2563a6" stroke-width="2"/>
+        <text x="128" y="264" text-anchor="middle" fill="#1a2b3c" font-size="12.5" font-weight="600">Hand a value</text>
+        <text x="128" y="280" text-anchor="middle" fill="#1a2b3c" font-size="12.5" font-weight="600">back to caller?</text>
+
+        <!-- Q2-left NO: straight down → Out1 -->
+        <line x1="128" y1="305" x2="128" y2="361" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="104" y="316" width="38" height="22" rx="4" fill="#eaf3fb"/>
+        <text x="123" y="331" text-anchor="middle" fill="#2563a6" font-size="13" font-weight="700">NO</text>
+
+        <!-- Q2-left YES: right then down → Out2 -->
+        <polyline points="244,270 282,270 282,361" fill="none" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="256" y="256" width="44" height="22" rx="4" fill="#e7f7ec"/>
+        <text x="278" y="271" text-anchor="middle" fill="#2e7d4f" font-size="13" font-weight="700">YES</text>
+
+        <!-- ===== Q2-RIGHT: return value? ===== -->
+        <polygon points="612,235 718,270 612,305 506,270" fill="#fef0ef" stroke="#c0392b" stroke-width="2"/>
+        <text x="612" y="264" text-anchor="middle" fill="#1a2b3c" font-size="12.5" font-weight="600">Hand a value</text>
+        <text x="612" y="280" text-anchor="middle" fill="#1a2b3c" font-size="12.5" font-weight="600">back to caller?</text>
+
+        <!-- Q2-right NO: left then down → Out3 -->
+        <polyline points="506,270 450,270 450,361" fill="none" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="462" y="256" width="38" height="22" rx="4" fill="#eaf3fb"/>
+        <text x="481" y="271" text-anchor="middle" fill="#2563a6" font-size="13" font-weight="700">NO</text>
+
+        <!-- Q2-right YES: straight down → Out4 -->
+        <line x1="612" y1="305" x2="612" y2="361" stroke="#26323d" stroke-width="2" marker-end="url(#arr)"/>
+        <rect x="590" y="316" width="44" height="22" rx="4" fill="#e7f7ec"/>
+        <text x="612" y="331" text-anchor="middle" fill="#2e7d4f" font-size="13" font-weight="700">YES</text>
+
+        <!-- ===== OUTCOME 1: no params, void ===== -->
+        <rect x="60" y="362" width="136" height="112" rx="9" fill="#eaf3fb" stroke="#2563a6" stroke-width="2.5"/>
+        <text x="128" y="385" text-anchor="middle" fill="#2563a6" font-size="13.5" font-weight="700" font-family="'JetBrains Mono',monospace">void name()</text>
+        <line x1="74" y1="393" x2="182" y2="393" stroke="#2563a6" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <text x="128" y="412" text-anchor="middle" fill="#26323d" font-size="12">no parameters</text>
+        <text x="128" y="428" text-anchor="middle" fill="#26323d" font-size="12">no return value</text>
+        <text x="128" y="447" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">e.g. drawSun()</text>
+        <text x="128" y="462" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">→ see section 03</text>
+
+        <!-- ===== OUTCOME 2: no params, returns ===== -->
+        <rect x="214" y="362" width="136" height="112" rx="9" fill="#e7f7ec" stroke="#2e7d4f" stroke-width="2.5"/>
+        <text x="282" y="385" text-anchor="middle" fill="#2e7d4f" font-size="13.5" font-weight="700" font-family="'JetBrains Mono',monospace">type name()</text>
+        <line x1="228" y1="393" x2="336" y2="393" stroke="#2e7d4f" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <text x="282" y="412" text-anchor="middle" fill="#26323d" font-size="12">no parameters</text>
+        <text x="282" y="428" text-anchor="middle" fill="#26323d" font-size="12">returns a value</text>
+        <text x="282" y="447" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">e.g. int count()</text>
+        <text x="282" y="462" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">→ see section 05</text>
+
+        <!-- ===== OUTCOME 3: params, void ===== -->
+        <rect x="382" y="362" width="136" height="112" rx="9" fill="#fdf3e3" stroke="#b0701f" stroke-width="2.5"/>
+        <text x="450" y="385" text-anchor="middle" fill="#b0701f" font-size="12.5" font-weight="700" font-family="'JetBrains Mono',monospace">void name(p)</text>
+        <line x1="396" y1="393" x2="504" y2="393" stroke="#b0701f" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <text x="450" y="412" text-anchor="middle" fill="#26323d" font-size="12">has parameters</text>
+        <text x="450" y="428" text-anchor="middle" fill="#26323d" font-size="12">no return value</text>
+        <text x="450" y="447" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">e.g. drawCloud(x,y)</text>
+        <text x="450" y="462" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">→ see section 04</text>
+
+        <!-- ===== OUTCOME 4: params, returns ===== -->
+        <rect x="544" y="362" width="136" height="112" rx="9" fill="#fef0ef" stroke="#c0392b" stroke-width="2.5"/>
+        <text x="612" y="385" text-anchor="middle" fill="#c0392b" font-size="12.5" font-weight="700" font-family="'JetBrains Mono',monospace">type name(p)</text>
+        <line x1="558" y1="393" x2="666" y2="393" stroke="#c0392b" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+        <text x="612" y="412" text-anchor="middle" fill="#26323d" font-size="12">has parameters</text>
+        <text x="612" y="428" text-anchor="middle" fill="#26323d" font-size="12">returns a value</text>
+        <text x="612" y="447" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">e.g. addScores(a,b)</text>
+        <text x="612" y="462" text-anchor="middle" fill="#5a6976" font-size="11" font-style="italic">→ see section 05</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 3: NO PARAMS, NO RETURN ============ -->
+  <section id="s3">
+    <span class="section-tag">03 · NO PARAMETERS, NO RETURN</span>
+    <h2>The simplest function: just do a job</h2>
+    <p>Some functions take no inputs and give nothing back — they just <b>do something</b>, like draw a fixed shape. Because it has no parameters, <code class="inline">drawSun()</code> always draws the <b>exact same sun</b> in the <b>exact same spot</b> every time you call it.</p>
+
+    <div class="demo">
+      <div>
+        <pre><code class="proc">void drawSun() {
+  fill(255, 214, 10);   // yellow
+  noStroke();           // no border
+  ellipse(230, 60, 80, 80);
+}
+
+void setup() {
+  size(300, 220);
+  background(135, 206, 235);
+  drawSun();   // call it by name
+}</code></pre>
+        <p style="font-size:14px;color:var(--ink-soft);">To <b>call</b> a function, write its name followed by <code class="inline">();</code>. No parameters means nothing goes in the parentheses.</p>
+      </div>
+      <div class="stage">
+        <canvas id="sunCanvas"></canvas>
+        <span class="caption">drawSun() — same result every time</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 4: WITH PARAMETERS (drawCloud) ============ -->
+  <section id="s4">
+    <span class="section-tag">04 · WITH PARAMETERS</span>
+    <h2>Parameters let one function do many things</h2>
+    <p class="lead">Our class example: <code class="inline">drawCloud(x, y)</code> draws <span class="hl">7 white circles with no border</span> to make a single fluffy cloud — placed <b>wherever you ask</b>. The 7 circles are positioned <i>relative</i> to <code class="inline">x</code> and <code class="inline">y</code>, so changing the inputs slides the whole cloud.</p>
+
+    <div class="card">
+      <pre><code class="proc">void drawCloud(float x, float y) {
+  fill(255);          // white
+  noStroke();         // no border on any circle
+  circle(x,      y,      44);   // center puff
+  circle(x - 30, y + 6,  36);   // left
+  circle(x + 30, y + 6,  36);   // right
+  circle(x - 15, y - 12, 40);   // top-left
+  circle(x + 15, y - 12, 40);   // top-right
+  circle(x - 48, y + 9,  28);   // far left
+  circle(x + 48, y + 9,  28);   // far right
+}</code></pre>
+      <p style="font-size:14px;color:var(--ink-soft);margin:8px 2px 0;"><code class="inline">circle(x, y, d)</code> is the shortcut for a perfect circle: center <code class="inline">(x, y)</code> and a single <b>diameter</b> <code class="inline">d</code> — no need to repeat width and height like <code class="inline">ellipse</code>.</p>
+    </div>
+
+    <h3>Try it: move the cloud, then stamp copies into the sky</h3>
+    <div class="demo">
+      <div class="controls">
+        <div class="ctrl-row"><label>x =</label><input type="range" id="cloudX" min="60" max="460" value="140"><span class="val" id="cloudXv">140</span></div>
+        <div class="ctrl-row"><label>y =</label><input type="range" id="cloudY" min="40" max="220" value="90"><span class="val" id="cloudYv">90</span></div>
+        <p style="font-size:14px;color:var(--ink-soft);margin:4px 0;">Drag the sliders (or click the sky) to choose a spot, then add the cloud. Each click is one <b>call</b> to the same function with different <b>arguments</b>.</p>
+        <div class="btnrow">
+          <button class="btn" id="addCloud">+ Add this cloud</button>
+          <button class="btn red ghost" id="resetCloud" style="background:#fff;color:var(--red);">Reset sky</button>
+        </div>
+        <div>
+          <div class="panel-title">What setup() now contains:</div>
+          <div class="callcode" id="cloudCalls"><span class="muted">void setup() {</span><br><span class="muted">&nbsp;&nbsp;size(520, 300);</span><br><span class="muted">&nbsp;&nbsp;background(135, 206, 235);</span><br><span class="muted">}</span></div>
+        </div>
+      </div>
+      <div class="stage">
+        <canvas id="cloudCanvas"></canvas>
+        <span class="caption">the dashed cloud is your preview — click to place!</span>
+      </div>
+    </div>
+    <div class="callout green">
+      <b>Defining vs. calling.</b> You <b>define</b> a function once (with its types and parameters). You can <b>call</b> it as many times as you like — and each call can pass different arguments: <code class="inline">drawCloud(90, 80);</code> then <code class="inline">drawCloud(250, 60);</code>.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 5: RETURN TYPES ============ -->
+  <section id="s5">
+    <span class="section-tag">05 · RETURN TYPES</span>
+    <h2>When a function hands a value back</h2>
+    <p><code class="inline">void</code> functions <b>do</b> something (like draw). But sometimes you want a function to <b>compute and hand back</b> an answer. That's what a <span class="hl">return type</span> is for. Instead of <code class="inline">void</code>, you write the type of value it returns, and you use the <code class="inline">return</code> keyword inside.</p>
+
+    <div class="demo">
+      <div>
+        <pre><code class="proc">int addScores(int a, int b) {
+  return a + b;   // hands back the total
+}
+
+void setup() {
+  int total = addScores(7, 5);
+  println("Total is now: " + total);   // → Total is now: 12
+}</code></pre>
+        <p style="font-size:14px;color:var(--ink-soft);">The returned value can be stored in a variable, printed, or used right away. Here we feed the total straight into a bar's width — and print it so we can see it.</p>
+      </div>
+      <div>
+        <div class="controls">
+          <div class="ctrl-row"><label>a =</label><input type="range" id="addA" min="0" max="10" value="7"><span class="val" id="addAv">7</span></div>
+          <div class="ctrl-row"><label>b =</label><input type="range" id="addB" min="0" max="10" value="5"><span class="val" id="addBv">5</span></div>
+          <div class="retout">
+            <span id="retCall">addScores(7, 5)</span> &nbsp;→&nbsp; <span class="badge" id="retVal">returns 12</span>
+          </div>
+          <div class="bartrack"><div class="barfill" id="bar"></div></div>
+          <p style="font-size:13.5px;color:var(--ink-soft);margin:8px 0 4px;"><b>Bar width</b> = the value handed back by <code class="inline">addScores</code>.</p>
+          <div class="panel-title" style="margin-top:10px;">Processing console</div>
+          <div class="console"><span class="cprompt">&gt;</span> Total is now: <span id="consoleVal">12</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Printing to the console: <code class="inline">print</code> and <code class="inline">println</code></h3>
+    <p><code class="inline">println(...)</code> writes text to the <b>console</b> — the message area at the bottom of the Processing editor, separate from your drawing. It's how your program talks back to you. <code class="inline">print(...)</code> does the same thing but <b>stays on the same line</b>; <code class="inline">println</code> adds a line break after it, so each message lands on its own line. You'll reach for <code class="inline">println</code> most of the time.</p>
+
+    <pre><code class="proc">print("Score: ");
+println(42);          // Score: 42   (print stays put, then println ends the line)
+println("Hello!");    // Hello!      (its own line)</code></pre>
+
+    <p>The real reason we lean on it: <span class="hl">debugging</span>. When a result looks wrong, printing a value shows what your program is <i>actually</i> working with instead of you guessing. A great use is checking what a function handed back:</p>
+
+    <pre><code class="proc">int total = addScores(7, 5);
+println(total);             // 12  — confirms what came back
+
+// or test a function call directly, without even storing it:
+println(addScores(10, 4));  // 14</code></pre>
+
+    <p>You can also drop a <code class="inline">println</code> <b>inside</b> a function to watch the values flowing through it while you test:</p>
+
+    <pre><code class="proc">int addScores(int a, int b) {
+  println("addScores got a=" + a + ", b=" + b);  // peek at the inputs
+  return a + b;
+}</code></pre>
+    <p style="font-size:14px;color:var(--ink-soft);">Now the console prints something like <code class="inline">addScores got a=7, b=5</code> every time the function runs — instant proof of the inputs it received. Once everything works, you delete the debug line.</p>
+
+    <div class="callout">
+      <b>void vs. a return type.</b> Use <code class="inline">void</code> when the function's job is to <b>act</b> (draw, print, move). Give it a real type (<code class="inline">int</code>, <code class="inline">float</code>, <code class="inline">boolean</code>, <code class="inline">String</code>…) when its job is to <b>calculate and return</b> an answer. A non-void function <b>must</b> use the <code class="inline">return</code> keyword.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 6: ORDER OF EXECUTION ============ -->
+  <section id="s6">
+    <span class="section-tag">06 · ORDER OF EXECUTION ★</span>
+    <h2>Where functions live vs. when they run</h2>
+    <p class="lead">This trips everyone up: a function's <b>position in your file does not decide when it runs</b>. You can define functions above, below, or anywhere around <code class="inline">setup()</code>. Processing reads them all, but nothing happens until a function is <b>called by name</b>. Then execution jumps in, runs that body <span class="hl">top to bottom</span>, returns to where it left off, and continues.</p>
+
+    <p style="font-size:14.5px;color:var(--ink-soft);">Notice below: <code class="inline">drawSky()</code> is defined <b>above</b> setup, and <code class="inline">drawSun()</code> / <code class="inline">drawCloud()</code> are defined <b>below</b> it — yet the screen fills in the order they're <b>called</b>. Press <b>Step</b> (or <b>Play</b>) and watch.</p>
+
+    <div class="stepper">
+      <div>
+        <div class="panel-title">The program</div>
+        <div class="codepanel" id="codePanel"></div>
+        <div class="btnrow" style="margin-top:12px;">
+          <button class="btn" id="playBtn">▶ Play</button>
+          <button class="btn ghost" id="stepBtn">⏭ Step</button>
+          <button class="btn ghost" id="resetBtn">↺ Reset</button>
+        </div>
+      </div>
+      <div class="right-col">
+        <div>
+          <div class="panel-title">Call stack (who is running now)</div>
+          <div class="stack" id="stack"></div>
+        </div>
+        <div class="order-stage">
+          <canvas id="orderCanvas"></canvas>
+        </div>
+        <div>
+          <div class="panel-title">Execution trace</div>
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout blue" style="margin-top:22px;">
+      <b>The mental model.</b> Definitions can be anywhere. <code class="inline">setup()</code> runs top to bottom. Each call <b>jumps</b> into the named function, runs it fully, then comes <b>back</b> to the next line. Calling <code class="inline">drawCloud(90, 80)</code> and then <code class="inline">drawCloud(250, 60)</code> runs the <b>same</b> body twice with different inputs.
+    </div>
+  </section>
+
+  <!-- ============ SECTION 7: QUIZ ============ -->
+  <section class="quiz" id="s7">
+    <span class="section-tag">07 · CHECK YOUR UNDERSTANDING</span>
+    <h2>Quick check</h2>
+    <p>Tap an answer. You'll get instant feedback and a short explanation.</p>
+    <div id="quiz"></div>
+  </section>
+
+  <!-- ============ RECIPE CARD ============ -->
+  <section id="s8">
+    <div class="card recipe">
+      <span class="section-tag">CHEAT SHEET</span>
+      <h2>The function recipe</h2>
+      <table>
+        <tr><th>Goal</th><th>Pattern</th><th>How you call it</th></tr>
+        <tr>
+          <td>Do a job, no inputs</td>
+          <td><code>void drawSun() { ... }</code></td>
+          <td><code>drawSun();</code></td>
+        </tr>
+        <tr>
+          <td>Do a job with inputs</td>
+          <td><code>void drawCloud(float x, float y) { ... }</code></td>
+          <td><code>drawCloud(90, 80);</code></td>
+        </tr>
+        <tr>
+          <td>Compute &amp; return a value</td>
+          <td><code>int addScores(int a, int b) { return a + b; }</code></td>
+          <td><code>int total = addScores(7, 5);</code></td>
+        </tr>
+        <tr>
+          <td>Start the program</td>
+          <td><code>void setup() { ... }</code></td>
+          <td>Processing calls it for you</td>
+        </tr>
+      </table>
+      <p style="margin-top:16px;color:#cfe4f3;font-size:14px;">Remember: <b>define</b> once, <b>call</b> as many times as you want, and code runs <b>top to bottom</b> from inside <code style="color:#ffd27a;">setup()</code>.</p>
+    </div>
+  </section>
+
+  <footer>made for our Processing unit — happy coding! ✎</footer>
+</div>
+</div>
+
+<script>
+/* ========================================================= */
+/*  Processing-like renderer (real Canvas drawing)           */
+/* ========================================================= */
+function Sketch(canvas, w, h){
+  canvas.style.width = w + "px";
+  canvas.style.height = h + "px";
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  var ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  var fillC = "#000", strokeC = "#000", useStroke = true, useFill = true, sw = 1;
+  function col(a, b, c){ return (b === undefined) ? "rgb("+a+","+a+","+a+")" : "rgb("+a+","+b+","+c+")"; }
+  return {
+    ctx: ctx, w: w, h: h,
+    clear: function(){ ctx.clearRect(0,0,w,h); },
+    background: function(a,b,c){ ctx.fillStyle = col(a,b,c); ctx.fillRect(0,0,w,h); },
+    fill: function(a,b,c){ fillC = col(a,b,c); useFill = true; },
+    noFill: function(){ useFill = false; },
+    stroke: function(a,b,c){ strokeC = col(a,b,c); useStroke = true; },
+    noStroke: function(){ useStroke = false; },
+    strokeWeight: function(v){ sw = v; },
+    ellipse: function(x,y,ew,eh){ ctx.beginPath(); ctx.ellipse(x,y,ew/2,eh/2,0,0,Math.PI*2); paint(); },
+    circle: function(x,y,d){ ctx.beginPath(); ctx.ellipse(x,y,d/2,d/2,0,0,Math.PI*2); paint(); },
+    rect: function(x,y,rw,rh){ ctx.beginPath(); ctx.rect(x,y,rw,rh); paint(); },
+    line: function(x1,y1,x2,y2){ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.strokeStyle=strokeC; ctx.lineWidth=sw; ctx.stroke(); },
+    dashedEllipse: function(x,y,ew,eh){ ctx.save(); ctx.setLineDash([6,5]); ctx.beginPath(); ctx.ellipse(x,y,ew/2,eh/2,0,0,Math.PI*2); ctx.strokeStyle=strokeC; ctx.lineWidth=sw; ctx.stroke(); ctx.restore(); }
+  };
+  function paint(){
+    if(useFill){ ctx.fillStyle = fillC; ctx.fill(); }
+    if(useStroke){ ctx.strokeStyle = strokeC; ctx.lineWidth = sw; ctx.stroke(); }
+  }
+}
+
+/* The cloud — 7 white, no-border circles, matching the shown code */
+function drawCloud(sk, x, y){
+  sk.fill(255);
+  sk.noStroke();
+  sk.circle(x,      y,      44);
+  sk.circle(x - 30, y + 6,  36);
+  sk.circle(x + 30, y + 6,  36);
+  sk.circle(x - 15, y - 12, 40);
+  sk.circle(x + 15, y - 12, 40);
+  sk.circle(x - 48, y + 9,  28);
+  sk.circle(x + 48, y + 9,  28);
+}
+function drawSun(sk, cx, cy){
+  if(cx === undefined){ cx = 230; cy = 60; }
+  sk.fill(255, 214, 10);
+  sk.noStroke();
+  sk.ellipse(cx, cy, 80, 80);
+  sk.fill(255, 234, 120);
+  sk.ellipse(cx, cy, 50, 50);
+}
+
+/* ========================================================= */
+/*  Section 3: drawSun                                       */
+/* ========================================================= */
+(function(){
+  var sk = Sketch(document.getElementById("sunCanvas"), 300, 220);
+  sk.background(135, 206, 235);
+  drawSun(sk);
+})();
+
+/* ========================================================= */
+/*  Section 4: drawCloud playground                          */
+/* ========================================================= */
+(function(){
+  var cv = document.getElementById("cloudCanvas");
+  var sk = Sketch(cv, 520, 300);
+  var xEl = document.getElementById("cloudX"), yEl = document.getElementById("cloudY");
+  var xv = document.getElementById("cloudXv"), yv = document.getElementById("cloudYv");
+  var calls = [];
+
+  function render(){
+    sk.background(135, 206, 235);
+    drawSun(sk, 470, 50);
+    for(var i=0;i<calls.length;i++){ drawCloud(sk, calls[i][0], calls[i][1]); }
+    // preview (dashed)
+    var px = +xEl.value, py = +yEl.value;
+    sk.stroke(80, 90, 100); sk.strokeWeight(2); sk.noFill();
+    sk.dashedEllipse(px, py, 120, 70);
+    sk.fill(255,255,255); sk.noStroke();
+    // faint preview cloud
+    sk.ctx.globalAlpha = 0.55; drawCloud(sk, px, py); sk.ctx.globalAlpha = 1;
+  }
+  function renderCalls(){
+    var html = '<span class="muted">void setup() {</span><br><span class="muted">&nbsp;&nbsp;size(520, 300);</span><br><span class="muted">&nbsp;&nbsp;background(135, 206, 235);</span><br>';
+    for(var i=0;i<calls.length;i++){
+      html += '<span class="added">&nbsp;&nbsp;drawCloud(' + calls[i][0] + ', ' + calls[i][1] + ');</span><br>';
+    }
+    html += '<span class="muted">}</span>';
+    document.getElementById("cloudCalls").innerHTML = html;
+  }
+  function update(){ xv.textContent = xEl.value; yv.textContent = yEl.value; render(); }
+  xEl.addEventListener("input", update);
+  yEl.addEventListener("input", update);
+  document.getElementById("addCloud").addEventListener("click", function(){
+    calls.push([+xEl.value, +yEl.value]); render(); renderCalls();
+  });
+  document.getElementById("resetCloud").addEventListener("click", function(){
+    calls = []; render(); renderCalls();
+  });
+  cv.addEventListener("click", function(e){
+    var r = cv.getBoundingClientRect();
+    var x = Math.round((e.clientX - r.left) / r.width * 520);
+    var y = Math.round((e.clientY - r.top) / r.height * 300);
+    x = Math.max(+xEl.min, Math.min(+xEl.max, x));
+    y = Math.max(+yEl.min, Math.min(+yEl.max, y));
+    xEl.value = x; yEl.value = y; xv.textContent = x; yv.textContent = y;
+    calls.push([x, y]); render(); renderCalls();
+  });
+  update();
+})();
+
+/* ========================================================= */
+/*  Section 5: return demo                                   */
+/* ========================================================= */
+(function(){
+  var aEl = document.getElementById("addA"), bEl = document.getElementById("addB");
+  var av = document.getElementById("addAv"), bv = document.getElementById("addBv");
+  var call = document.getElementById("retCall"), val = document.getElementById("retVal");
+  var bar = document.getElementById("bar");
+  var consoleVal = document.getElementById("consoleVal");
+  function update(){
+    var a = +aEl.value, b = +bEl.value, t = a + b;
+    av.textContent = a; bv.textContent = b;
+    call.textContent = "addScores(" + a + ", " + b + ")";
+    val.textContent = "returns " + t;
+    bar.style.width = (t / 20 * 100) + "%";
+    consoleVal.textContent = t;
+  }
+  aEl.addEventListener("input", update);
+  bEl.addEventListener("input", update);
+  update();
+})();
+
+/* ========================================================= */
+/*  Syntax highlighter for Processing                        */
+/* ========================================================= */
+(function(){
+  var KW = {"if":1,"else":1,"for":1,"while":1,"return":1,"true":1,"false":1,"new":1};
+  var TYPES = {"void":1,"int":1,"float":1,"double":1,"color":1,"boolean":1,"char":1,"String":1,"long":1,"byte":1};
+  var BUILTIN = {"setup":1,"draw":1,"size":1,"background":1,"fill":1,"noFill":1,"stroke":1,"noStroke":1,"strokeWeight":1,"ellipse":1,"circle":1,"rect":1,"line":1,"triangle":1,"point":1,"text":1,"textSize":1,"println":1,"print":1,"random":1,"frameRate":1,"noLoop":1};
+  function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function hl(code){
+    var out = "", i = 0, n = code.length;
+    while(i < n){
+      var c = code[i];
+      if(c === "/" && code[i+1] === "/"){ var j=i; while(j<n && code[j] !== "\n") j++; out += '<span class="t-com">'+esc(code.slice(i,j))+'</span>'; i=j; continue; }
+      if(c === '"'){ var j=i+1; while(j<n && code[j] !== '"'){ if(code[j]==="\\") j++; j++; } j=Math.min(n,j+1); out += '<span class="t-str">'+esc(code.slice(i,j))+'</span>'; i=j; continue; }
+      if(c >= "0" && c <= "9"){ var j=i; while(j<n && /[0-9.]/.test(code[j])) j++; out += '<span class="t-num">'+esc(code.slice(i,j))+'</span>'; i=j; continue; }
+      if(/[A-Za-z_]/.test(c)){
+        var j=i; while(j<n && /[A-Za-z0-9_]/.test(code[j])) j++;
+        var word = code.slice(i,j);
+        var k=j; while(k<n && /\s/.test(code[k])) k++;
+        var isCall = code[k] === "(";
+        var cls = "t-var";
+        if(TYPES[word]) cls = "t-type";
+        else if(KW[word]) cls = "t-kw";
+        else if(BUILTIN[word]) cls = "t-builtin";
+        else if(isCall) cls = "t-fn";
+        out += '<span class="'+cls+'">'+esc(word)+'</span>'; i=j; continue;
+      }
+      out += esc(c); i++;
+    }
+    return out;
+  }
+  var blocks = document.querySelectorAll("code.proc");
+  for(var b=0;b<blocks.length;b++){ blocks[b].innerHTML = hl(blocks[b].textContent); }
+})();
+
+/* ========================================================= */
+/*  Section 6: order of execution stepper                    */
+/* ========================================================= */
+(function(){
+  var src = [
+    "void drawSky() {            // \u2191 defined ABOVE setup",
+    "  background(135, 206, 235);",
+    "}",
+    "",
+    "void setup() {              // \u25B6 program starts here",
+    "  size(400, 260);",
+    "  drawSky();",
+    "  drawSun();",
+    "  drawCloud(90, 80);",
+    "  drawCloud(250, 60);",
+    "}",
+    "",
+    "void drawSun() {            // \u2193 defined BELOW setup",
+    "  fill(255, 214, 10);",
+    "  noStroke();",
+    "  ellipse(330, 60, 70, 70);",
+    "}",
+    "",
+    "void drawCloud(float x, float y) {",
+    "  fill(255);",
+    "  noStroke();",
+    "  // draws 7 white circles around (x, y)",
+    "}"
+  ];
+
+  var orderSk = Sketch(document.getElementById("orderCanvas"), 400, 260);
+  function skyAct(){ orderSk.background(135, 206, 235); }
+  function sunAct(){ orderSk.fill(255,214,10); orderSk.noStroke(); orderSk.ellipse(330,60,70,70); orderSk.fill(255,234,120); orderSk.ellipse(330,60,44,44); }
+  function cloud1Act(){ drawCloud(orderSk, 90, 80); }
+  function cloud2Act(){ drawCloud(orderSk, 250, 60); }
+
+  var steps = [
+    {line:4,  stack:["setup()"], log:"Processing calls setup() — execution begins at line 5."},
+    {line:5,  stack:["setup()"], log:"Line 6: size(400, 260) sets up the canvas."},
+    {line:6,  stack:["setup()"], log:"Line 7: drawSky(); is called → jump UP to its definition on line 1."},
+    {line:0,  stack:["setup()","drawSky()"], log:"Enter drawSky(). Run its body top → bottom."},
+    {line:1,  stack:["setup()","drawSky()"], log:"Line 2: background(...) paints the sky.", act:skyAct},
+    {line:2,  stack:["setup()","drawSky()"], log:"Line 3: } ends drawSky → return to setup(), back at line 7."},
+    {line:7,  stack:["setup()"], log:"Line 7 done. Move to line 8: drawSun(); → jump DOWN to line 13."},
+    {line:12, stack:["setup()","drawSun()"], log:"Enter drawSun()."},
+    {line:13, stack:["setup()","drawSun()"], log:"Line 14: fill(255, 214, 10) sets the sun's color."},
+    {line:14, stack:["setup()","drawSun()"], log:"Line 15: noStroke() — no outline."},
+    {line:15, stack:["setup()","drawSun()"], log:"Line 16: ellipse(...) draws the sun.", act:sunAct},
+    {line:16, stack:["setup()","drawSun()"], log:"Line 17: } ends drawSun → return to setup(), back at line 8."},
+    {line:8,  stack:["setup()"], log:"Line 8 done. Move to line 9: drawCloud(90, 80); → x=90, y=80. Jump to line 19."},
+    {line:18, stack:["setup()","drawCloud(90, 80)"], log:"Enter drawCloud with x=90, y=80."},
+    {line:19, stack:["setup()","drawCloud(90, 80)"], log:"Line 20: fill(255) — white."},
+    {line:20, stack:["setup()","drawCloud(90, 80)"], log:"Line 21: noStroke() — no border."},
+    {line:21, stack:["setup()","drawCloud(90, 80)"], log:"Line 22: draw 7 circles around (90, 80).", act:cloud1Act},
+    {line:22, stack:["setup()","drawCloud(90, 80)"], log:"Line 23: } ends drawCloud → return to setup(), back at line 9."},
+    {line:9,  stack:["setup()"], log:"Line 9 done. Move to line 10: drawCloud(250, 60); → SAME function, new inputs. Jump to line 19."},
+    {line:18, stack:["setup()","drawCloud(250, 60)"], log:"Enter drawCloud again, now x=250, y=60."},
+    {line:19, stack:["setup()","drawCloud(250, 60)"], log:"Line 20: fill(255) — white."},
+    {line:20, stack:["setup()","drawCloud(250, 60)"], log:"Line 21: noStroke() — no border."},
+    {line:21, stack:["setup()","drawCloud(250, 60)"], log:"Line 22: draw 7 circles around (250, 60).", act:cloud2Act},
+    {line:22, stack:["setup()","drawCloud(250, 60)"], log:"Line 23: } ends drawCloud → return to setup(), back at line 10."},
+    {line:10, stack:["setup()"], log:"Line 11: } ends setup(). The program is finished! ✓"}
+  ];
+
+  var panel = document.getElementById("codePanel");
+  var stackEl = document.getElementById("stack");
+  var logEl = document.getElementById("log");
+  var lineEls = [];
+  for(var i=0;i<src.length;i++){
+    var d = document.createElement("div");
+    d.className = "codeline";
+    var ln = (i+1) < 10 ? " " + (i+1) : (i+1);
+    d.innerHTML = '<span class="ln">' + ln + '</span>' + esc2(src[i]);
+    panel.appendChild(d);
+    lineEls.push(d);
+  }
+  function esc2(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  var pos = -1, timer = null;
+
+  function clearHighlights(){ for(var i=0;i<lineEls.length;i++){ lineEls[i].className = "codeline"; } }
+  function reset(){
+    pos = -1; stopPlay();
+    clearHighlights();
+    stackEl.innerHTML = "";
+    logEl.innerHTML = "";
+    orderSk.background(245, 247, 248);
+    orderSk.fill(150,160,168); orderSk.noStroke();
+    orderSk.ctx.font = "14px 'JetBrains Mono', monospace"; orderSk.ctx.textAlign="center";
+    orderSk.ctx.fillStyle = "#9aa6ad"; orderSk.ctx.fillText("press Step or Play \u25B6", 200, 130);
+    orderSk.ctx.textAlign = "start";
+  }
+  function renderStack(arr){
+    stackEl.innerHTML = "";
+    for(var i=0;i<arr.length;i++){
+      var f = document.createElement("div");
+      f.className = "frame" + (i===0 ? " base" : "");
+      f.textContent = arr[i];
+      stackEl.appendChild(f);
+    }
+  }
+  function step(){
+    if(pos >= steps.length - 1){ stopPlay(); return; }
+    pos++;
+    var s = steps[pos];
+    clearHighlights();
+    lineEls[s.line].className = "codeline active";
+    // faintly hint the definition line of the currently-running function
+    renderStack(s.stack);
+    if(s.act) s.act();
+    var entry = document.createElement("div");
+    entry.innerHTML = '<span class="step-n">' + (pos+1) + '.</span> ' + s.log;
+    logEl.appendChild(entry);
+    logEl.scrollTop = logEl.scrollHeight;
+    if(pos >= steps.length - 1) stopPlay();
+  }
+  function play(){
+    if(pos >= steps.length - 1) reset();
+    var btn = document.getElementById("playBtn");
+    btn.textContent = "\u23F8 Pause";
+    timer = setInterval(function(){ step(); if(pos >= steps.length-1) stopPlay(); }, 1100);
+  }
+  function stopPlay(){
+    if(timer){ clearInterval(timer); timer = null; }
+    document.getElementById("playBtn").textContent = "\u25B6 Play";
+  }
+  document.getElementById("stepBtn").addEventListener("click", function(){ stopPlay(); step(); });
+  document.getElementById("resetBtn").addEventListener("click", reset);
+  document.getElementById("playBtn").addEventListener("click", function(){
+    if(timer) stopPlay(); else play();
+  });
+  reset();
+})();
+
+/* ========================================================= */
+/*  Section 7: quiz                                          */
+/* ========================================================= */
+(function(){
+  var questions = [
+    {
+      q: "How many parameters does <code>void drawCloud(float x, float y)</code> have?",
+      opts: ["0", "1", "2", "7"],
+      correct: 2,
+      explain: "Two: <code>x</code> and <code>y</code>. They're the inputs the function accepts. (It draws 7 circles, but those aren't parameters!)"
+    },
+    {
+      q: "What does the keyword <code>void</code> tell us about a function?",
+      opts: ["It returns nothing", "It has no name", "It can't be called", "It always draws a circle"],
+      correct: 0,
+      explain: "<code>void</code> is the return type meaning the function gives <b>no value back</b> \u2014 it just does a job, like drawing."
+    },
+    {
+      q: "In the order-of-execution program, what appears on screen <b>first</b>?",
+      opts: ["The sun", "The sky", "The cloud at (90,80)", "The cloud at (250,60)"],
+      correct: 1,
+      explain: "setup() runs top to bottom. The first call is <code>drawSky()</code>, so the sky's blue background paints before anything else."
+    },
+    {
+      q: "Which line correctly <b>calls</b> drawCloud to draw at x=200, y=50?",
+      opts: ["<code>void drawCloud(200, 50);</code>", "<code>drawCloud(float 200, float 50);</code>", "<code>drawCloud(200, 50);</code>", "<code>drawCloud = (200, 50);</code>"],
+      correct: 2,
+      explain: "When you <b>call</b> a function you just use its name and the argument values \u2014 no return type, no parameter types. Those only appear when you <b>define</b> it."
+    },
+    {
+      q: "A function written as <code>int addScores(int a, int b)</code> must include which keyword in its body?",
+      opts: ["<code>void</code>", "<code>return</code>", "<code>print</code>", "<code>new</code>"],
+      correct: 1,
+      explain: "Any non-<code>void</code> function must hand a value back using <code>return</code> \u2014 here, <code>return a + b;</code>."
+    }
+  ];
+
+  var root = document.getElementById("quiz");
+  questions.forEach(function(item, qi){
+    var box = document.createElement("div");
+    box.className = "q";
+    var html = '<div class="qtext"><span class="num">Q' + (qi+1) + '.</span>' + item.q + '</div>';
+    item.opts.forEach(function(opt, oi){
+      html += '<button class="opt" data-q="' + qi + '" data-o="' + oi + '">' + opt + '</button>';
+    });
+    html += '<div class="explain" id="ex' + qi + '"></div>';
+    box.innerHTML = html;
+    root.appendChild(box);
+  });
+
+  root.addEventListener("click", function(e){
+    var btn = e.target.closest(".opt");
+    if(!btn) return;
+    var qi = +btn.getAttribute("data-q"), oi = +btn.getAttribute("data-o");
+    var item = questions[qi];
+    var box = btn.parentNode;
+    var opts = box.querySelectorAll(".opt");
+    for(var i=0;i<opts.length;i++){ opts[i].classList.add("disabled"); }
+    opts[item.correct].classList.add("correct");
+    if(oi !== item.correct) btn.classList.add("wrong");
+    var ex = document.getElementById("ex" + qi);
+    ex.innerHTML = (oi === item.correct ? "<b>Correct!</b> " : "<b>Not quite.</b> ") + item.explain;
+    ex.classList.add("show");
+  });
+})();
+
+/* ========================================================= */
+/*  Table-of-contents scrollspy                              */
+/* ========================================================= */
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var map = {};
+  links.forEach(function(a){
+    var id = a.getAttribute("href").slice(1);
+    var sec = document.getElementById(id);
+    if(sec) map[id] = a;
+  });
+  var sections = Object.keys(map).map(function(id){ return document.getElementById(id); });
+  function setActive(id){
+    links.forEach(function(a){ a.classList.remove("active"); });
+    if(map[id]) map[id].classList.add("active");
+  }
+  if("IntersectionObserver" in window){
+    var visible = {};
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ visible[en.target.id] = en.isIntersecting ? en.intersectionRatio : 0; });
+      var best = null, bestR = 0;
+      sections.forEach(function(s){ var r = visible[s.id] || 0; if(r > bestR){ bestR = r; best = s.id; } });
+      if(best) setActive(best);
+    }, { rootMargin: "-15% 0px -70% 0px", threshold: [0, 0.25, 0.5, 1] });
+    sections.forEach(function(s){ obs.observe(s); });
+  } else {
+    window.addEventListener("scroll", function(){
+      var top = window.scrollY + 120, current = sections[0].id;
+      sections.forEach(function(s){ if(s.offsetTop <= top) current = s.id; });
+      setActive(current);
+    });
+  }
+  setActive(sections[0].id);
+})();
+</script>
+</body>
+</html>

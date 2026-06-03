@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Types &amp; Variables — AP CSP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf0;
+  --ink:#26323d;
+  --ink-soft:#5a6976;
+  --red:#c0392b;          /* teacher's red pen */
+  --blue:#2563a6;
+  --sky:#6ab0de;
+  --green:#2e7d4f;
+  --amber:#b0701f;
+  --magenta:#9b2d6e;
+  --grid-fine:rgba(45,106,159,.10);
+  --grid-bold:rgba(45,106,159,.18);
+  --highlight:#fff39e;
+  --card:#fffdf6;
+  --line-strong:#d7d2bd;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"DM Sans",sans-serif;color:var(--ink);background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(var(--grid-bold) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-bold) 1px, transparent 1px);
+  background-size:25px 25px, 25px 25px, 125px 125px, 125px 125px;
+  line-height:1.6;padding-bottom:120px;
+}
+::selection{background:var(--highlight);}
+
+/* ---------- fixed left table of contents ---------- */
+.toc{
+  position:fixed;left:0;top:0;width:248px;height:100vh;
+  background:rgba(251,250,240,.94);border-right:2px solid var(--line-strong);
+  box-shadow:2px 0 0 rgba(38,50,61,.04);padding:30px 22px;overflow-y:auto;z-index:20;
+}
+.toc .toc-brand{font-family:"Fraunces",serif;font-weight:700;font-size:21px;line-height:1.1;color:var(--ink);margin-bottom:2px;}
+.toc .toc-brand .dot{color:var(--red);}
+.toc .toc-sub{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:22px;}
+.toc a{display:block;text-decoration:none;color:var(--ink-soft);font-size:14px;font-weight:500;padding:8px 12px;margin:3px 0;border-radius:6px;border-left:3px solid transparent;transition:.13s;}
+.toc a .tnum{font-family:"JetBrains Mono",monospace;font-size:11px;color:#b9b49c;margin-right:8px;font-weight:700;}
+.toc a:hover{background:#f0eedd;color:var(--ink);}
+.toc a.active{background:#fff;color:var(--ink);border-left-color:var(--red);font-weight:700;box-shadow:1px 1px 0 rgba(38,50,61,.08);}
+.toc a.active .tnum{color:var(--red);}
+.toc .toc-foot{margin-top:26px;font-family:"Caveat",cursive;font-size:19px;color:var(--ink-soft);transform:rotate(-2deg);}
+
+.content{margin-left:248px;}
+.wrap{max-width:900px;margin:0 auto;padding:0 40px;}
+section{scroll-margin-top:24px;margin:54px 0;}
+
+/* ---------- header ---------- */
+header.hero{text-align:center;padding:64px 0 28px;}
+.eyebrow{font-family:"JetBrains Mono",monospace;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--blue);font-weight:700;}
+h1{font-family:"Fraunces",serif;font-weight:700;font-size:60px;line-height:1.02;margin:14px 0 10px;color:var(--ink);}
+h1 .accent{color:var(--red);font-style:italic;}
+.subtitle{font-size:19px;color:var(--ink-soft);max-width:660px;margin:0 auto;}
+.margin-note{font-family:"Caveat",cursive;font-size:25px;color:var(--red);transform:rotate(-3deg);display:inline-block;}
+.herochips{margin-top:24px;display:flex;gap:9px;flex-wrap:wrap;justify-content:center;}
+.herochips .hchip{font-family:"JetBrains Mono",monospace;font-size:12px;border:1.5px solid var(--line-strong);background:var(--card);padding:5px 12px;border-radius:30px;color:var(--ink-soft);}
+.herochips .hchip.solid{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* ---------- section headings ---------- */
+.section-tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:12.5px;font-weight:700;letter-spacing:.12em;color:#fff;background:var(--ink);padding:5px 12px;border-radius:3px 12px 3px 12px;margin-bottom:14px;}
+h2{font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1.15;margin:6px 0 10px;}
+h3{font-family:"Fraunces",serif;font-weight:600;font-size:22px;margin:26px 0 8px;}
+p{margin:12px 0;}
+.lead{font-size:18px;}
+ul.body-list{margin:8px 0 14px 22px;}
+ul.body-list li{margin:5px 0;}
+.hl{background:linear-gradient(transparent 55%, var(--highlight) 55%);padding:0 2px;font-weight:600;}
+code.inline,.ink-mono,.code-inline{font-family:"JetBrains Mono",monospace;font-size:.9em;background:#f0eedd;border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;color:var(--ink);}
+strong{font-weight:700;}
+
+/* ---------- cards & callouts ---------- */
+.card{background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;padding:24px 26px;box-shadow:3px 4px 0 rgba(38,50,61,.06);margin:18px 0;}
+.callout{border-left:6px solid var(--red);background:#fff6f4;padding:16px 20px;border-radius:0 8px 8px 0;margin:18px 0;}
+.callout.blue{border-left-color:var(--blue);background:#f1f7fc;}
+.callout.green{border-left-color:var(--green);background:#f1faf3;}
+.callout.amber{border-left-color:var(--amber);background:#fbf5ea;}
+.callout .lbl{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:5px;}
+.callout .lbl{color:var(--red);}
+.callout.blue .lbl{color:var(--blue);} .callout.green .lbl{color:var(--green);} .callout.amber .lbl{color:var(--amber);}
+
+/* ---------- code blocks (auto-highlighted) ---------- */
+.code{background:#fcfbf3;color:var(--ink);font-family:"JetBrains Mono",monospace;font-size:14px;line-height:1.85;padding:16px 18px 16px 20px;border-radius:8px;border:1.5px solid var(--line-strong);border-left:5px solid #e9b3ab;overflow-x:auto;margin:14px 0;white-space:pre;}
+.code .c{color:#7d9b6e;font-style:italic;}
+.code .t{color:var(--red);font-weight:700;}
+.code .k{color:var(--magenta);font-weight:700;}
+.code .f{color:var(--amber);font-weight:700;}
+.code .n{color:var(--green);}
+.code .s{color:var(--green);}
+
+/* ---------- tables ---------- */
+.table-wrap{overflow-x:auto;margin:16px 0;border:1.5px solid var(--line-strong);border-radius:10px;box-shadow:3px 4px 0 rgba(38,50,61,.06);}
+table.tbl{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--card);}
+table.tbl thead th{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--ink);text-align:left;padding:11px 13px;font-weight:700;}
+table.tbl td{padding:10px 13px;border-bottom:1px solid var(--line-strong);vertical-align:top;}
+table.tbl tbody tr:last-child td{border-bottom:none;}
+table.tbl tbody tr:nth-child(even){background:#f6f4e6;}
+table.tbl .ty{font-family:"JetBrains Mono",monospace;font-weight:700;color:var(--red);}
+table.tbl .star{color:var(--amber);font-weight:700;}
+table.tbl tr.fav td:first-child{box-shadow:inset 4px 0 0 var(--amber);}
+
+/* ---------- mini cards ---------- */
+.cardgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:18px 0;}
+.minicard{background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;box-shadow:3px 4px 0 rgba(38,50,61,.06);padding:18px;}
+.minicard h4{font-family:"JetBrains Mono",monospace;font-size:14px;letter-spacing:.02em;margin:0 0 10px;border-bottom:1.5px solid var(--line-strong);padding-bottom:8px;font-weight:700;}
+.minicard ul{list-style:none;font-size:14px;margin:0;padding:0;}
+.minicard li{padding:4px 0;display:flex;gap:8px;line-height:1.4;}
+.minicard li::before{content:"▸";color:var(--red);}
+
+/* ---------- buttons ---------- */
+.btn{font-family:"DM Sans",sans-serif;font-weight:700;font-size:14px;border:2px solid var(--ink);background:var(--ink);color:#fff;border-radius:7px;padding:9px 16px;cursor:pointer;transition:.12s;}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:2px 2px 0 rgba(38,50,61,.25);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff;}
+.btn:active{transform:translate(0,0);box-shadow:none;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.panel-title{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:8px;}
+.caption{font-family:"Caveat",cursive;font-size:19px;color:var(--ink-soft);}
+
+/* ---------- name checker ---------- */
+#nameInput{width:100%;font-family:"JetBrains Mono",monospace;font-size:16px;padding:11px 13px;border:1.5px solid var(--line-strong);border-radius:7px;background:#fff;color:var(--ink);outline:none;}
+#nameInput:focus{border-color:var(--blue);box-shadow:2px 2px 0 rgba(37,99,166,.18);}
+.verdict{margin:14px 0;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;padding:10px 14px;border-radius:7px;border:1.5px solid var(--line-strong);}
+.verdict.ok{background:#f1faf3;color:var(--green);border-color:#bfe0cb;}
+.verdict.bad{background:#fff6f4;color:var(--red);border-color:#e8c2bb;}
+.rules{list-style:none;display:grid;gap:7px;margin:0;padding:0;}
+.rules li{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:8px 10px;border-radius:6px;background:#f6f4e6;}
+.rules .mark{font-family:"JetBrains Mono",monospace;font-weight:700;min-width:18px;}
+.rules li.pass .mark{color:var(--green);}
+.rules li.fail .mark{color:var(--red);}
+.rules li.fail{background:#fff6f4;}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center;}
+.chip-row .lbl{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink-soft);}
+.chip-row button{font-family:"JetBrains Mono",monospace;font-size:13px;cursor:pointer;border:1.5px solid var(--line-strong);background:#fff;color:var(--ink);padding:5px 11px;border-radius:30px;transition:.12s;}
+.chip-row button:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* ---------- house demo ---------- */
+.house-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;}
+#houseCanvas{width:100%;height:auto;border:2px solid var(--ink);border-radius:8px;background:#fcfbf3;display:block;}
+.ctrl{margin:0 0 16px;}
+.ctrl label{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:700;margin-bottom:6px;}
+.ctrl label .val{color:var(--red);}
+input[type=range]{width:100%;accent-color:var(--blue);}
+.live-code{background:#fcfbf3;color:var(--ink);font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.7;padding:14px;border-radius:8px;border:1.5px solid var(--line-strong);margin-top:6px;white-space:pre;overflow-x:auto;}
+.live-code .t{color:var(--red);}
+.live-code .f{color:var(--amber);}
+.live-code .c{color:#7d9b6e;font-style:italic;}
+.live-code .v{color:var(--green);font-weight:700;}
+.live-code .vn{color:var(--blue);font-weight:700;}
+
+/* ---------- byte calculator ---------- */
+.byterow{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px;}
+.byteblocks{display:flex;flex-wrap:wrap;gap:4px;min-height:24px;margin:12px 0;}
+.byteblock{width:18px;height:18px;border-radius:3px;border:1.5px solid var(--ink);}
+.bk-whole{background:#bcd6f0;} .bk-dec{background:#bfe3cc;} .bk-char{background:#ecd6a8;} .bk-bool{background:#eec2bb;}
+.byte-summary{font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--ink);margin-top:6px;}
+.byte-total{font-weight:700;color:var(--red);}
+.byte-legend{display:flex;gap:16px;flex-wrap:wrap;font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink-soft);margin-top:10px;}
+.byte-legend span{display:inline-flex;align-items:center;gap:6px;}
+.byte-legend i{width:13px;height:13px;border-radius:3px;border:1.5px solid var(--ink);display:inline-block;}
+
+/* ---------- type picker ---------- */
+.prompt-box{text-align:center;padding:24px 18px;background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:8px;margin:14px 0;}
+.prompt-box .convo{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;margin-bottom:10px;}
+.prompt-box .scn{font-size:21px;font-weight:600;color:var(--ink);}
+.typegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;}
+.typebtn{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;border:1.5px solid var(--line-strong);background:#fff;color:var(--ink);border-radius:8px;padding:15px 8px;cursor:pointer;transition:.12s;}
+.typebtn:hover:not(:disabled){border-color:var(--ink);transform:translateY(-1px);}
+.typebtn.correct{background:#eaf6ee;border-color:var(--green);color:var(--green);}
+.typebtn.wrong{background:#fdeceb;border-color:var(--red);color:var(--red);}
+.typebtn:disabled{cursor:default;}
+.feedback{min-height:24px;font-weight:700;margin-top:8px;font-size:15px;}
+.feedback.good{color:var(--green);} .feedback.bad{color:var(--red);} .feedback.neutral{color:var(--ink-soft);font-weight:500;}
+.scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+.stat{text-align:center;background:#26323d;color:#f3f1e3;border-radius:10px;padding:13px 8px;border:1.5px solid #11171d;}
+.stat .v{font-family:"JetBrains Mono",monospace;font-size:25px;font-weight:700;color:#ffd27a;}
+.stat .l{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin-top:2px;}
+
+/* ---------- value tracer ---------- */
+.tracer-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start;margin:8px 0;}
+.codepanel{font-family:"JetBrains Mono",monospace;font-size:14px;line-height:1.7;background:#fcfbf3;border:1.5px solid var(--line-strong);border-radius:8px;padding:12px 0;overflow:hidden;}
+.codeline{display:flex;padding:3px 14px;white-space:pre;transition:background .15s;}
+.codeline .ln{color:#b9b49c;width:22px;text-align:right;margin-right:14px;user-select:none;}
+.codeline.active{background:var(--highlight);box-shadow:inset 4px 0 0 var(--red);}
+.codeline .t{color:var(--red);font-weight:700;}
+.codeline .vn{color:var(--blue);font-weight:700;}
+.codeline .n{color:var(--green);}
+.codeline .c{color:#7d9b6e;font-style:italic;}
+.varbox{border:2px dashed var(--line-strong);border-radius:12px;padding:20px 16px;text-align:center;background:#fcfbf3;transition:.2s;}
+.varbox.exists{border-style:solid;border-color:var(--blue);}
+.varbox .vname{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink-soft);}
+.varbox .vval{font-family:"JetBrains Mono",monospace;font-size:40px;font-weight:700;color:var(--blue);margin:2px 0;line-height:1.1;}
+.varbox .vval.empty{color:#c2bca8;font-size:22px;padding:9px 0;}
+.varbox .vphase{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--amber);}
+.tracer-note{font-family:"JetBrains Mono",monospace;font-size:13px;background:#26323d;color:#e9e6d6;border-radius:8px;padding:12px 14px;margin-top:14px;min-height:40px;line-height:1.55;}
+.stepnav{display:flex;align-items:center;gap:12px;margin-top:14px;}
+.stepnav .counter{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink-soft);font-weight:700;}
+
+/* ---------- thought questions ---------- */
+.q{background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;box-shadow:3px 4px 0 rgba(38,50,61,.06);margin:16px 0;overflow:hidden;}
+.q-head{padding:18px 20px;display:flex;gap:14px;align-items:flex-start;}
+.q-num{font-family:"Fraunces",serif;font-weight:700;font-size:26px;color:var(--red);line-height:1;min-width:30px;}
+.q-text{font-size:16px;}
+.reveal-btn{margin:0 20px 18px;}
+.answer{display:none;border-top:1.5px dashed var(--line-strong);background:#fcfbf3;padding:16px 20px;font-size:15px;}
+.answer.show{display:block;animation:fade .3s ease;}
+.answer .albl{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--green);font-weight:700;display:block;margin-bottom:6px;}
+@keyframes fade{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
+
+/* ---------- cheat sheet (recipe) ---------- */
+.recipe{background:#26323d;color:#f3f1e3;border-radius:12px;padding:28px 30px;margin:18px 0;}
+.recipe h2{color:#fff;margin:4px 0 6px;}
+.recipe .section-tag{background:var(--sky);color:#1b2730;}
+.recipe table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14.5px;}
+.recipe td,.recipe th{border:1px solid #44525e;padding:10px 12px;text-align:left;vertical-align:top;}
+.recipe th{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--sky);}
+.recipe .rk{font-family:"JetBrains Mono",monospace;color:#ffd27a;white-space:nowrap;}
+.recipe code{font-family:"JetBrains Mono",monospace;color:#ffd27a;background:transparent;border:none;padding:0;}
+
+footer{text-align:center;color:var(--ink-soft);font-family:"Caveat",cursive;font-size:22px;margin-top:50px;}
+.divider{height:2px;background:repeating-linear-gradient(90deg,var(--line-strong),var(--line-strong) 8px,transparent 8px,transparent 16px);margin:8px 0;}
+</style>
+</head>
+<body>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<nav class="toc">
+  <div class="toc-brand">Data Types<span class="dot">.</span></div>
+  <div class="toc-sub">AP CSP · Processing</div>
+  <a href="#what"><span class="tnum">01</span>What is a data type?</a>
+  <a href="#types"><span class="tnum">02</span>The 9 data types</a>
+  <a href="#prefer"><span class="tnum">03</span>The four we prefer</a>
+  <a href="#vars"><span class="tnum">04</span>What variables are</a>
+  <a href="#rules"><span class="tnum">05</span>Naming rules + checker</a>
+  <a href="#syntax"><span class="tnum">06</span>Declare, init &amp; assign</a>
+  <a href="#house"><span class="tnum">07</span>The house demo</a>
+  <a href="#examples"><span class="tnum">08</span>Worked examples</a>
+  <a href="#questions"><span class="tnum">09</span>Thought questions</a>
+  <a href="#cheat"><span class="tnum">★</span>Cheat sheet</a>
+  <div class="toc-foot">jump anywhere ↑</div>
+</nav>
+
+<div class="content">
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">AP Computer Science Principles · Processing</div>
+    <h1>Data Types <span class="accent">&amp;</span> Variables</h1>
+    <p class="subtitle">Everything we covered in class — what each data type is, how much memory it uses, the rules for naming variables, and why we keep our values in variables.</p>
+    <p style="margin-top:18px;"><span class="margin-note">declare it once — reuse it everywhere ✓</span></p>
+    <div class="herochips">
+      <span class="hchip solid">9 data types</span>
+      <span class="hchip">byte budget</span>
+      <span class="hchip">name checker</span>
+      <span class="hchip">type picker</span>
+      <span class="hchip">live house demo</span>
+      <span class="hchip">6 self-check questions</span>
+    </div>
+  </header>
+
+  <!-- ============ 01 ============ -->
+  <section id="what">
+    <span class="section-tag">01 · FOUNDATIONS</span>
+    <h2>What is a data type?</h2>
+    <p class="lead">When you store information in a Processing program, the computer needs to know <strong>what kind</strong> of information it is. Is it a whole number? A decimal? A piece of text? A yes/no answer? That "kind" is called a <strong>data type</strong>.</p>
+    <p>The data type tells the computer two important things: what <em>values are allowed</em> (you can't store the word "cat" in a number), and <em>how much memory</em> to set aside. Memory is measured in <strong>bytes</strong> — one byte is 8 bits, and a bit is a single 0 or 1.</p>
+    <div class="callout blue">
+      <span class="lbl">Why memory size matters</span>
+      Bigger types can hold bigger values but take up more space. On a tiny sketch it doesn't matter, but the habit of picking the right-sized type is a real computer-science skill. A <span class="ink-mono">byte</span> can only count to 255 — an <span class="ink-mono">int</span> can count past 4 billion.
+    </div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="types">
+    <span class="section-tag">02 · REFERENCE</span>
+    <h2>The nine data types</h2>
+    <p>These are the types we learned. The ones marked with a <span class="star" style="color:var(--amber);font-weight:700;">★</span> are the four we reach for most of the time. "Bytes" is how much memory one value takes up.</p>
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead>
+          <tr><th>Type</th><th>Bytes</th><th>Holds</th><th>Range / Notes</th><th>Use it for…</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="ty">byte</span></td><td>1</td><td>Whole numbers</td><td>0 to 255</td><td>Rarely used; tiny whole numbers</td></tr>
+          <tr><td><span class="ty">short</span></td><td>2</td><td>Whole numbers</td><td>0 to 65,535</td><td>Rarely used</td></tr>
+          <tr class="fav"><td><span class="ty">int</span> <span class="star">★</span></td><td>4</td><td>Whole numbers</td><td>0 to ≈ 4.3 billion</td><td><strong>Default whole number</strong> — counters, coordinates, scores</td></tr>
+          <tr><td><span class="ty">long</span></td><td>8</td><td>Whole numbers</td><td>0 to an astronomically large number</td><td>When an int isn't big enough</td></tr>
+          <tr class="fav"><td><span class="ty">float</span> <span class="star">★</span></td><td>4</td><td>Decimal numbers</td><td>≈ 7 digits of precision</td><td><strong>Default decimal</strong> — prices, speeds, percentages</td></tr>
+          <tr><td><span class="ty">double</span></td><td>8</td><td>Decimal numbers</td><td>≈ 15 digits of precision</td><td>When you need very precise decimals</td></tr>
+          <tr><td><span class="ty">char</span></td><td>1*</td><td>A single character</td><td>One symbol in <strong>single</strong> quotes: <span class="ink-mono">'A'</span></td><td>One letter, digit, or symbol</td></tr>
+          <tr class="fav"><td><span class="ty">String</span> <span class="star">★</span></td><td>varies**</td><td>Text</td><td>Any text in <strong>double</strong> quotes: <span class="ink-mono">"hello"</span></td><td><strong>Default for text</strong> — names, words, sentences</td></tr>
+          <tr class="fav"><td><span class="ty">boolean</span> <span class="star">★</span></td><td>1 bit</td><td>true / false</td><td>Only two values: <span class="ink-mono">true</span> or <span class="ink-mono">false</span></td><td><strong>Yes/no answers</strong> — isGameOver, hasKey</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <span class="lbl">Things to remember in our class</span>
+      <strong>Ranges are unsigned.</strong> We treat whole-number types as unsigned, so they start at 0 (a byte is 0–255, not −128 to 127). <br>
+      <strong>*char = 1 byte for us.</strong> In the real world a char is 2 bytes (it can hold any Unicode symbol), but in our class we count it as 1 byte. <br>
+      <strong>**String is special:</strong> it's not a basic ("primitive") type — it's an object built from many characters, so its size depends on how long the text is, and it's the only type that starts with a capital letter. <br>
+      <strong>boolean:</strong> only needs 1 bit of information (true = 1, false = 0), but computers don't address individual bits — they work in bytes. So a boolean is stored as a full 1-byte container even though only one bit inside it is used. <br>
+      <strong>Quotes matter:</strong> <span class="ink-mono">char</span> uses <strong>single</strong> quotes; <span class="ink-mono">String</span> uses <strong>double</strong> quotes — mixing these up is the #1 beginner error.
+    </div>
+
+    <h3>Try it: build a byte budget</h3>
+    <p>Click types to add variables and watch the memory add up — each little square is one byte. This is exactly the kind of counting question that shows up on the quiz.</p>
+    <div class="card">
+      <div class="panel-title">memory_budget.pde</div>
+      <div class="byterow">
+        <button class="btn ghost" data-type="byte">+ byte</button>
+        <button class="btn ghost" data-type="short">+ short</button>
+        <button class="btn ghost" data-type="int">+ int</button>
+        <button class="btn ghost" data-type="long">+ long</button>
+        <button class="btn ghost" data-type="float">+ float</button>
+        <button class="btn ghost" data-type="double">+ double</button>
+        <button class="btn ghost" data-type="char">+ char</button>
+        <button class="btn ghost" data-type="boolean">+ boolean</button>
+        <button class="btn red" id="byteReset">Reset</button>
+      </div>
+      <div class="byteblocks" id="byteBlocks"></div>
+      <div class="byte-summary" id="byteSummary">No variables yet — click a type above to start.</div>
+      <div class="byte-legend">
+        <span><i class="bk-whole"></i> whole numbers</span>
+        <span><i class="bk-dec"></i> decimals</span>
+        <span><i class="bk-char"></i> char</span>
+        <span><i class="bk-bool"></i> boolean</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="prefer">
+    <span class="section-tag">03 · THE SHORTLIST</span>
+    <h2>The four we prefer</h2>
+    <p>You could memorize all nine, but in practice almost everything you write uses just these four. When you're deciding what type to use, start here and only reach for something else if you have a reason.</p>
+    <div class="cardgrid">
+      <div class="minicard"><h4 style="color:var(--blue);">int</h4><ul><li>Whole numbers</li><li>Coordinates, counts, scores</li><li><span class="ink-mono">int lives = 3;</span></li></ul></div>
+      <div class="minicard"><h4 style="color:var(--green);">float</h4><ul><li>Decimal numbers</li><li>Speed, money, ratios</li><li><span class="ink-mono">float speed = 2.5;</span></li></ul></div>
+      <div class="minicard"><h4 style="color:var(--amber);">String</h4><ul><li>Text in "double quotes"</li><li>Names, labels, words</li><li><span class="ink-mono">String name = "Ava";</span></li></ul></div>
+      <div class="minicard"><h4 style="color:var(--red);">boolean</h4><ul><li>true or false only</li><li>On/off, yes/no states</li><li><span class="ink-mono">boolean win = false;</span></li></ul></div>
+    </div>
+    <div class="callout green">
+      <span class="lbl">Quick decision rule</span>
+      Whole number? <strong>int</strong>. Has a decimal point? <strong>float</strong>. Text? <strong>String</strong>. Just yes-or-no? <strong>boolean</strong>.
+    </div>
+
+    <h3>Try it: pick the right type</h3>
+    <p>Read each scenario and choose the best type. The decision rule above is all you need.</p>
+    <div class="card">
+      <div class="panel-title">type_picker.pde</div>
+      <div class="prompt-box">
+        <div class="convo">Which type best fits…</div>
+        <div class="scn" id="tpScenario">—</div>
+      </div>
+      <div class="typegrid" id="tpGrid">
+        <button class="typebtn" data-t="int">int</button>
+        <button class="typebtn" data-t="float">float</button>
+        <button class="typebtn" data-t="String">String</button>
+        <button class="typebtn" data-t="boolean">boolean</button>
+      </div>
+      <div class="feedback neutral" id="tpFeedback">Pick the type you think fits best.</div>
+      <div class="btnrow" style="margin-top:8px;"><button class="btn" id="tpNext">Next scenario →</button></div>
+      <div class="scoreboard">
+        <div class="stat"><div class="v" id="tpCorrect">0</div><div class="l">Correct</div></div>
+        <div class="stat"><div class="v" id="tpAttempts">0</div><div class="l">Attempts</div></div>
+        <div class="stat"><div class="v" id="tpStreak">0</div><div class="l">Streak</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="vars">
+    <span class="section-tag">04 · VARIABLES</span>
+    <h2>What variables are (and why we use them)</h2>
+    <p class="lead">A <strong>variable</strong> is a named container that holds a value. Instead of writing the number <span class="ink-mono">500</span> all over your sketch, you store it once in a variable and use the variable's name everywhere else.</p>
+    <p>Three big reasons we use variables:</p>
+    <h3>1. Change it once, update everywhere</h3>
+    <p>If twelve shapes are positioned using <span class="ink-mono">houseX</span> and you want to move the whole house, you change <strong>one line</strong> instead of twelve numbers.</p>
+    <h3>2. Names explain your code</h3>
+    <p>A reader sees <span class="ink-mono">playerSpeed</span> and instantly knows what it means. A bare <span class="ink-mono">2.5</span> floating in your code explains nothing.</p>
+    <h3>3. Relationships stay connected</h3>
+    <p>When you build shapes <em>relative to</em> a variable (the roof sits at <span class="ink-mono">houseX + 50</span>), they all move together automatically. That's exactly what we did with the house — try the live demo in section 07.</p>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="rules">
+    <span class="section-tag">05 · THE RULES</span>
+    <h2>Rules for naming variables</h2>
+    <p>Processing is picky about variable names. Some rules are <strong>required</strong> (break them and your sketch won't run), and some are <strong>conventions</strong> (good habits that make your code readable).</p>
+    <h3>Required rules</h3>
+    <ul class="body-list">
+      <li><strong>Must start with a letter.</strong> Not a number, not a symbol.</li>
+      <li><strong>No special characters except the underscore</strong> ( _ ). No spaces, dashes, dollar signs, dots, etc.</li>
+      <li><strong>After the first letter</strong>, you may use letters, numbers, and underscores.</li>
+      <li><strong>No spaces.</strong> <span class="ink-mono">high score</span> is two words and will error.</li>
+      <li><strong>Case-sensitive.</strong> <span class="ink-mono">houseX</span> and <span class="ink-mono">housex</span> are two different variables.</li>
+      <li><strong>Can't be a reserved name</strong> — any word Processing already uses. This includes type keywords like <span class="ink-mono">int</span> and <span class="ink-mono">float</span>, AND built-in names like <span class="ink-mono">width</span>, <span class="ink-mono">height</span>, <span class="ink-mono">mouseX</span>, <span class="ink-mono">mouseY</span>, <span class="ink-mono">color</span>, and <span class="ink-mono">size</span>.</li>
+    </ul>
+    <h3>Conventions (strongly recommended)</h3>
+    <ul class="body-list">
+      <li><strong>Use camelCase:</strong> start lowercase, capitalize each new word — <span class="ink-mono">houseX</span>, <span class="ink-mono">playerSpeed</span>, <span class="ink-mono">isGameOver</span>.</li>
+      <li><strong>Be descriptive.</strong> <span class="ink-mono">score</span> beats <span class="ink-mono">s</span>. Future-you will thank present-you.</li>
+    </ul>
+
+    <h3>Try it: the name checker</h3>
+    <div class="card">
+      <div class="panel-title">variable_name_checker.pde</div>
+      <p style="margin-top:0;font-size:15px;">Type a name and watch it get checked against every rule in real time:</p>
+      <input type="text" id="nameInput" placeholder="try typing: houseX" autocomplete="off" spellcheck="false">
+      <div class="verdict" id="verdict">Start typing above…</div>
+      <ul class="rules" id="ruleList"></ul>
+      <div class="chip-row">
+        <span class="lbl">Try these:</span>
+        <button data-n="houseX">houseX</button>
+        <button data-n="2cool">2cool</button>
+        <button data-n="high score">high score</button>
+        <button data-n="player_speed">player_speed</button>
+        <button data-n="total$">total$</button>
+        <button data-n="mouseX">mouseX</button>
+        <button data-n="float">float</button>
+        <button data-n="isGameOver">isGameOver</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="syntax">
+    <span class="section-tag">06 · SYNTAX</span>
+    <h2>Declaration, initialization &amp; assignment</h2>
+    <p>These three words sound similar but mean different things. Knowing the difference is a classic exam question, so let's nail it down.</p>
+
+    <h3>1. Declaration — create the container</h3>
+    <p><strong>Declaring</strong> means telling the computer the variable's <em>type</em> and <em>name</em>. This sets aside the memory, but it doesn't put a value in yet.</p>
+    <div class="code" data-raw="int score;   // declaration: type + name, but no value yet"></div>
+
+    <h3>2. Initialization — give it its first value</h3>
+    <p><strong>Initializing</strong> means giving a variable its <em>very first</em> value. You can do it on its own line, or combine it with the declaration (this is what we usually do).</p>
+    <div class="code" data-raw="score = 0;        // initialization: the FIRST value goes in
+
+int lives = 3;    // declaration + initialization on one line"></div>
+
+    <h3>3. Assignment — change the value later</h3>
+    <p><strong>Assigning</strong> means giving the variable a <em>new</em> value at any point after it already exists. You do <strong>not</strong> write the type again — it's already declared.</p>
+    <div class="code" data-raw="score = 10;          // assignment: replace the old value (no type!)
+score = score + 5;   // assignment: now score is 15"></div>
+
+    <div class="callout amber">
+      <span class="lbl">The one-line summary</span>
+      <strong>Declare</strong> = make it (type + name). <strong>Initialize</strong> = first value. <strong>Assign</strong> = any value after that. The type is written <em>only</em> when you declare — never again.
+    </div>
+
+    <h3>All the favorites, declared + initialized</h3>
+    <div class="code" data-raw="int score = 0;        // whole number
+float speed = 2.5;    // decimal
+String name = &quot;Ava&quot;;  // text → double quotes
+char grade = 'A';     // one character → single quotes
+boolean win = false;  // true or false"></div>
+
+    <h3>Watch a value change: declare → initialize → assign</h3>
+    <p>Step through the four lines below and watch the <span class="ink-mono">score</span> container appear, fill, and update.</p>
+    <div class="card">
+      <div class="panel-title">value_tracer.pde</div>
+      <div class="tracer-grid">
+        <div class="codepanel" id="tracerCode"></div>
+        <div>
+          <div class="panel-title">the score variable</div>
+          <div class="varbox" id="varBox">
+            <div class="vname">int score</div>
+            <div class="vval empty" id="varVal">doesn't exist yet</div>
+            <div class="vphase" id="varPhase">before line 1</div>
+          </div>
+        </div>
+      </div>
+      <div class="tracer-note" id="tracerNote">Press <strong>Next ›</strong> to run the first line.</div>
+      <div class="stepnav">
+        <button class="btn ghost" id="trPrev">‹ Back</button>
+        <button class="btn" id="trNext">Next ›</button>
+        <button class="btn red" id="trPlay">▶ Play</button>
+        <span class="counter" id="trCounter"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="house">
+    <span class="section-tag">07 · LIVE DEMO</span>
+    <h2>The house: building relative to a variable</h2>
+    <p>In class we stored the house's starting point in <span class="ink-mono">houseX</span>, then built every other shape <em>relative to it</em> — the roof, the door, the window. Because everything references <span class="ink-mono">houseX</span> and <span class="ink-mono">houseY</span>, moving those two values slides the whole house across the screen. Drag the sliders and watch:</p>
+
+    <div class="card">
+      <div class="panel-title">house_relative.pde</div>
+      <div class="house-grid">
+        <div>
+          <svg id="houseCanvas" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div class="caption" style="display:block;text-align:center;margin-top:6px;">drag the sliders — only houseX &amp; houseY change!</div>
+        </div>
+        <div>
+          <div class="ctrl">
+            <label>int houseX = <span class="val" id="hxVal">250</span>;</label>
+            <input type="range" id="hxSlider" min="40" max="440" value="250">
+          </div>
+          <div class="ctrl">
+            <label>int houseY = <span class="val" id="hyVal">220</span>;</label>
+            <input type="range" id="hySlider" min="120" max="300" value="220">
+          </div>
+          <div class="live-code" id="liveCode"></div>
+        </div>
+      </div>
+    </div>
+    <div class="callout blue">
+      <span class="lbl">The big idea</span>
+      Notice that <strong>no other number changes</strong> — only <span class="ink-mono">houseX</span> and <span class="ink-mono">houseY</span>. Every shape is written as <span class="ink-mono">houseX + something</span> or <span class="ink-mono">houseY + something</span>, so the parts keep their positions relative to each other. That's the power of building relative to a variable.
+    </div>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="examples">
+    <span class="section-tag">08 · WORKED EXAMPLES</span>
+    <h2>Worked examples</h2>
+
+    <h3>Example A — picking the right type</h3>
+    <p>A game tracks the player's name, their score, their movement speed, and whether they've won. Here's the right type for each:</p>
+    <div class="code" data-raw="String playerName = &quot;Sam&quot;;   // text   → String
+int score = 0;               // whole  → int
+float speed = 3.75;          // decimal → float
+boolean hasWon = false;      // yes/no → boolean"></div>
+
+    <h3>Example B — the full house sketch</h3>
+    <p>This is the kind of sketch the demo above is based on. Everything hangs off <span class="ink-mono">houseX</span> and <span class="ink-mono">houseY</span>:</p>
+    <div class="code" data-raw="int houseX = 250;   // starting point — the ONE source of truth
+int houseY = 220;
+
+void setup() {
+  size(600, 400);
+}
+
+void draw() {
+  background(220);
+
+  rect(houseX, houseY, 120, 100);                 // wall
+  triangle(houseX, houseY,                         // roof: left corner
+           houseX + 120, houseY,                   //       right corner
+           houseX + 60,  houseY - 70);             //       peak
+  rect(houseX + 45, houseY + 50, 30, 50);          // door
+  rect(houseX + 15, houseY + 15, 25, 25);          // window
+}"></div>
+    <div class="callout amber">
+      <span class="lbl">Try this yourself</span>
+      Change only <span class="ink-mono">int houseX = 250;</span> to <span class="ink-mono">int houseX = 400;</span> and run it. The entire house jumps right — because every shape was written relative to <span class="ink-mono">houseX</span>.
+    </div>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="questions">
+    <span class="section-tag">09 · SELF-CHECK</span>
+    <h2>Thought questions</h2>
+    <p>Try each one on your own first, then tap <strong>Reveal answer</strong> to check yourself. No peeking until you've committed to an answer!</p>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">1</span><div class="q-text">Choose the best data type for each: <em>(a)</em> a person's age, <em>(b)</em> the price of a coffee, <em>(c)</em> a username, <em>(d)</em> whether the lights are on.</div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span>(a) <strong>int</strong> — age is a whole number. (b) <strong>float</strong> — prices have decimals like 3.50. (c) <strong>String</strong> — text. (d) <strong>boolean</strong> — it's either on (true) or off (false).</div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">2</span><div class="q-text">Which of these are <strong>valid</strong> variable names, and why are the others invalid?<br><span class="code-inline">2myVar</span> &nbsp; <span class="code-inline">my var</span> &nbsp; <span class="code-inline">score_1</span> &nbsp; <span class="code-inline">mouseX</span> &nbsp; <span class="code-inline">playerName</span> &nbsp; <span class="code-inline">total$</span> &nbsp; <span class="code-inline">_count</span></div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span><strong>Valid:</strong> <span class="ink-mono">score_1</span>, <span class="ink-mono">playerName</span>, and technically <span class="ink-mono">_count</span> (underscore start is allowed, but we prefer starting with a letter).<br><strong>Invalid:</strong> <span class="ink-mono">2myVar</span> (starts with a number), <span class="ink-mono">my var</span> (has a space), <span class="ink-mono">mouseX</span> (reserved — it's a built-in name Processing already uses), <span class="ink-mono">total$</span> (the $ is a special character we don't allow). Use the checker in section 05 to confirm!</div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">3</span><div class="q-text">In our class a <span class="code-inline">byte</span> holds values from 0 to 255. What kind of problem happens if you try to store <strong>300</strong> in a byte, and which type should you use instead?</div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span>300 is <strong>out of range</strong> for a byte (the max is 255), so it won't fit / will "overflow." Use an <strong>int</strong> — it easily holds 300 and goes up past 4 billion.</div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">4</span><div class="q-text">Given <span class="code-inline">int houseX = 500;</span> and <span class="code-inline">int houseY = 300;</span>, write the three points of a roof <span class="code-inline">triangle()</span> so the roof sits on top of a 120-wide wall, with the peak 70 pixels above the wall and centered.</div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span><div class="code" data-raw="triangle(houseX,       houseY,           // left corner
+         houseX + 120, houseY,           // right corner
+         houseX + 60,  houseY - 70);      // centered peak, 70 up"></div>The peak's x is <span class="ink-mono">houseX + 60</span> (half of 120 = centered), and its y is <span class="ink-mono">houseY - 70</span> because <strong>smaller y is higher</strong> on the screen.</div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">5</span><div class="q-text">How many total <strong>bytes</strong> of memory do these three variables use together?<br><span class="code-inline">int a;</span> &nbsp; <span class="code-inline">float b;</span> &nbsp; <span class="code-inline">char c;</span></div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span><strong>9 bytes.</strong> int = 4, float = 4, char = 1. So 4 + 4 + 1 = 9. <em>(Build it in the byte budget tool in section 02 to see it!)</em></div>
+    </div>
+
+    <div class="q">
+      <div class="q-head"><span class="q-num">6</span><div class="q-text">Your sketch uses the number <span class="code-inline">450</span> in eight different places to position a tree. Mr. Bryant asks you to move the tree. Explain why a variable would have saved you time — and write the line that <strong>declares and initializes</strong> it.</div></div>
+      <button class="btn reveal-btn">Reveal answer ▾</button>
+      <div class="answer"><span class="albl">Answer</span>With a variable you'd change <strong>one line</strong> instead of hunting down all eight 450s (and risking missing one). Declare and initialize it like: <span class="ink-mono">int treeX = 450;</span> — then use <span class="ink-mono">treeX</span> everywhere. To move the tree, you edit only that single line.</div>
+    </div>
+  </section>
+
+  <!-- ============ CHEAT SHEET ============ -->
+  <section id="cheat">
+    <div class="recipe">
+      <span class="section-tag">★ · CHEAT SHEET</span>
+      <h2>Everything on one card</h2>
+      <table>
+        <tr><th>Topic</th><th>The short version</th></tr>
+        <tr><td class="rk">The four favorites</td><td><code>int</code> → whole numbers<br /><code>float</code> → decimals<br /><code>String</code> → "text"<br /><code>boolean</code> → true/false</td></tr>
+        <tr><td class="rk">Memory sizes (bytes)</td><td>byte 1 · short 2 · int 4 · long 8 · float 4 · double 8 · char 1 · String varies</td></tr>
+        <tr><td class="rk">Naming: required</td><td>Start with a letter<br />only letters, numbers, _ <br />no spaces<br />case-sensitive<br />not a reserved / built-in name</td></tr>
+        <tr><td class="rk">Naming: style</td><td>camelCase like <code>playerSpeed</code> · be descriptive · declare the type once · reassign with no type</td></tr>
+        <tr><td class="rk">Quotes matter</td><td><code>char</code> → 'single'<br /><code>String</code> → "double"<br />String (the data type, not the value) starts with a Capital Letter</td></tr>
+        <tr><td class="rk">Screen reminder</td><td>x grows → right<br />y grows → down<br />up = smaller y</td></tr>
+        <tr><td class="rk">Declare / init / assign</td><td><code>int score;</code>//declare<br /><code>score = 0;</code>//initialize<br /><code>score = 10;</code>//assign (no type the second time)</td></tr>
+      </table>
+    </div>
+    <div class="divider"></div>
+  </section>
+
+  <footer>drag the sliders · check your answers · Mr. Bryant - APCSP - Summer 2026 ✦</footer>
+
+</div>
+</div>
+
+<script>
+/* ---------- SYNTAX HIGHLIGHTER (tokenizer) ---------- */
+try {
+(function(){
+  var KEYWORDS=['void','if','else','for','while','return','true','false','new','public','class','import','final','static','null'];
+  var TYPES=['int','float','double','char','boolean','byte','short','long','String','color'];
+  var FNS=['rect','triangle','ellipse','line','size','background','fill','stroke','noStroke','noFill','point','quad','arc','setup','draw','text','circle'];
+  var BUILTINS=['width','height','mouseX','mouseY','pmouseX','pmouseY','mousePressed','mouseButton','key','keyCode','frameCount','frameRate','displayWidth','displayHeight'];
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function highlight(raw){
+    var out='',i=0,n=raw.length;
+    while(i<n){
+      var rest=raw.slice(i),m;
+      if((m=/^\/\/[^\n]*/.exec(rest))){ out+='<span class="c">'+esc(m[0])+'</span>'; i+=m[0].length; continue; }
+      if((m=/^"(?:\\.|[^"\\])*"/.exec(rest))){ out+='<span class="s">'+esc(m[0])+'</span>'; i+=m[0].length; continue; }
+      if((m=/^'(?:\\.|[^'\\])*'/.exec(rest))){ out+='<span class="s">'+esc(m[0])+'</span>'; i+=m[0].length; continue; }
+      if((m=/^\d+\.?\d*/.exec(rest))){ out+='<span class="n">'+m[0]+'</span>'; i+=m[0].length; continue; }
+      if((m=/^[A-Za-z_][A-Za-z0-9_]*/.exec(rest))){
+        var w=m[0],cls=null;
+        if(TYPES.indexOf(w)>=0)cls='t';
+        else if(KEYWORDS.indexOf(w)>=0)cls='k';
+        else if(FNS.indexOf(w)>=0||BUILTINS.indexOf(w)>=0)cls='f';
+        out+= cls ? '<span class="'+cls+'">'+w+'</span>' : esc(w);
+        i+=w.length; continue;
+      }
+      out+=esc(raw[i]); i++;
+    }
+    return out;
+  }
+  var nodes=document.querySelectorAll('.code[data-raw]');
+  for(var k=0;k<nodes.length;k++){ nodes[k].innerHTML=highlight(nodes[k].getAttribute('data-raw')); }
+})();
+} catch(e){ console.warn('Highlighter error:', e); }
+
+/* ---------- NAME CHECKER ---------- */
+try {
+(function(){
+  var KEYWORDS=[
+    'int','float','double','char','boolean','byte','short','long','void','true','false','String','color','null',
+    'if','else','for','while','return','new','class','public','static','final','import',
+    'width','height','mouseX','mouseY','pmouseX','pmouseY','mousePressed','mouseButton',
+    'key','keyPressed','keyCode','frameCount','frameRate','displayWidth','displayHeight',
+    'size','background','fill','stroke','rect','ellipse','line','triangle','setup','draw','text'
+  ];
+  var input=document.getElementById('nameInput');
+  var verdict=document.getElementById('verdict');
+  var list=document.getElementById('ruleList');
+  function check(name){
+    var rules=[
+      {ok:name.length>0, label:'Is not empty'},
+      {ok:/^[A-Za-z_]/.test(name)&&name.length>0, label:'Starts with a letter (or underscore)'},
+      {ok:name.length>0 && /^[A-Za-z0-9_]*$/.test(name), label:'Only letters, numbers, and underscores'},
+      {ok:!/\s/.test(name)&&name.length>0, label:'Contains no spaces'},
+      {ok:name.length>0 && KEYWORDS.indexOf(name)<0, label:'Is not a reserved name (a Processing keyword or built-in)'}
+    ];
+    list.innerHTML=rules.map(function(r){
+      return '<li class="'+(r.ok?'pass':'fail')+'"><span class="mark">'+(r.ok?'✓':'✗')+'</span>'+r.label+'</li>';
+    }).join('');
+    var allOk=rules.every(function(r){return r.ok;});
+    if(name.length===0){ verdict.className='verdict'; verdict.textContent='Start typing above…'; return; }
+    if(allOk){
+      var camel=/^[a-z][A-Za-z0-9]*$/.test(name);
+      verdict.className='verdict ok';
+      verdict.textContent='✓ Valid name!'+(camel?'  (nice camelCase 👍)':'  (legal, but camelCase is the recommended style)');
+    }else{
+      verdict.className='verdict bad';
+      verdict.textContent='✗ Not a legal variable name — see the ✗ below.';
+    }
+  }
+  input.addEventListener('input',function(){check(input.value);});
+  document.querySelectorAll('.chip-row button').forEach(function(b){
+    b.addEventListener('click',function(){input.value=b.dataset.n;check(input.value);input.focus();});
+  });
+  check('');
+})();
+} catch(e){ console.warn('Name checker error:', e); }
+
+/* ---------- HOUSE DEMO ---------- */
+try {
+(function(){
+  var svg=document.getElementById('houseCanvas');
+  var hx=document.getElementById('hxSlider'), hy=document.getElementById('hySlider');
+  var hxVal=document.getElementById('hxVal'), hyVal=document.getElementById('hyVal');
+  var liveCode=document.getElementById('liveCode');
+  var NS='http://www.w3.org/2000/svg';
+  var INK='#26323d';
+  function render(){
+    var X=+hx.value, Y=+hy.value;
+    hxVal.textContent=X; hyVal.textContent=Y;
+    svg.innerHTML='';
+    for(var gx=0;gx<=600;gx+=50){
+      var l=document.createElementNS(NS,'line');
+      l.setAttribute('x1',gx);l.setAttribute('y1',0);l.setAttribute('x2',gx);l.setAttribute('y2',400);
+      l.setAttribute('stroke','rgba(45,106,159,.12)');l.setAttribute('stroke-width','1');svg.appendChild(l);
+    }
+    for(var gy=0;gy<=400;gy+=50){
+      var ln=document.createElementNS(NS,'line');
+      ln.setAttribute('x1',0);ln.setAttribute('y1',gy);ln.setAttribute('x2',600);ln.setAttribute('y2',gy);
+      ln.setAttribute('stroke','rgba(45,106,159,.12)');ln.setAttribute('stroke-width','1');svg.appendChild(ln);
+    }
+    function rect(x,y,w,h,fill){
+      var r=document.createElementNS(NS,'rect');
+      r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);
+      r.setAttribute('fill',fill);r.setAttribute('stroke',INK);r.setAttribute('stroke-width','2.5');
+      svg.appendChild(r);
+    }
+    rect(X,Y,120,100,'#f0e4c8');                                  // wall
+    var tri=document.createElementNS(NS,'polygon');               // roof
+    tri.setAttribute('points',X+','+Y+' '+(X+120)+','+Y+' '+(X+60)+','+(Y-70));
+    tri.setAttribute('fill','#c0392b');tri.setAttribute('stroke',INK);tri.setAttribute('stroke-width','2.5');
+    svg.appendChild(tri);
+    rect(X+45,Y+50,30,50,'#2e7d4f');                              // door
+    rect(X+15,Y+15,25,25,'#6ab0de');                              // window
+    var dot=document.createElementNS(NS,'circle');               // origin
+    dot.setAttribute('cx',X);dot.setAttribute('cy',Y);dot.setAttribute('r','5');
+    dot.setAttribute('fill','#b0701f');dot.setAttribute('stroke',INK);dot.setAttribute('stroke-width','2');
+    svg.appendChild(dot);
+    var lbl=document.createElementNS(NS,'text');
+    lbl.setAttribute('x',X+9);lbl.setAttribute('y',Y-6);
+    lbl.setAttribute('font-family','JetBrains Mono, monospace');lbl.setAttribute('font-size','13');
+    lbl.setAttribute('fill','#c0392b');lbl.textContent='(houseX, houseY) = ('+X+', '+Y+')';
+    svg.appendChild(lbl);
+
+    liveCode.innerHTML=
+      '<span class="t">int</span> <span class="vn">houseX</span> = <span class="v">'+X+'</span>;  <span class="c">// \u2190 drag to change</span>\n'+
+      '<span class="t">int</span> <span class="vn">houseY</span> = <span class="v">'+Y+'</span>;\n\n'+
+      '<span class="f">rect</span>(<span class="vn">houseX</span>, <span class="vn">houseY</span>, 120, 100);           <span class="c">// wall</span>\n'+
+      '<span class="f">triangle</span>(<span class="vn">houseX</span>,        <span class="vn">houseY</span>,       <span class="c">// roof</span>\n'+
+      '         <span class="vn">houseX</span> + 120, <span class="vn">houseY</span>,\n'+
+      '         <span class="vn">houseX</span> + 60,  <span class="vn">houseY</span> - 70);\n'+
+      '<span class="f">rect</span>(<span class="vn">houseX</span> + 45, <span class="vn">houseY</span> + 50, 30, 50); <span class="c">// door</span>\n'+
+      '<span class="f">rect</span>(<span class="vn">houseX</span> + 15, <span class="vn">houseY</span> + 15, 25, 25); <span class="c">// window</span>';
+  }
+  hx.addEventListener('input',render);
+  hy.addEventListener('input',render);
+  render();
+})();
+} catch(e){ console.warn('House demo error:', e); }
+
+/* ---------- BYTE BUDGET CALCULATOR ---------- */
+try {
+(function(){
+  var SIZES={byte:1,short:2,int:4,long:8,float:4,double:8,char:1,boolean:1};
+  var GROUP={byte:'whole',short:'whole',int:'whole',long:'whole',float:'dec',double:'dec',char:'char',boolean:'bool'};
+  var CLS={whole:'bk-whole',dec:'bk-dec',char:'bk-char',bool:'bk-bool'};
+  var vars=[];
+  var blocks=document.getElementById('byteBlocks');
+  var summary=document.getElementById('byteSummary');
+  function render(){
+    blocks.innerHTML='';
+    var total=0;
+    vars.forEach(function(t){
+      total+=SIZES[t];
+      for(var i=0;i<SIZES[t];i++){
+        var d=document.createElement('div');
+        d.className='byteblock '+CLS[GROUP[t]];
+        d.title=t+' ('+SIZES[t]+' byte'+(SIZES[t]>1?'s':'')+')';
+        blocks.appendChild(d);
+      }
+    });
+    if(vars.length===0){ summary.innerHTML='No variables yet — click a type above to start.'; return; }
+    var parts=vars.map(function(t){ return t+' ('+SIZES[t]+')'; });
+    summary.innerHTML=parts.join(' + ')+' = <span class="byte-total">'+total+' byte'+(total!==1?'s':'')+'</span>';
+  }
+  document.querySelectorAll('[data-type]').forEach(function(b){
+    b.addEventListener('click',function(){ vars.push(b.getAttribute('data-type')); render(); });
+  });
+  document.getElementById('byteReset').addEventListener('click',function(){ vars=[]; render(); });
+  render();
+})();
+} catch(e){ console.warn('Byte calc error:', e); }
+
+/* ---------- TYPE PICKER ---------- */
+try {
+(function(){
+  var SCENARIOS=[
+    {t:"A player's score",a:'int',why:'it\u2019s a whole-number count'},
+    {t:"The price of a coffee ($3.50)",a:'float',why:'money has a decimal point'},
+    {t:"A username",a:'String',why:'it\u2019s text'},
+    {t:"Whether the game is over",a:'boolean',why:'it\u2019s a yes/no state'},
+    {t:"The number of lives left",a:'int',why:'it\u2019s a whole-number count'},
+    {t:"A character\u2019s movement speed",a:'int',why:'speed is usually a whole number in our case. Float would also be acceptable.'},
+    {t:"A person\u2019s full name",a:'String',why:'it\u2019s text'},
+    {t:"Whether the player has a key",a:'boolean',why:'it\u2019s a true/false state'},
+    {t:"How many coins collected",a:'int',why:'it\u2019s a whole-number count'},
+    {t:"Health remaining as a percent (87.5)",a:'float',why:'it has a decimal'},
+    {t:"A favorite color\u2019s name (\u201Cteal\u201D)",a:'String',why:'it\u2019s text'},
+    {t:"Is the door locked?",a:'boolean',why:'it\u2019s a yes/no answer'},
+    {t:"The x-coordinate of a shape",a:'int',why:'it\u2019s pixel coordinates and they are whole numbers'},
+    {t:"A bank balance like 102.47",a:'float',why:'it has cents (a decimal)'}
+  ];
+  var grid=document.getElementById('tpGrid');
+  var scn=document.getElementById('tpScenario');
+  var fb=document.getElementById('tpFeedback');
+  var btns=Array.prototype.slice.call(grid.querySelectorAll('.typebtn'));
+  var correct=0,attempts=0,streak=0,current=null,locked=false;
+  function rnd(n){return Math.floor(Math.random()*n);}
+  function load(){
+    current=SCENARIOS[rnd(SCENARIOS.length)];
+    scn.textContent=current.t;
+    btns.forEach(function(b){ b.disabled=false; b.className='typebtn'; });
+    fb.className='feedback neutral'; fb.textContent='Pick the type you think fits best.';
+    locked=false;
+  }
+  function choose(b){
+    if(locked) return;
+    locked=true; attempts++;
+    var pick=b.getAttribute('data-t');
+    btns.forEach(function(x){ x.disabled=true; });
+    if(pick===current.a){
+      correct++; streak++;
+      b.classList.add('correct');
+      fb.className='feedback good'; fb.textContent='✓ Yes — '+current.a+', because  '+current.why+'.';
+    }else{
+      streak=0;
+      b.classList.add('wrong');
+      btns.forEach(function(x){ if(x.getAttribute('data-t')===current.a) x.classList.add('correct'); });
+      fb.className='feedback bad'; fb.textContent='✗ The better fit is '+current.a+' — '+current.why+'.';
+    }
+    render();
+  }
+  function render(){
+    document.getElementById('tpCorrect').textContent=correct;
+    document.getElementById('tpAttempts').textContent=attempts;
+    document.getElementById('tpStreak').textContent=streak;
+  }
+  btns.forEach(function(b){ b.addEventListener('click',function(){ choose(b); }); });
+  document.getElementById('tpNext').addEventListener('click',load);
+  load(); render();
+})();
+} catch(e){ console.warn('Type picker error:', e); }
+
+/* ---------- VALUE TRACER ---------- */
+try {
+(function(){
+  var lines=[
+    '<span class="t">int&nbsp;</span> <span class="vn">score</span>;',
+    '<span class="vn">score</span> = <span class="n">0</span>;',
+    '<span class="vn">score</span> = <span class="n">10</span>;',
+    '<span class="vn">score</span> = <span class="vn">score</span> + <span class="n">5</span>;'
+  ];
+  var comments=['// declare','// initialize','// assign','// assign'];
+  var steps=[
+    {line:-1, exists:false, val:null, phase:'before line 1', note:'Nothing exists yet. Press <strong>Next \u203A</strong> to run line 1.'},
+    {line:0,  exists:true,  val:null, phase:'DECLARE',     note:'<strong>DECLARE:</strong> a container named <b>score</b> is created (type int). It has no value yet \u2014 it is empty.'},
+    {line:1,  exists:true,  val:0,    phase:'INITIALIZE',  note:'<strong>INITIALIZE:</strong> score gets its very first value, <b>0</b>.'},
+    {line:2,  exists:true,  val:10,   phase:'ASSIGN',      note:'<strong>ASSIGN:</strong> replace the old value with <b>10</b>. No type word \u2014 it already exists.'},
+    {line:3,  exists:true,  val:15,   phase:'ASSIGN',      note:'<strong>ASSIGN:</strong> score = score + 5 \u2192 10 + 5 = <b>15</b>. The right side is computed first, then stored back.'}
+  ];
+  var panel=document.getElementById('tracerCode');
+  var varBox=document.getElementById('varBox');
+  var varVal=document.getElementById('varVal');
+  var varPhase=document.getElementById('varPhase');
+  var note=document.getElementById('tracerNote');
+  var counter=document.getElementById('trCounter');
+  var idx=0, timer=null;
+
+  var html='';
+  for(var i=0;i<lines.length;i++){
+    html+='<div class="codeline" data-i="'+i+'"><span class="ln">'+(i+1)+'</span>'+lines[i]+'   <span class="c">'+comments[i]+'</span></div>';
+  }
+  panel.innerHTML=html;
+  var lineEls=panel.querySelectorAll('.codeline');
+
+  function render(){
+    var s=steps[idx];
+    for(var i=0;i<lineEls.length;i++){ lineEls[i].className='codeline'; }
+    if(s.line>=0) lineEls[s.line].className='codeline active';
+    if(!s.exists){
+      varBox.className='varbox';
+      varVal.className='vval empty'; varVal.textContent='doesn\u2019t exist yet';
+    }else if(s.val===null){
+      varBox.className='varbox exists';
+      varVal.className='vval empty'; varVal.textContent='empty';
+    }else{
+      varBox.className='varbox exists';
+      varVal.className='vval'; varVal.textContent=s.val;
+    }
+    varPhase.textContent=s.phase;
+    note.innerHTML=s.note;
+    counter.textContent='Step '+(idx+1)+' of '+steps.length;
+    document.getElementById('trPrev').disabled=(idx===0);
+    document.getElementById('trNext').disabled=(idx===steps.length-1);
+  }
+  function next(){ if(idx<steps.length-1){ idx++; render(); } }
+  function prev(){ if(idx>0){ idx--; render(); } }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } document.getElementById('trPlay').textContent='▶ Play'; }
+  function play(){
+    if(idx>=steps.length-1) idx=-1;
+    document.getElementById('trPlay').textContent='⏸ Pause';
+    timer=setInterval(function(){ if(idx>=steps.length-1){ stop(); return; } next(); },1300);
+  }
+  document.getElementById('trNext').addEventListener('click',function(){ stop(); next(); });
+  document.getElementById('trPrev').addEventListener('click',function(){ stop(); prev(); });
+  document.getElementById('trPlay').addEventListener('click',function(){ if(timer) stop(); else play(); });
+  render();
+})();
+} catch(e){ console.warn('Value tracer error:', e); }
+
+/* ---------- REVEAL ANSWERS ---------- */
+try {
+document.querySelectorAll('.reveal-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var ans=btn.nextElementSibling;
+    var open=ans.classList.toggle('show');
+    btn.textContent=open?'Hide answer ▴':'Reveal answer ▾';
+  });
+});
+} catch(e){ console.warn('Reveal buttons error:', e); }
+
+/* ---------- TOC SCROLLSPY ---------- */
+try {
+(function(){
+  var links=Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map={};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        if(map[e.target.id]) map[e.target.id].classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section[id]').forEach(function(s){ obs.observe(s); });
+})();
+} catch(e){ console.warn('TOC error:', e); }
+</script>
+</body>
+</html>
