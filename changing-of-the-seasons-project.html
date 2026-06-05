@@ -2,1118 +2,909 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Changing of the Seasons — Project Planner · AP CSP</title>
+<title>Changing of the Seasons — A Thinking Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Libre+Franklin:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --paper:#fbfaf0;
-  --ink:#26323d;
-  --ink-soft:#5a6976;
-  --red:#c0392b;
-  --blue:#2563a6;
-  --sky:#6ab0de;
-  --green:#2e7d4f;
-  --amber:#b0701f;
-  --magenta:#9b2d6e;
-  --grid-fine:rgba(45,106,159,.10);
-  --grid-bold:rgba(45,106,159,.18);
-  --highlight:#fff39e;
-  --card:#fffdf6;
-  --code-bg:#fdfbef;
-  --line:#e6e1cc;
-  --line-strong:#d7d2bd;
-  --shadow:#d7d2bd;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-html,body{margin:0;padding:0;}
-body{
-  font-family:"DM Sans",sans-serif;
-  color:var(--ink);
-  background-color:var(--paper);
-  background-image:
-    linear-gradient(var(--grid-fine) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
-    linear-gradient(var(--grid-bold) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-bold) 1px, transparent 1px);
-  background-size:25px 25px, 25px 25px, 125px 125px, 125px 125px;
-  line-height:1.62;
-  padding-bottom:140px;
-}
+  :root{
+    --paper:#FAF6EE;
+    --paper-2:#F2EBDC;
+    --panel:#FFFDF8;
+    --ink:#262019;
+    --ink-soft:#6B6253;
+    --ink-faint:#9A9081;
+    --line:#E4DBC9;
+    --line-strong:#CDBFA6;
+    --accent:#2F6970;
+    --accent-soft:#DEEAEB;
+    --accent-deep:#214A50;
+    --spring:#5C9F58;
+    --summer:#D99B2B;
+    --fall:#CB7434;
+    --winter:#6E92AD;
+    --good:#3F8A4A;
+    --good-soft:#E4F0E4;
+    --warn:#BD472C;
+    --warn-soft:#F6E2DB;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Libre Franklin',-apple-system,sans-serif;
+    --mono:'IBM Plex Mono','Courier New',monospace;
+    --shadow:0 1px 2px rgba(60,45,20,.05),0 8px 24px -16px rgba(60,45,20,.25);
+  }
 
-/* ---------------- sidebar TOC ---------------- */
-.sidebar{
-  position:fixed; top:0; left:0;
-  width:248px; height:100vh;
-  padding:34px 22px 30px 26px;
-  border-right:2px solid var(--line-strong);
-  background:rgba(251,250,240,.92);
-  backdrop-filter:blur(2px);
-  overflow-y:auto;
-  z-index:30;
-}
-.brand{
-  font-family:"Fraunces",serif; font-weight:700;
-  font-size:21px; line-height:1.12; color:var(--ink);
-  margin-bottom:4px;
-}
-.brand .pen{color:var(--red); font-style:italic;}
-.brand-sub{
-  font-family:"IBM Plex Mono",monospace; font-size:10.5px;
-  letter-spacing:.18em; text-transform:uppercase; color:var(--blue);
-  margin-bottom:24px;
-}
-.toc{list-style:none; margin:0; padding:0;}
-.toc li{margin:0;}
-.toc a{
-  display:flex; gap:11px; align-items:baseline;
-  text-decoration:none; color:var(--ink-soft);
-  font-size:13.5px; font-weight:500;
-  padding:7px 10px 7px 12px; border-radius:7px;
-  border-left:3px solid transparent;
-  transition:all .15s ease;
-}
-.toc a .n{
-  font-family:"IBM Plex Mono",monospace; font-size:11px;
-  color:var(--blue); font-weight:600; min-width:18px;
-}
-.toc a:hover{color:var(--ink); background:rgba(106,176,222,.12);}
-.toc a.active{
-  color:var(--ink); font-weight:700;
-  background:rgba(192,57,43,.09);
-  border-left-color:var(--red);
-}
-.toc a.active .n{color:var(--red);}
-.toc-foot{
-  margin-top:26px; padding-top:18px; border-top:1px dashed var(--line-strong);
-  font-family:"Caveat",cursive; font-size:18px; color:var(--ink-soft);
-  transform:rotate(-1.5deg);
-}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 12% -5%, rgba(217,155,43,.06), transparent 40%),
+                     radial-gradient(circle at 90% 0%, rgba(47,105,112,.05), transparent 35%);
+  }
 
-/* ---------------- main column ---------------- */
-.main{margin-left:248px;}
-.wrap{max-width:880px; margin:0 auto; padding:0 40px;}
+  .wrap{max-width:980px;margin:0 auto;padding:0 40px 120px;}
 
-/* ---------------- hero ---------------- */
-header.hero{padding:70px 0 26px; position:relative;}
-.eyebrow{
-  font-family:"IBM Plex Mono",monospace; font-weight:600;
-  letter-spacing:.30em; text-transform:uppercase; font-size:12px;
-  color:var(--blue);
-}
-h1{
-  font-family:"Fraunces",serif; font-weight:700;
-  font-size:58px; line-height:1.02; margin:14px 0 14px; color:var(--ink);
-  letter-spacing:-.01em;
-}
-h1 .accent{color:var(--red); font-style:italic;}
-.subtitle{font-size:19px; color:var(--ink-soft); max-width:620px;}
-.metastrip{
-  display:flex; flex-wrap:wrap; gap:10px; margin-top:26px;
-}
-.tag-meta{
-  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
-  background:var(--card); border:1.5px solid var(--line-strong);
-  border-radius:3px 11px 3px 11px;
-  padding:7px 13px; color:var(--ink-soft);
-  box-shadow:3px 3px 0 var(--shadow);
-}
-.tag-meta b{color:var(--ink);}
+  /* ---------- HEADER ---------- */
+  header.masthead{max-width:980px;margin:0 auto;padding:48px 40px 30px;}
+  .skyband{
+    position:relative;height:74px;border-radius:14px;overflow:hidden;
+    border:1px solid var(--line-strong);
+    background:linear-gradient(90deg,#1c2540,#2e3a5c 14%,#7d5a86 30%,#e8a44d 44%,#8fcce9 60%,#7ec0e8 72%,#d9794a 84%,#2e3a5c 96%,#1c2540);
+    background-size:240% 100%;
+    animation:sky 36s linear infinite;
+    box-shadow:inset 0 -10px 22px -14px rgba(0,0,0,.5);
+  }
+  @keyframes sky{0%{background-position:0% 50%;}100%{background-position:240% 50%;}}
+  .celestial{
+    position:absolute;top:50%;left:0;width:26px;height:26px;border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 35% 35%,#fff,#ffe9b0 60%,#ffd166);
+    box-shadow:0 0 18px 4px rgba(255,225,150,.7);
+    animation:arc 36s linear infinite;
+  }
+  @keyframes arc{
+    0%{left:6%;top:62%;opacity:.5;background:radial-gradient(circle at 35% 35%,#fff,#e8eefc 60%,#cdd7f0);box-shadow:0 0 14px 3px rgba(205,215,240,.6);}
+    20%{top:30%;opacity:1;}
+    50%{left:62%;top:24%;background:radial-gradient(circle at 35% 35%,#fff,#ffe9b0 60%,#ffd166);box-shadow:0 0 20px 5px rgba(255,225,150,.8);}
+    82%{left:90%;top:60%;opacity:.6;}
+    100%{left:96%;top:64%;opacity:.4;background:radial-gradient(circle at 35% 35%,#fff,#e8eefc 60%,#cdd7f0);box-shadow:0 0 14px 3px rgba(205,215,240,.6);}
+  }
 
-/* ---------------- sections ---------------- */
-section{padding:46px 0 10px; border-top:1px solid var(--line); margin-top:30px;}
-section:first-of-type{border-top:none;}
-.sec-tag{
-  display:inline-block; font-family:"IBM Plex Mono",monospace;
-  font-size:11.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
-  color:#fff; background:var(--blue);
-  padding:5px 12px; border-radius:3px 10px 3px 10px; margin-bottom:16px;
-}
-.sec-tag.red{background:var(--red);}
-.sec-tag.green{background:var(--green);}
-.sec-tag.amber{background:var(--amber);}
-.sec-tag.magenta{background:var(--magenta);}
-h2{
-  font-family:"Fraunces",serif; font-weight:600; font-size:34px;
-  line-height:1.1; margin:0 0 12px; color:var(--ink); letter-spacing:-.01em;
-}
-h3{
-  font-family:"Fraunces",serif; font-weight:600; font-size:21px;
-  margin:30px 0 8px; color:var(--ink);
-}
-p{margin:0 0 15px; font-size:16.5px;}
-.lead{font-size:18px; color:var(--ink);}
-strong{font-weight:700; color:var(--ink);}
-em.h{font-style:normal; background:linear-gradient(transparent 58%, var(--highlight) 58%); padding:0 2px;}
-a.inlink{color:var(--blue); font-weight:600;}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:26px 0 8px;
+  }
+  h1{
+    font-family:var(--serif);font-weight:600;font-size:54px;line-height:1.02;
+    letter-spacing:-.015em;margin:0 0 6px;
+    font-variation-settings:"opsz" 140;
+  }
+  h1 em{font-style:italic;color:var(--accent-deep);font-weight:500;}
+  .lede{font-size:19px;color:var(--ink-soft);max-width:62ch;margin:10px 0 0;}
+  .howto{
+    margin-top:22px;padding:14px 18px;border-left:3px solid var(--summer);
+    background:var(--paper-2);border-radius:0 8px 8px 0;font-size:15px;color:var(--ink-soft);
+    max-width:64ch;
+  }
+  .howto b{color:var(--ink);}
 
-/* margin note */
-.mnote{
-  font-family:"Caveat",cursive; font-size:21px; line-height:1.25;
-  color:var(--red); transform:rotate(-1deg);
-  border-left:3px solid var(--red); padding:2px 0 2px 14px; margin:18px 0;
-}
+  /* ---------- SECTIONS ---------- */
+  section{margin-top:64px;opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
+  section.in{opacity:1;transform:none;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+  .sec-num{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600;flex:none;padding-top:8px;}
+  h2{font-family:var(--serif);font-weight:600;font-size:30px;letter-spacing:-.01em;margin:0;line-height:1.1;}
+  .sec-sub{color:var(--ink-soft);font-size:15.5px;margin:14px 0 0;max-width:66ch;}
+  .sec-sub strong{color:var(--ink);font-weight:600;}
 
-/* ---------------- callouts ---------------- */
-.note{
-  background:var(--card); border:1.5px solid var(--line-strong);
-  border-left:5px solid var(--blue);
-  border-radius:4px 12px 12px 12px;
-  padding:16px 20px; margin:20px 0;
-  box-shadow:4px 4px 0 var(--shadow);
-}
-.note .lab{
-  display:block; font-family:"IBM Plex Mono",monospace; font-size:11px;
-  font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--blue); margin-bottom:6px;
-}
-.note p:last-child{margin-bottom:0;}
-.note.red{border-left-color:var(--red);} .note.red .lab{color:var(--red);}
-.note.green{border-left-color:var(--green);} .note.green .lab{color:var(--green);}
-.note.amber{border-left-color:var(--amber);} .note.amber .lab{color:var(--amber);}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:26px;margin-top:22px;box-shadow:var(--shadow);
+  }
 
-/* ---------------- code ---------------- */
-code.inl{
-  font-family:"IBM Plex Mono",monospace; font-size:.9em;
-  background:#f0ecda; border:1px solid var(--line-strong);
-  padding:1px 6px; border-radius:5px; color:#3a2e52;
-  font-feature-settings:"liga" 0,"calt" 0;
-}
-pre.code{
-  font-family:"IBM Plex Mono",monospace; font-size:14px; line-height:1.7;
-  background:var(--code-bg); border:1.5px solid var(--line-strong);
-  border-radius:10px; padding:18px 20px; margin:20px 0; overflow-x:auto;
-  box-shadow:4px 4px 0 var(--shadow);
-  font-feature-settings:"liga" 0,"calt" 0;
-}
-pre.code code{font-family:inherit;}
-.c-com{color:#8a9aa5; font-style:italic;}
-.c-str{color:var(--green);}
-.c-num{color:var(--amber);}
-.c-kw{color:var(--magenta); font-weight:600;}
-.c-type{color:var(--blue); font-weight:600;}
-.c-fn{color:#b5651d;}
-.codecap{
-  font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--ink-soft); margin:-8px 0 14px 2px;
-}
+  code,.mono{font-family:var(--mono);font-size:.92em;}
+  .inline-code{background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-family:var(--mono);font-size:.85em;color:var(--accent-deep);}
 
-/* ---------------- cards / grids ---------------- */
-.card{
-  background:var(--card); border:1.5px solid var(--line-strong);
-  border-radius:12px; padding:20px 22px; margin:20px 0;
-  box-shadow:5px 5px 0 var(--shadow);
-}
-.grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0;}
-.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:20px 0;}
-.mini{
-  background:var(--card); border:1.5px solid var(--line-strong);
-  border-radius:10px; padding:15px 17px; box-shadow:3px 3px 0 var(--shadow);
-}
-.mini h4{font-family:"Fraunces",serif; font-weight:600; font-size:16px; margin:0 0 6px;}
-.mini p{font-size:14.5px; margin:0; color:var(--ink-soft);}
-.mini .ic{font-size:22px; line-height:1; display:block; margin-bottom:8px;}
+  /* ---------- BIG IDEA ---------- */
+  .idea-flow{display:flex;align-items:stretch;gap:0;margin-top:8px;flex-wrap:nowrap;}
+  .idea-step{flex:1;text-align:center;padding:18px 12px;position:relative;}
+  .idea-step .ic{font-family:var(--serif);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .idea-step .word{font-family:var(--serif);font-size:22px;font-weight:600;margin:6px 0 4px;color:var(--ink);}
+  .idea-step .desc{font-size:13px;color:var(--ink-soft);line-height:1.45;}
+  .idea-arrow{align-self:center;color:var(--line-strong);font-size:22px;flex:none;padding:0 2px;}
 
-/* ---------------- buttons ---------------- */
-.btn{
-  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
-  background:var(--ink); color:#fbfaf0; border:none;
-  padding:9px 16px; border-radius:8px; cursor:pointer;
-  box-shadow:3px 3px 0 var(--shadow); transition:transform .1s ease, box-shadow .1s ease;
-}
-.btn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--shadow);}
-.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--shadow);}
-.btn.ghost{background:var(--card); color:var(--ink); border:1.5px solid var(--line-strong);}
-.btn.sm{font-size:12px; padding:6px 12px;}
-.btn:disabled{opacity:.4; cursor:not-allowed;}
-.btn.ghost.chosen{background:var(--blue); color:#fff; border-color:var(--blue); box-shadow:2px 2px 0 var(--shadow);}
+  /* ---------- FOLLOW THE VALUE ---------- */
+  .flow-controls{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end;padding-bottom:22px;border-bottom:1px dashed var(--line-strong);margin-bottom:24px;}
+  .ctrl{display:flex;flex-direction:column;gap:7px;}
+  .ctrl label{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+  select{
+    font-family:var(--mono);font-size:15px;padding:9px 14px;border-radius:9px;border:1.5px solid var(--line-strong);
+    background:var(--paper);color:var(--ink);cursor:pointer;min-width:170px;font-weight:500;
+  }
+  select:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+  .timeread{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--accent-deep);min-width:120px;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:230px;height:6px;border-radius:6px;background:linear-gradient(90deg,var(--accent) 0%,var(--accent) var(--fill,60%),var(--line-strong) var(--fill,60%));cursor:pointer;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--panel);border:3px solid var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--panel);border:3px solid var(--accent);cursor:pointer;}
 
-/* ===== interactive: argument matcher (will be styled fully here) ===== */
-.lab-strip{
-  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600;
-  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;
-}
-.chiprow{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:6px;}
-.chip{
-  font-family:"IBM Plex Mono",monospace; font-size:13.5px; font-weight:600;
-  background:#eef4fb; border:1.5px solid var(--sky); color:var(--blue);
-  padding:8px 14px; border-radius:8px; cursor:pointer; transition:all .15s ease;
-}
-.chip:hover{background:#e2eefb;}
-.chip.active{background:var(--blue); color:#fff; box-shadow:3px 3px 0 var(--shadow);}
-.fnwrap{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;}
-.fncard{
-  border:1.5px solid var(--line-strong); border-radius:10px; padding:13px 15px;
-  background:var(--card); transition:all .2s ease;
-}
-.fncard .nm{font-family:"IBM Plex Mono",monospace; font-size:14px; font-weight:600; color:var(--ink);}
-.fncard .ds{font-size:13.5px; color:var(--ink-soft); margin-top:5px;}
-.fncard.lit{border-color:var(--green); background:#f1f8f3; box-shadow:4px 4px 0 rgba(46,125,79,.18);}
-.fncard.dim{opacity:.32;}
-.matchmsg{margin-top:14px; font-size:15px; min-height:24px; color:var(--ink);}
+  .pipe{display:grid;grid-template-columns:1fr 86px 1.55fr;align-items:center;gap:0;}
+  .pipe-box{border:1.5px solid var(--line-strong);border-radius:12px;background:var(--paper);}
+  .pipe-box .pb-title{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);padding:10px 16px 0;}
+  .var-row{font-family:var(--mono);font-size:14.5px;padding:8px 16px;display:flex;gap:8px;align-items:center;}
+  .var-row .vk{color:var(--accent-deep);}
+  .var-row .vv{font-weight:600;background:var(--accent-soft);border-radius:5px;padding:1px 8px;color:var(--accent-deep);}
+  .pipe-box.draw{padding-bottom:12px;}
 
-/* ===== interactive: layer stepper ===== */
-.stagewrap{display:grid; grid-template-columns:280px 1fr; gap:22px; align-items:start; margin-top:8px;}
-.stage{
-  width:280px; height:200px; border:1.5px solid var(--line-strong); border-radius:10px;
-  position:relative; overflow:hidden; background:#eef2f4; box-shadow:4px 4px 0 var(--shadow);
-}
-.ly{position:absolute; left:0; right:0; opacity:0; transition:opacity .35s ease;}
-.ly.on{opacity:1;}
-.ly-sky{top:0; height:120px; background:linear-gradient(#9ec9e8,#cfe6f5);}
-.ly-ground{bottom:0; height:84px; background:linear-gradient(#7fbf6a,#5fa64f);}
-.ly-tree{bottom:60px; left:54px; width:0; height:0;
-  border-left:22px solid transparent; border-right:22px solid transparent;
-  border-bottom:78px solid #3f7d3a;}
-.ly-tree.on::after{content:""; position:absolute; left:-6px; top:78px; width:12px; height:20px; background:#7a4a1f;}
-.ly-item{bottom:64px; left:180px; width:42px; height:42px; border-radius:50%; background:#fff; border:2px solid #d6d6d6;}
-.ly-egg{top:18px; left:30px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:36px 12px 0 #fff, 72px -4px 0 #fff, 120px 16px 0 #fff;}
-.steplist{margin:0; padding:0; list-style:none;}
-.steplist li{
-  font-family:"IBM Plex Mono",monospace; font-size:13.5px; padding:8px 12px;
-  border:1.5px solid var(--line); border-radius:8px; margin-bottom:8px; color:var(--ink-soft);
-  background:var(--card); transition:all .2s ease;
-}
-.steplist li.done{color:var(--ink); border-color:var(--line-strong);}
-.steplist li.cur{border-color:var(--red); color:var(--ink); background:#fdf1ef; box-shadow:3px 3px 0 rgba(192,57,43,.16);}
-.steplist li .z{color:var(--blue); font-weight:600; margin-right:8px;}
-.stepctrl{display:flex; gap:10px; align-items:center; margin-top:14px;}
-.stepctrl .cnt{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-soft);}
+  .connector{position:relative;height:90px;}
+  .connector svg{width:100%;height:100%;overflow:visible;}
+  .connector .clabel{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;text-align:center;}
+  .flowline{stroke:var(--accent);stroke-width:2;fill:none;stroke-dasharray:5 5;animation:dash 1s linear infinite;}
+  @keyframes dash{to{stroke-dashoffset:-20;}}
 
-/* ===== interactive: == vs = ===== */
-.eqrow{
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  border:1.5px solid var(--line-strong); border-radius:10px; padding:13px 16px;
-  margin-bottom:12px; background:var(--card);
-}
-.eqrow .snip{font-family:"IBM Plex Mono",monospace; font-size:14px; flex:1; min-width:240px; color:var(--ink); font-feature-settings:"liga" 0,"calt" 0;}
-.eqrow .pick{display:flex; gap:8px;}
-.eqrow .fb{font-family:"IBM Plex Mono",monospace; font-size:12.5px; font-weight:600; min-width:54px;}
-.eqrow .fb.ok{color:var(--green);} .eqrow .fb.bad{color:var(--red);}
+  .fn-box{padding:0 0 14px;}
+  .fn-sig{font-family:var(--mono);font-size:14px;padding:12px 16px 10px;color:var(--ink);border-bottom:1px solid var(--line);}
+  .fn-sig .kw{color:var(--winter);}
+  .fn-sig .pm{color:var(--accent-deep);font-weight:600;}
+  .decision{padding:12px 16px 0;}
+  .decision .dh{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;}
+  .branch{font-family:var(--mono);font-size:13px;padding:6px 11px;border-radius:7px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px;border:1px solid transparent;transition:all .25s ease;color:var(--ink-soft);}
+  .branch .cond{color:var(--accent-deep);}
+  .branch .res{color:var(--ink-faint);font-size:12px;}
+  .branch.active{background:var(--accent-soft);border-color:var(--accent);color:var(--ink);transform:translateX(3px);}
+  .branch.active .res{color:var(--accent-deep);}
+  .branch.active::after{content:"runs \2713";font-size:10px;letter-spacing:.05em;color:var(--accent);font-weight:600;flex:none;}
+  .branch.pulse{animation:pulse .5s ease;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,105,112,.4);}100%{box-shadow:0 0 0 8px rgba(47,105,112,0);}}
 
-/* ===== interactive: range mapper ===== */
-.todwrap{margin-top:8px;}
-.skybar{
-  height:74px; border-radius:10px; border:1.5px solid var(--line-strong);
-  box-shadow:4px 4px 0 var(--shadow); position:relative; overflow:hidden;
-  transition:background .4s ease; display:flex; align-items:center; justify-content:center;
-}
-.skybar .lbl{font-family:"Fraunces",serif; font-weight:700; font-size:24px; letter-spacing:.04em; text-shadow:0 1px 6px rgba(0,0,0,.35);}
-.todctrl{display:flex; align-items:center; gap:16px; margin:16px 0 6px;}
-.todctrl input[type=range]{flex:1; accent-color:var(--red); height:6px;}
-.todval{font-family:"IBM Plex Mono",monospace; font-size:15px; font-weight:600; min-width:96px; color:var(--ink);}
-.branchbox code.inl{display:block; padding:6px 10px; margin:0; border-radius:0; border:none; background:transparent; opacity:.45; transition:all .2s ease;}
-.branch{
-  font-family:"IBM Plex Mono",monospace; font-size:13.5px; line-height:1.5;
-  background:var(--code-bg); border:1.5px solid var(--line-strong); border-radius:10px;
-  padding:14px 16px; margin-top:14px; box-shadow:4px 4px 0 var(--shadow);
-  font-feature-settings:"liga" 0,"calt" 0;
-}
-.branch .bl{display:block; padding:3px 8px; border-radius:6px; color:var(--ink-soft); transition:all .2s ease;}
-.branch .bl.hot{background:#fdf1ef; color:var(--ink); font-weight:600; box-shadow:inset 3px 0 0 var(--red);}
+  .readout{margin-top:20px;padding:14px 18px;background:var(--paper-2);border-radius:9px;font-size:15px;color:var(--ink);border-left:3px solid var(--accent);}
+  .readout b{color:var(--accent-deep);}
+  .think-q{margin-top:18px;font-family:var(--serif);font-style:italic;font-size:17px;color:var(--ink);}
+  .think-q::before{content:"\201C";color:var(--summer);font-size:22px;margin-right:2px;}
 
-/* ===== interactive: sorter ===== */
-.sortgrid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:6px;}
-.sline{
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-  border:1.5px solid var(--line-strong); border-radius:10px; padding:12px 15px; background:var(--card);
-  transition:all .2s ease;
-}
-.sline .code-frag{font-family:"IBM Plex Mono",monospace; font-size:14px; flex:1; min-width:240px; color:var(--ink); font-feature-settings:"liga" 0,"calt" 0;}
-.sline .opts{display:flex; gap:8px;}
-.sline.right{border-color:var(--green); background:#f1f8f3;}
-.sline.wrong{border-color:var(--red); background:#fdf1ef;}
-.sline .why{flex-basis:100%; font-size:13.5px; color:var(--ink-soft); margin-top:4px;}
-.scorebar{
-  display:flex; align-items:center; gap:14px; margin-top:16px;
-  font-family:"IBM Plex Mono",monospace; font-size:14px;
-}
-.scorebar .pill{background:var(--ink); color:#fbfaf0; padding:6px 14px; border-radius:20px; font-weight:600;}
+  /* ---------- == TRAP ---------- */
+  .eq-stage{display:flex;gap:26px;align-items:stretch;flex-wrap:wrap;}
+  .eq-left{flex:1;min-width:280px;}
+  .eq-line{font-family:var(--mono);font-size:21px;padding:20px;background:var(--paper);border:1.5px solid var(--line-strong);border-radius:11px;display:flex;align-items:center;gap:2px;flex-wrap:wrap;}
+  .eq-line .kw{color:var(--winter);}
+  .eq-line .str{color:var(--fall);}
+  .op-toggle{background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-weight:600;font-size:20px;padding:3px 14px;margin:0 4px;cursor:pointer;transition:background .2s,transform .1s;}
+  .op-toggle:hover{transform:translateY(-1px);}
+  .op-toggle.is-eq{background:var(--good);}
+  .op-toggle.is-assign{background:var(--warn);}
+  .eq-hint{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;font-family:var(--mono);}
+  .eq-explain{flex:1.1;min-width:280px;border-radius:11px;padding:20px 22px;transition:all .3s ease;}
+  .eq-explain.good{background:var(--good-soft);border:1px solid #bcdcc0;}
+  .eq-explain.bad{background:var(--warn-soft);border:1px solid #ecc4b8;}
+  .eq-explain .tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+  .eq-explain.good .tag{color:var(--good);}
+  .eq-explain.bad .tag{color:var(--warn);}
+  .eq-explain h4{font-family:var(--serif);font-size:20px;margin:6px 0 8px;font-weight:600;}
+  .eq-explain p{margin:0;font-size:14.5px;color:var(--ink);}
+  .eq-explain .demo{margin-top:14px;font-family:var(--mono);font-size:13px;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.6);}
 
-/* ===== interactive: easter grid ===== */
-.egwrap{display:grid; grid-template-columns:1.1fr .9fr; gap:22px; align-items:start; margin-top:8px;}
-.egrid{display:grid; grid-template-columns:auto repeat(4,1fr); gap:6px;}
-.egrid .hd{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); display:flex; align-items:center; justify-content:center; padding:4px;}
-.egrid .rh{justify-content:flex-end; padding-right:8px;}
-.egcell{
-  border:1.5px solid var(--line-strong); border-radius:8px; aspect-ratio:1.5/1;
-  background:var(--card); cursor:pointer; display:flex; align-items:center; justify-content:center;
-  font-size:20px; transition:all .15s ease;
-}
-.egcell:hover{background:#eef4fb; transform:translateY(-2px);}
-.egcell.sel{border-color:var(--red); background:#fdf1ef; box-shadow:3px 3px 0 rgba(192,57,43,.18);}
-.sparkpanel{
-  border:1.5px solid var(--line-strong); border-radius:12px; padding:18px 20px;
-  background:var(--card); box-shadow:5px 5px 0 var(--shadow); min-height:200px;
-}
-.sparkpanel .when{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--blue); font-weight:600;}
-.sparkpanel h4{font-family:"Fraunces",serif; font-weight:600; font-size:19px; margin:6px 0 10px;}
-.sparkpanel ul{margin:0 0 14px; padding-left:18px;}
-.sparkpanel li{font-size:15px; margin-bottom:6px;}
-.sparkpanel .yourbox{width:100%; font-family:"DM Sans",sans-serif; font-size:14.5px; border:1.5px dashed var(--line-strong); border-radius:8px; padding:10px 12px; resize:vertical; min-height:60px; background:#fffefa;}
-.sparkpanel .ph{color:var(--ink-soft); font-style:italic;}
+  /* ---------- RANGES ---------- */
+  .track-wrap{padding-top:8px;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px;font-size:12.5px;color:var(--ink-soft);font-family:var(--mono);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .swatch{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.12);}
+  .track{display:flex;height:46px;border-radius:10px;overflow:hidden;border:1.5px solid var(--line-strong);position:relative;}
+  .band{position:relative;}
+  .band .blabel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:rgba(255,255,255,.92);text-shadow:0 1px 2px rgba(0,0,0,.3);pointer-events:none;}
+  .marker{position:absolute;top:-10px;bottom:-10px;width:3px;background:var(--ink);border-radius:3px;transform:translateX(-50%);transition:left .12s ease;z-index:3;}
+  .marker::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--ink);}
+  .hours{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);}
+  .range-read{margin-top:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .range-read .big{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--accent-deep);}
+  .range-read .cond-chip{font-family:var(--mono);font-size:13px;background:var(--accent-soft);color:var(--accent-deep);padding:5px 11px;border-radius:7px;}
 
-/* ===== interactive: rubric self-check ===== */
-.rubric{margin-top:8px;}
-.rrow{
-  border:1.5px solid var(--line-strong); border-radius:10px; padding:14px 16px;
-  margin-bottom:12px; background:var(--card);
-}
-.rrow .rhead{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;}
-.rrow .rname{font-family:"Fraunces",serif; font-weight:600; font-size:17px;}
-.rrow .rmax{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-soft);}
-.rrow .rdesc{font-size:13.5px; color:var(--ink-soft); margin:6px 0 11px;}
-.lvls{display:flex; gap:7px; flex-wrap:wrap;}
-.lvl{
-  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
-  min-width:36px; padding:6px 0; text-align:center; border-radius:7px; cursor:pointer;
-  border:1.5px solid var(--line-strong); background:#f6f3e6; color:var(--ink-soft); transition:all .12s ease;
-}
-.lvl:hover{border-color:var(--blue);}
-.lvl.on{background:var(--blue); color:#fff; border-color:var(--blue); box-shadow:2px 2px 0 var(--shadow);}
-.totalcard{
-  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
-  border:2px solid var(--ink); border-radius:12px; padding:16px 22px; margin-top:6px; background:var(--card);
-  box-shadow:5px 5px 0 var(--shadow);
-}
-.totalcard .tnum{font-family:"Fraunces",serif; font-weight:700; font-size:38px; color:var(--ink);}
-.totalcard .tnum b{color:var(--red);}
-.totalcard .tlabel{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
-.meter{height:12px; border-radius:8px; background:#e9e4d2; overflow:hidden; border:1px solid var(--line-strong); flex:1; min-width:160px;}
-.meter > div{height:100%; width:0; background:linear-gradient(90deg,var(--amber),var(--green)); transition:width .3s ease;}
+  /* ---------- FUNCTION TREE ---------- */
+  .tree-stage{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start;}
+  .tree{font-family:var(--mono);font-size:13.5px;line-height:1.9;}
+  .tree ul{list-style:none;margin:0;padding-left:20px;border-left:1px dashed var(--line-strong);}
+  .tree>ul{padding-left:0;border:none;}
+  .tree li{position:relative;}
+  .tree-node{cursor:pointer;border-radius:6px;padding:1px 8px;transition:background .15s,color .15s;display:inline-block;border:1px solid transparent;}
+  .tree-node:hover{background:var(--paper-2);}
+  .tree-node.active{background:var(--accent);color:#fff;border-color:var(--accent-deep);}
+  .tree-node .args{color:var(--accent-deep);}
+  .tree-node.active .args{color:#cfe6e8;}
+  .tree-node.root{font-weight:600;color:var(--ink);}
+  .tree-detail{position:sticky;top:20px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:22px;min-height:160px;}
+  .tree-detail .td-name{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--accent-deep);}
+  .tree-detail .td-job{margin-top:10px;font-size:15px;color:var(--ink);line-height:1.55;}
+  .tree-detail .td-hint{margin-top:14px;font-size:12.5px;color:var(--ink-faint);font-style:italic;}
+  .naming-note{margin-top:22px;padding:16px 18px;border-radius:10px;background:var(--warn-soft);border:1px solid #ecc4b8;font-size:14px;color:var(--ink);}
+  .naming-note b{color:var(--warn);}
 
-/* ===== dark recipe / cheat card ===== */
-.recipe{
-  background:#222d36; color:#e9edf0; border-radius:14px; padding:28px 30px 26px;
-  margin:26px 0 8px; box-shadow:7px 7px 0 #b9c2c9; position:relative;
-}
-.recipe::before{
-  content:"PRE-FLIGHT"; position:absolute; top:-13px; left:24px;
-  font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.18em;
-  background:var(--red); color:#fff; padding:5px 12px; border-radius:3px 9px 3px 9px;
-}
-.recipe h3{font-family:"Fraunces",serif; color:#fff; font-size:22px; margin:6px 0 14px;}
-.recipe ul{list-style:none; margin:0; padding:0;}
-.recipe li{
-  display:flex; gap:12px; align-items:flex-start; padding:9px 0;
-  border-bottom:1px dashed rgba(255,255,255,.14); font-size:15px;
-}
-.recipe li:last-child{border-bottom:none;}
-.recipe li .bx{flex:none; width:18px; height:18px; border:2px solid #7f8c98; border-radius:5px; margin-top:3px; cursor:pointer; transition:background .12s ease, border-color .12s ease; position:relative;}
-.recipe li.done{opacity:.55;}
-.recipe li.done .bx{background:#4cb87a; border-color:#4cb87a;}
-.recipe li.done .bx::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#0f2017; font-size:13px; font-weight:700;}
-.recipe li b{color:#ffd479;}
-.recipe code{font-family:"IBM Plex Mono",monospace; background:rgba(255,255,255,.1); padding:1px 6px; border-radius:5px; font-size:.9em; color:#bfe3ff;}
-.kbd{font-family:"IBM Plex Mono",monospace; font-size:.85em; background:#3a4751; border:1px solid #55636e; border-bottom-width:2px; border-radius:5px; padding:1px 7px; color:#fff;}
+  /* ---------- EASTER EGGS ---------- */
+  .egg-grid{display:grid;grid-template-columns:96px repeat(4,1fr);gap:7px;}
+  .egg-cellhead{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;padding:8px 4px;font-weight:600;text-align:center;}
+  .egg-rowhead{font-family:var(--serif);font-size:15px;font-weight:600;display:flex;align-items:center;padding-left:6px;}
+  .egg-cell{aspect-ratio:1.5/1;border:1.5px solid var(--line);border-radius:9px;background:var(--paper);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .18s ease;}
+  .egg-cell:hover{border-color:var(--accent);transform:translateY(-2px);background:var(--accent-soft);}
+  .egg-cell.active{border-color:var(--accent);background:var(--accent);color:#fff;transform:translateY(-2px);box-shadow:var(--shadow);}
+  .egg-detail{margin-top:22px;padding:20px 22px;border-radius:12px;background:var(--paper-2);border:1px solid var(--line);min-height:96px;}
+  .egg-detail .ed-combo{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .egg-detail .ed-spark{font-family:var(--serif);font-size:18px;margin:8px 0 6px;color:var(--ink);}
+  .egg-detail .ed-spark b{font-style:italic;color:var(--accent-deep);}
+  .egg-detail .ed-q{font-size:14px;color:var(--ink-soft);}
+  .egg-detail.empty{color:var(--ink-faint);font-style:italic;display:flex;align-items:center;}
 
-/* ---------------- footer ---------------- */
-footer.foot{
-  max-width:880px; margin:60px auto 0; padding:30px 40px 0;
-  border-top:2px dashed var(--line-strong);
-}
-footer.foot .sign{font-family:"Caveat",cursive; font-size:26px; color:var(--ink-soft); transform:rotate(-1.3deg);}
-footer.foot .small{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-soft); margin-top:8px; letter-spacing:.04em;}
+  /* ---------- RUBRIC ---------- */
+  .rub-head{display:grid;grid-template-columns:200px 1fr;gap:0;font-family:var(--serif);font-weight:600;font-size:15px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:4px;}
+  .rub-row{display:grid;grid-template-columns:200px 1fr;gap:0;border-bottom:1px solid var(--line);padding:16px 0;align-items:start;}
+  .rub-crit{padding-right:16px;}
+  .rub-crit .rc-name{font-family:var(--serif);font-size:17px;font-weight:600;line-height:1.2;}
+  .rub-crit .rc-note{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:4px;}
+  .rub-crit .rc-max{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:6px;}
+  .rub-levels{display:flex;gap:8px;flex-wrap:wrap;}
+  .level{flex:1;min-width:120px;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;cursor:pointer;background:var(--paper);transition:all .15s ease;}
+  .level:hover{border-color:var(--line-strong);background:#fff;}
+  .level .pts{font-family:var(--mono);font-weight:600;font-size:18px;color:var(--ink-faint);line-height:1;}
+  .level .ltxt{font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.4;}
+  .level.sel{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent);}
+  .level.sel .pts{color:var(--accent-deep);}
+  .level.sel .ltxt{color:var(--ink);}
+
+  .rub-total{margin-top:26px;padding:20px 24px;border-radius:13px;background:var(--ink);color:var(--paper);display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+  .rub-total .score{font-family:var(--serif);font-size:38px;font-weight:600;line-height:1;flex:none;}
+  .rub-total .score small{font-size:18px;color:var(--ink-faint);}
+  .rub-bar-wrap{flex:1;min-width:200px;}
+  .rub-bar{height:10px;border-radius:6px;background:rgba(255,255,255,.15);overflow:hidden;}
+  .rub-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--summer),var(--accent));border-radius:6px;transition:width .4s cubic-bezier(.2,.8,.2,1);}
+  .rub-total .note{font-size:13px;color:var(--ink-faint);flex-basis:100%;font-style:italic;}
+  .rub-clear{background:none;border:1px solid rgba(255,255,255,.3);color:var(--paper);border-radius:7px;padding:7px 13px;font-family:var(--mono);font-size:12px;cursor:pointer;flex:none;}
+  .rub-clear:hover{background:rgba(255,255,255,.12);}
+
+  /* ---------- CHECKLIST ---------- */
+  .check-list{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;}
+  .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--paper);transition:all .15s ease;}
+  .check-item:hover{border-color:var(--line-strong);}
+  .check-item.done{background:var(--good-soft);border-color:#bcdcc0;}
+  .check-box{flex:none;width:21px;height:21px;border-radius:6px;border:2px solid var(--line-strong);margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s ease;}
+  .check-item.done .check-box{background:var(--good);border-color:var(--good);}
+  .check-box svg{width:13px;height:13px;opacity:0;transform:scale(.4);transition:all .15s ease;}
+  .check-item.done .check-box svg{opacity:1;transform:scale(1);}
+  .check-item .ctext{font-size:14.5px;color:var(--ink);line-height:1.4;}
+  .check-item.done .ctext{color:var(--ink-soft);}
+  .check-item .ctext code{font-size:.85em;}
+  .check-progress{margin-top:22px;text-align:center;font-family:var(--mono);font-size:14px;color:var(--ink-soft);}
+  .check-progress b{color:var(--accent-deep);font-size:16px;}
+  .check-progress.alldone{color:var(--good);font-weight:600;}
+
+  /* ---------- FOOTER ---------- */
+  footer{margin-top:80px;padding-top:30px;border-top:2px solid var(--ink);}
+  .foot-grid{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;}
+  .foot-pill{font-family:var(--mono);font-size:12.5px;padding:8px 14px;border-radius:8px;background:var(--paper-2);border:1px solid var(--line);color:var(--ink-soft);}
+  .foot-pill b{color:var(--accent-deep);}
+  .foot-sign{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);margin-top:6px;}
 </style>
 </head>
 <body>
 
-<nav class="sidebar">
-  <div class="brand">Changing of <span class="pen">the Seasons</span></div>
-  <div class="brand-sub">AP CSP · Processing</div>
-  <ul class="toc" id="toc">
-    <li><a href="#s1"><span class="n">01</span><span>The Big Picture</span></a></li>
-    <li><a href="#s2"><span class="n">02</span><span>Plan Before You Code</span></a></li>
-    <li><a href="#s3"><span class="n">03</span><span>Your Variables</span></a></li>
-    <li><a href="#s4"><span class="n">04</span><span>Thinking in Ranges</span></a></li>
-    <li><a href="#s5"><span class="n">05</span><span>Helper Functions</span></a></li>
-    <li><a href="#s6"><span class="n">06</span><span>Easter Eggs</span></a></li>
-    <li><a href="#s7"><span class="n">07</span><span>How You're Graded</span></a></li>
-    <li><a href="#s8"><span class="n">08</span><span>Before You Submit</span></a></li>
-  </ul>
-  <div class="toc-foot">No copying scenes &mdash;<br>make it yours ✎</div>
-</nav>
-
-<div class="main">
-  <div class="wrap">
-    <header class="hero">
-      <div class="eyebrow">Project Planner · Things to think about</div>
-      <h1>Functions, Arguments &amp;<br>Conditionals, <span class="accent">Oh My!</span></h1>
-      <p class="subtitle">You're about to build a landscape that <em class="h">changes with the season and the time of day</em>. This page won't write it for you &mdash; it'll help you plan it, dodge the common traps, and know exactly how it'll be graded.</p>
-      <div class="metastrip">
-        <span class="tag-meta">Pulls together: <b>variables · arguments · conditionals · helpers</b></span>
-        <span class="tag-meta">Worth <b>25 points</b></span>
-        <span class="tag-meta">Bring a <b>plan</b>, not just code</span>
-      </div>
-    </header>
-
-    <!-- ============ SECTION 1 ============ -->
-    <section id="s1">
-      <span class="sec-tag">01 · The Big Picture</span>
-      <h2>One idea ties the whole project together</h2>
-      <p class="lead">Almost everything you'll do here is a version of the same move, repeated:</p>
-      <div class="card">
-        <p style="margin:0;font-size:17.5px;"><strong>Set a few variables</strong> &nbsp;→&nbsp; <strong>hand them to helper functions as arguments</strong> &nbsp;→&nbsp; <strong>each helper uses <code class="inl">if</code> statements to decide what to draw.</strong></p>
-      </div>
-      <p>Your <code class="inl">setup()</code> (or <code class="inl">draw()</code>) is basically a control panel. It holds the dials for your world &mdash; the season, the hour, how many clouds &mdash; and then calls helpers to build the scene. It should contain <em class="h">only variable assignments and function calls</em>. No <code class="inl">fill()</code>, no <code class="inl">rect()</code> living directly in there.</p>
-
-      <pre class="code"><code>void setup() {
-  size(800, 600);
-
-  int timeOfDay = 14;          // the dial: 0 to 23
-  String season = "SUMMER";    // the dial: SUMMER / SPRING / WINTER / FALL
-  int numClouds = 3;           // the dial: how many of something
-
-  drawSky(season, timeOfDay);  // hand the dials to the helpers
-  drawLandscape(season, timeOfDay);
-  drawClouds(numClouds);
-}</code></pre>
-      <p class="codecap">notice: the panel just sets values and calls helpers — nothing is drawn here directly</p>
-
-      <p>The trickier part is the arrow in the middle: <strong>which helper actually needs which dial?</strong> A function should only receive the arguments it truly uses to do its one job. Try it &mdash; tap a variable and see who needs it:</p>
-
-      <div class="card">
-        <div class="lab-strip">Tap a variable</div>
-        <div class="chiprow" id="argchips">
-          <button class="chip" data-var="season">season</button>
-          <button class="chip" data-var="timeOfDay">timeOfDay</button>
-          <button class="chip" data-var="numClouds">numClouds</button>
-        </div>
-        <div class="fnwrap" id="argfns">
-          <div class="fncard" data-needs="season timeOfDay"><div class="nm">drawSky(...)</div><div class="ds">Sky color + seasonal sky extras, and the day/night look.</div></div>
-          <div class="fncard" data-needs="season timeOfDay"><div class="nm">drawLandscape(...)</div><div class="ds">Ground color and seasonal ground details.</div></div>
-          <div class="fncard" data-needs="numClouds"><div class="nm">drawClouds(...)</div><div class="ds">Draws a count of clouds — only cares about how many.</div></div>
-          <div class="fncard" data-needs="season"><div class="nm">drawTrees(...)</div><div class="ds">Bare, leafy, or snowy depending on the season.</div></div>
-        </div>
-        <div class="matchmsg" id="argmsg">Each function should take in <em>only</em> what it needs &mdash; that's worth points on the rubric.</div>
-      </div>
-
-      <div class="note blue">
-        <span class="lab">Why this matters</span>
-        <p>Passing a function exactly the arguments it needs (and no extras) is literally a graded line on your rubric. A <code class="inl">drawClouds()</code> that demands the season is a hint that the job isn't cleanly separated yet.</p>
-      </div>
-    </section>
-
-    <!-- ============ SECTION 2 ============ -->
-    <section id="s2">
-      <span class="sec-tag green">02 · Plan Before You Code</span>
-      <h2>Sketch first. The code is the easy part later.</h2>
-      <p class="lead">The students who struggle most are usually the ones who open Processing and start typing. The ones who finish calmly drew a plan first. Spend ten minutes here before any code:</p>
-
-      <div class="grid3">
-        <div class="mini"><span class="ic">✏️</span><h4>Sketch the scenes</h4><p>Doodle what SUMMER noon looks like vs WINTER night. You don't need 96 drawings — a few rough sketches reveal what changes and what stays.</p></div>
-        <div class="mini"><span class="ic">🧱</span><h4>List the layers</h4><p>Sky, ground, trees, an object or two, then small surprises. That list becomes your function calls.</p></div>
-        <div class="mini"><span class="ic">🔧</span><h4>Name the helpers</h4><p>Write the function names you'll need <em>before</em> writing them: <code class="inl">drawSky</code>, <code class="inl">drawTree</code>, <code class="inl">drawSnowman</code>…</p></div>
-      </div>
-
-      <h3>Order is everything: last drawn sits on top</h3>
-      <p>Processing paints in the order you call things, like stacking sheets of paper. The <strong>first</strong> call lands on the bottom; the <strong>last</strong> call sits on top. So your sky and ground come first, your tiny details come last &mdash; otherwise the ground paints right over your snowman. Step through it:</p>
-
-      <div class="card">
-        <div class="stagewrap">
-          <div class="stage" id="lstage">
-            <div class="ly ly-sky" data-layer="sky"></div>
-            <div class="ly ly-ground" data-layer="ground"></div>
-            <div class="ly ly-tree" data-layer="tree"></div>
-            <div class="ly ly-item" data-layer="item"></div>
-            <div class="ly ly-egg" data-layer="egg"></div>
-          </div>
-          <div>
-            <div class="lab-strip">Your draw() calls, in order</div>
-            <ul class="steplist" id="lsteps">
-              <li data-layer="sky"><span class="z">1.</span>drawSky(...)</li>
-              <li data-layer="ground"><span class="z">2.</span>drawLandscape(...)</li>
-              <li data-layer="tree"><span class="z">3.</span>drawTrees(...)</li>
-              <li data-layer="item"><span class="z">4.</span>drawSnowman(...)</li>
-              <li data-layer="egg"><span class="z">5.</span>drawStars(...)</li>
-            </ul>
-            <div class="stepctrl">
-              <button class="btn sm" id="lback" disabled>◀ Back</button>
-              <button class="btn sm" id="lnext">Draw next ▶</button>
-              <span class="cnt" id="lcnt">0 / 5 layers</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mnote">If something keeps disappearing, you probably drew it <em>before</em> the thing covering it.</div>
-    </section>
-
-    <!-- ============ SECTION 3 ============ -->
-    <section id="s3">
-      <span class="sec-tag amber">03 · Your Variables</span>
-      <h2>Three or more dials, set in the right place</h2>
-      <p class="lead">The assignment asks for at least three variables. These three are required:</p>
-      <div class="grid3">
-        <div class="mini"><span class="ic">🕐</span><h4>timeOfDay</h4><p>An <code class="inl">int</code> from 0 to 23. Drives sunrise / day / sunset / night.</p></div>
-        <div class="mini"><span class="ic">🍂</span><h4>season</h4><p>A <code class="inl">String</code>: <code class="inl">"SUMMER"</code>, <code class="inl">"SPRING"</code>, <code class="inl">"WINTER"</code>, or <code class="inl">"FALL"</code>.</p></div>
-        <div class="mini"><span class="ic">🔢</span><h4>num___</h4><p>An <code class="inl">int</code> for how many of something — clouds, stars, leaves. Plus anything else you need.</p></div>
-      </div>
-
-      <div class="note red">
-        <span class="lab">The #1 thing graders look for</span>
-        <p>Declare your variables <em class="h">locally, inside <code class="inl">setup()</code></em> (or <code class="inl">draw()</code>) &mdash; not globally at the top of the file. On the rubric, local declarations earn full marks; global ones drop you a level even if everything else is perfect. And every variable you declare must actually get <strong>used</strong>.</p>
-      </div>
-
-      <h3>Naming rules (same as always)</h3>
-      <p>Start with a letter, no spaces or symbols except the underscore, and pick a name that says what it holds. <code class="inl">numClouds</code> tells a reader something; <code class="inl">x2</code> doesn't. Clear names are graded too.</p>
-
-      <h3>The one operator mistake that bites everyone</h3>
-      <p>When you <strong>compare</strong> things inside an <code class="inl">if</code>, use <code class="inl">==</code> (double). A single <code class="inl">=</code> means "put this value in here." Mixing them up is the most common bug in this whole project. Decide what each line is doing:</p>
-
-      <div class="card">
-        <div class="lab-strip">Comparing (==) or assigning (=) ?</div>
-        <div id="eqlist">
-          <div class="eqrow" data-a="cmp" data-why="✓ == checks whether they're equal — exactly right inside an if.">
-            <span class="snip">if (season == "WINTER")</span>
-            <span class="pick"><button class="btn ghost sm" data-pick="cmp">Comparing</button><button class="btn ghost sm" data-pick="set">Assigning</button></span>
-            <span class="fb"></span>
-          </div>
-          <div class="eqrow" data-a="set" data-why="✓ A single = stores 5 into numClouds. Correct when you're setting a value.">
-            <span class="snip">numClouds = 5;</span>
-            <span class="pick"><button class="btn ghost sm" data-pick="cmp">Comparing</button><button class="btn ghost sm" data-pick="set">Assigning</button></span>
-            <span class="fb"></span>
-          </div>
-          <div class="eqrow" data-a="set" data-why="⚠ This is the classic bug. A single = inside an if assigns instead of comparing — you almost certainly meant ==.">
-            <span class="snip">if (timeOfDay = 18)</span>
-            <span class="pick"><button class="btn ghost sm" data-pick="cmp">Comparing</button><button class="btn ghost sm" data-pick="set">Assigning</button></span>
-            <span class="fb"></span>
-          </div>
-          <div class="eqrow" data-a="set" data-why="✓ Declaring season and giving it a starting value. The = is exactly right.">
-            <span class="snip">String season = "SPRING";</span>
-            <span class="pick"><button class="btn ghost sm" data-pick="cmp">Comparing</button><button class="btn ghost sm" data-pick="set">Assigning</button></span>
-            <span class="fb"></span>
-          </div>
-        </div>
-        <div class="matchmsg" id="eqmsg">Tap a choice for each line. Single <code class="inl">=</code> sets a value; double <code class="inl">==</code> checks equality.</div>
-      </div>
-    </section>
-
-    <!-- ============ SECTION 4 ============ -->
-    <section id="s4">
-      <span class="sec-tag">04 · Thinking in Ranges</span>
-      <h2>You don't need 24 looks — you need a few ranges</h2>
-      <p class="lead">The clock runs 0 to 23, but nobody wants to write 24 different skies. Group the hours into a handful of moods &mdash; night, sunrise, midday, sunset, night &mdash; and let an <code class="inl">if / else if / else</code> chain sort each hour into exactly one of them.</p>
-
-      <p>The chain reads top to bottom and <em class="h">stops at the first match</em>. That's why <code class="inl">timeOfDay &lt; 6</code> quietly means "0 through 5": anything below 6 already got caught. Drag the hour and watch which branch wins:</p>
-
-      <div class="card">
-        <div class="todwrap">
-          <div class="skybar" id="skybar"><span class="lbl" id="skylbl">DAYTIME</span></div>
-          <div class="todctrl">
-            <span class="todval" id="todval">14:00</span>
-            <input type="range" id="todrange" min="0" max="23" value="14">
-          </div>
-          <div class="branch" id="branchbox">
-            <span class="bl" data-idx="0">if (timeOfDay &lt; 6) {        <span style="opacity:.6">// night</span></span>
-            <span class="bl" data-idx="1">} else if (timeOfDay &lt; 10) { <span style="opacity:.6">// sunrise</span></span>
-            <span class="bl" data-idx="2">} else if (timeOfDay &lt; 18) { <span style="opacity:.6">// daytime</span></span>
-            <span class="bl" data-idx="3">} else if (timeOfDay &lt; 20) { <span style="opacity:.6">// sunset</span></span>
-            <span class="bl" data-idx="4">} else {                      <span style="opacity:.6">// night again</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="note amber">
-        <span class="lab">Graded: efficient conditionals</span>
-        <p>The rubric rewards the "most efficient use of <code class="inl">if/else if/else</code>." A tidy chain like the one above beats five separate <code class="inl">if</code> statements, because the chain guarantees exactly one branch runs. Keep your braces lined up and your conditions in a sensible order (smallest range first).</p>
-      </div>
-
-      <p>Do the same trick for the seasons inside each helper: one <code class="inl">if/else if</code> chain comparing <code class="inl">season</code> to each of the four strings.</p>
-    </section>
-
-    <!-- ============ SECTION 5 ============ -->
-    <section id="s5">
-      <span class="sec-tag magenta">05 · Helper Functions</span>
-      <h2>Lots of small functions, each with one job</h2>
-      <p class="lead">A good helper function does <em class="h">one focused thing</em>, has a name that says what it does, and uses the arguments it's given. <code class="inl">drawTree()</code> draws a tree. <code class="inl">drawSnowman(size)</code> draws a snowman of that size. You're allowed &mdash; encouraged &mdash; to call <em>other</em> helpers, the way <code class="inl">drawLandscape()</code> might call <code class="inl">drawTree()</code>, which calls <code class="inl">drawOneLeaf()</code>.</p>
-
-      <div class="grid2">
-        <div class="note green" style="margin:0;">
-          <span class="lab">A strong helper</span>
-          <p>Clear name · does a single task · takes only the arguments it needs · <strong>actually uses</strong> those arguments inside its body.</p>
-        </div>
-        <div class="note red" style="margin:0;">
-          <span class="lab">A weak helper</span>
-          <p>Vague name · tries to do five things · takes an argument it never looks at · or holds code that should be its own separate helper.</p>
-        </div>
-      </div>
-
-      <div class="note amber">
-        <span class="lab">Two graded traps, side by side</span>
-        <p><strong>Function Calling:</strong> if drawing commands like <code class="inl">fill()</code> or <code class="inl">rect()</code> sit loose in <code class="inl">draw()</code> instead of inside a helper, you drop from full marks. <strong>Helper Functions:</strong> if a function takes <code class="inl">season</code> but never checks it, the rubric calls that "not properly using arguments."</p>
-      </div>
-
-      <h3>Sorting test: where does each line belong?</h3>
-      <p>Your control panel holds <em>variables and function calls</em>. Everything that actually paints pixels lives <em>inside a helper</em>. Sort each line into the right home:</p>
-
-      <div class="card">
-        <div class="sortgrid" id="sortlist">
-          <div class="sline" data-a="draw" data-why="A variable — your dials always live in setup() or draw().">
-            <span class="code-frag">String season = "WINTER";</span>
-            <span class="opts"><button class="btn ghost sm" data-pick="draw">setup()/draw()</button><button class="btn ghost sm" data-pick="helper">inside a helper</button></span>
-          </div>
-          <div class="sline" data-a="draw" data-why="A function call — exactly what belongs in your control panel.">
-            <span class="code-frag">drawSky(season, timeOfDay);</span>
-            <span class="opts"><button class="btn ghost sm" data-pick="draw">setup()/draw()</button><button class="btn ghost sm" data-pick="helper">inside a helper</button></span>
-          </div>
-          <div class="sline" data-a="helper" data-why="A raw drawing command. Loose in draw() it costs you points — tuck it inside a helper.">
-            <span class="code-frag">fill(255, 200, 0);</span>
-            <span class="opts"><button class="btn ghost sm" data-pick="draw">setup()/draw()</button><button class="btn ghost sm" data-pick="helper">inside a helper</button></span>
-          </div>
-          <div class="sline" data-a="helper" data-why="Shape drawing — this belongs inside something like drawTree().">
-            <span class="code-frag">triangle(655, 420, 740, 415, 695, 360);</span>
-            <span class="opts"><button class="btn ghost sm" data-pick="draw">setup()/draw()</button><button class="btn ghost sm" data-pick="helper">inside a helper</button></span>
-          </div>
-          <div class="sline" data-a="draw" data-why="Another dial. Declare it in setup()/draw() with your other variables.">
-            <span class="code-frag">int numStars = 30;</span>
-            <span class="opts"><button class="btn ghost sm" data-pick="draw">setup()/draw()</button><button class="btn ghost sm" data-pick="helper">inside a helper</button></span>
-          </div>
-        </div>
-        <div class="scorebar"><span class="pill" id="sortscore">0 / 5 sorted</span><span id="sortmsg" style="color:var(--ink-soft);">Sort every line to check your instinct.</span></div>
-      </div>
-    </section>
-
-    <!-- ============ SECTION 6 ============ -->
-    <section id="s6">
-      <span class="sec-tag red">06 · Easter Eggs</span>
-      <h2>The surprises that only show up sometimes</h2>
-      <p class="lead">This is the playful, heavily-graded part. An easter egg is something that appears <em class="h">only</em> in a certain season or time &mdash; snowflakes in winter, a moon and stars at night, a squirrel in spring. The magic word is <strong>only</strong>: a bird that's always on screen isn't an easter egg, it's just a bird.</p>
-
-      <p>Mechanically, an easter egg is just a helper call wrapped in a condition:</p>
-      <pre class="code"><code>if (season == "WINTER") {
-  drawSnowflakes();   // only ever happens in winter
-}</code></pre>
-
-      <div class="note red">
-        <span class="lab">How easter eggs are scored</span>
-        <p>Top marks go to ideas that are <strong>thoughtful, clever, and well-executed</strong>, and that appear <strong>only when appropriate</strong>. "Too few or too simple" lands in the middle; missing them is zero. Aim for a couple you're genuinely a little proud of.</p>
-      </div>
-
-      <h3>Brainstorm station</h3>
-      <p>Tap a season and time of day for a couple of sparks &mdash; then make them your own. (These are just ideas to get you unstuck, not code.)</p>
-
-      <div class="card">
-        <div class="egwrap">
-          <div>
-            <div class="lab-strip">Season × time of day</div>
-            <div class="egrid" id="egrid">
-              <div class="hd"></div>
-              <div class="hd">🌅 Morn</div><div class="hd">☀️ Mid</div><div class="hd">🌆 Eve</div><div class="hd">🌙 Night</div>
-
-              <div class="hd rh">Spring</div>
-              <div class="egcell" data-s="SPRING" data-t="Morning"></div>
-              <div class="egcell" data-s="SPRING" data-t="Midday"></div>
-              <div class="egcell" data-s="SPRING" data-t="Evening"></div>
-              <div class="egcell" data-s="SPRING" data-t="Night"></div>
-
-              <div class="hd rh">Summer</div>
-              <div class="egcell" data-s="SUMMER" data-t="Morning"></div>
-              <div class="egcell" data-s="SUMMER" data-t="Midday"></div>
-              <div class="egcell" data-s="SUMMER" data-t="Evening"></div>
-              <div class="egcell" data-s="SUMMER" data-t="Night"></div>
-
-              <div class="hd rh">Fall</div>
-              <div class="egcell" data-s="FALL" data-t="Morning"></div>
-              <div class="egcell" data-s="FALL" data-t="Midday"></div>
-              <div class="egcell" data-s="FALL" data-t="Evening"></div>
-              <div class="egcell" data-s="FALL" data-t="Night"></div>
-
-              <div class="hd rh">Winter</div>
-              <div class="egcell" data-s="WINTER" data-t="Morning"></div>
-              <div class="egcell" data-s="WINTER" data-t="Midday"></div>
-              <div class="egcell" data-s="WINTER" data-t="Evening"></div>
-              <div class="egcell" data-s="WINTER" data-t="Night"></div>
-            </div>
-          </div>
-          <div class="sparkpanel">
-            <div class="when" id="sparkwhen">Pick a cell →</div>
-            <h4 id="sparktitle">Ideas will appear here</h4>
-            <ul id="sparklist"><li class="ph">Tap any square to get a couple of sparks for that season and time of day.</li></ul>
-            <textarea class="yourbox" id="sparkbox" placeholder="What will YOU hide here? Jot your own idea…"></textarea>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ SECTION 7 ============ -->
-    <section id="s7">
-      <span class="sec-tag green">07 · How You're Graded</span>
-      <h2>The rubric, turned into a mirror</h2>
-      <p class="lead">Here's the actual grading scale &mdash; 25 points total. It starts at full marks; <em class="h">be honest about where you'd lose a point</em>, then go fix that thing before you submit. (We will assign the real grade. This is just for catching gaps.)</p>
-
-      <div class="rubric" id="rubric">
-        <div class="rrow" data-max="1">
-          <div class="rhead"><span class="rname">Code Formatting</span><span class="rmax">CMD + T · max 1</span></div>
-          <div class="rdesc">Auto-format (Tidy) was run before submitting.</div>
-          <div class="lvls"><button class="lvl on" data-val="1">1</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="4">
-          <div class="rhead"><span class="rname">3+ Variables</span><span class="rmax">max 4</span></div>
-          <div class="rdesc">Follow the spec, clear descriptive names, declared <strong>locally in setup()</strong>. (Global, or some unused, = a level down.)</div>
-          <div class="lvls"><button class="lvl on" data-val="4">4</button><button class="lvl" data-val="3">3</button><button class="lvl" data-val="2">2</button><button class="lvl" data-val="1">1</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="2">
-          <div class="rhead"><span class="rname">Variables in Setup</span><span class="rmax">max 2</span></div>
-          <div class="rdesc">Starting values defined for all 3+ variables (not just some).</div>
-          <div class="lvls"><button class="lvl on" data-val="2">2</button><button class="lvl" data-val="1">1</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="3">
-          <div class="rhead"><span class="rname">Function Calling</span><span class="rmax">max 3</span></div>
-          <div class="rdesc">Calls clearly-named helpers with <strong>exactly the arguments they need</strong> — no drawing code loose in draw().</div>
-          <div class="lvls"><button class="lvl on" data-val="3">3</button><button class="lvl" data-val="2">2</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="3">
-          <div class="rhead"><span class="rname">Helper Functions</span><span class="rmax">max 3</span></div>
-          <div class="rdesc">Clear names, necessary arguments that get <strong>used</strong>, one focused task each.</div>
-          <div class="lvls"><button class="lvl on" data-val="3">3</button><button class="lvl" data-val="2">2</button><button class="lvl" data-val="1">1</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="6">
-          <div class="rhead"><span class="rname">Conditional Logic</span><span class="rmax">max 6 · biggest chunk</span></div>
-          <div class="rdesc">Effective, well-formatted <code class="inl">if/else if/else</code> used throughout, with thoughtful conditions.</div>
-          <div class="lvls"><button class="lvl on" data-val="6">6</button><button class="lvl" data-val="5">5</button><button class="lvl" data-val="3">3</button><button class="lvl" data-val="2">2</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="4">
-          <div class="rhead"><span class="rname">Easter Eggs</span><span class="rmax">max 4</span></div>
-          <div class="rdesc">Thoughtful, clever, polished — and they appear <strong>only when appropriate</strong>.</div>
-          <div class="lvls"><button class="lvl on" data-val="4">4</button><button class="lvl" data-val="3">3</button><button class="lvl" data-val="2">2</button><button class="lvl" data-val="1">1</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-        <div class="rrow" data-max="2">
-          <div class="rhead"><span class="rname">4+ Images</span><span class="rmax">max 2</span></div>
-          <div class="rdesc">Four screenshots of different scenes in one doc, submitted alongside your code.</div>
-          <div class="lvls"><button class="lvl on" data-val="2">2</button><button class="lvl" data-val="0">0</button></div>
-        </div>
-      </div>
-
-      <div class="totalcard">
-        <div><div class="tnum"><b id="rtotal">25</b> / 25</div><div class="tlabel">Your honest self-estimate</div></div>
-        <div class="meter"><div id="rmeter"></div></div>
-      </div>
-    </section>
-
-    <!-- ============ SECTION 8 ============ -->
-    <section id="s8">
-      <span class="sec-tag red">08 · Before You Submit</span>
-      <h2>The pre-flight check</h2>
-      <p class="lead">Most lost points aren't about hard logic &mdash; they're the small stuff that's easy to forget at the end. Tick these off (tap to check) right before you turn it in:</p>
-
-      <div class="recipe">
-        <h3>Last look before takeoff</h3>
-        <ul>
-          <li><span class="bx"></span><span>Run auto-format: <span class="kbd">CMD</span> + <span class="kbd">T</span> right before submitting. <b>It's a free point.</b></span></li>
-          <li><span class="bx"></span><span>All <b>3+ variables</b> declared <b>locally</b> in <code>setup()</code> (or <code>draw()</code>) — and every one is actually <b>used</b>.</span></li>
-          <li><span class="bx"></span><span><code>setup()</code> / <code>draw()</code> holds <b>only</b> variable assignments and function calls. No stray <code>fill()</code> or <code>rect()</code> in there.</span></li>
-          <li><span class="bx"></span><span>Each helper does <b>one job</b>, has a clear name, and <b>uses</b> the arguments you pass it.</span></li>
-          <li><span class="bx"></span><span>Comparisons use <code>==</code>, never <code>=</code>; the hours are grouped into <b>ranges</b> with <code>if/else if/else</code>.</span></li>
-          <li><span class="bx"></span><span>At least <b>a couple of easter eggs</b> that show up <b>only</b> in the right season or time.</span></li>
-          <li><span class="bx"></span><span><b>Four screenshots</b> of different scenes, dropped into one Word/Google Doc and submitted <b>with</b> your code.</span></li>
-        </ul>
-      </div>
-      <div class="mnote">Total on the table: 25 points. Plan well, decompose, and let the conditionals do the heavy lifting.</div>
-    </section>
-
-
+<header class="masthead">
+  <div class="skyband"><div class="celestial"></div></div>
+  <div class="eyebrow">AP CSP &middot; Processing (Java Mode) &middot; Project Companion</div>
+  <h1>Changing of the <em>Seasons</em></h1>
+  <p class="lede">Functions, arguments &amp; conditionals — a guide for <em>thinking through</em> your scene before (and while) you build it.</p>
+  <div class="howto">
+    <b>This isn't the answer key.</b> It's scaffolding. Poke at the interactive pieces below to get the <i>concepts</i> firmly in your head, then go invent a world that's entirely yours. The creativity is the part nobody can hand you.
   </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1. THE BIG IDEA -->
+  <section>
+    <div class="sec-head"><span class="sec-num">01</span><h2>The big idea</h2></div>
+    <p class="sec-sub">Strip away the shapes and colors, and this whole project is one simple loop of logic. Your scene is just <strong>facts</strong> about a world, <strong>handed</strong> to little helpers, who <strong>decide</strong> what to draw. Change the facts → the world changes.</p>
+    <div class="card">
+      <div class="idea-flow">
+        <div class="idea-step">
+          <div class="ic">You store</div>
+          <div class="word">Variables</div>
+          <div class="desc">Facts about your world: what time is it? which season?</div>
+        </div>
+        <div class="idea-arrow">&rarr;</div>
+        <div class="idea-step">
+          <div class="ic">You pass</div>
+          <div class="word">Arguments</div>
+          <div class="desc">You hand those facts to the functions that need them.</div>
+        </div>
+        <div class="idea-arrow">&rarr;</div>
+        <div class="idea-step">
+          <div class="ic">They check</div>
+          <div class="word">Conditionals</div>
+          <div class="desc">Each helper asks "given these facts, what should I draw?"</div>
+        </div>
+        <div class="idea-arrow">&rarr;</div>
+        <div class="idea-step">
+          <div class="ic">You see</div>
+          <div class="word">A scene</div>
+          <div class="desc">The right sky, ground, and surprises appear.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. FOLLOW THE VALUE -->
+  <section>
+    <div class="sec-head"><span class="sec-num">02</span><h2>Follow the value</h2></div>
+    <p class="sec-sub">The trickiest idea to <em>feel</em> is how a value travels. You declare it in one place, but it does its work somewhere else entirely. Change the season and the time below, and watch the same two values flow into <span class="inline-code">drawSky</span> (straight from your starter) and light up the branch that runs.</p>
+    <div class="card">
+      <div class="flow-controls">
+        <div class="ctrl">
+          <label for="seasonSel">season</label>
+          <select id="seasonSel">
+            <option>SUMMER</option><option selected>SPRING</option><option>WINTER</option><option>FALL</option>
+          </select>
+        </div>
+        <div class="ctrl">
+          <label for="timeRange">timeOfDay&nbsp;<span style="color:var(--ink-faint)">(0&ndash;23)</span></label>
+          <div style="display:flex;align-items:center;gap:14px;">
+            <input type="range" id="timeRange" min="0" max="23" value="14">
+            <span class="timeread" id="timeRead">14:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe">
+        <div class="pipe-box draw">
+          <div class="pb-title">in setup() / draw()</div>
+          <div class="var-row"><span class="vk">season</span> = <span class="vv" id="vSeason">SPRING</span></div>
+          <div class="var-row"><span class="vk">timeOfDay</span> = <span class="vv" id="vTime">14</span></div>
+        </div>
+
+        <div class="connector">
+          <div class="clabel">passed as<br>arguments</div>
+          <svg viewBox="0 0 86 90" preserveAspectRatio="none">
+            <path class="flowline" d="M2,30 C40,30 46,30 84,46"></path>
+            <path class="flowline" d="M2,60 C40,60 46,60 84,46"></path>
+          </svg>
+        </div>
+
+        <div class="pipe-box">
+          <div class="fn-box">
+            <div class="fn-sig"><span class="kw">void</span> drawSky(<span class="kw">String</span> <span class="pm">season</span>, <span class="kw">int</span> <span class="pm">timeOfDay</span>)</div>
+            <div class="decision">
+              <div class="dh">// what's in the sky for this season?</div>
+              <div class="branch" data-s="SUMMER"><span class="cond">if (season == "SUMMER")</span><span class="res">summer sky</span></div>
+              <div class="branch" data-s="WINTER"><span class="cond">else if (season == "WINTER")</span><span class="res">winter sky</span></div>
+              <div class="branch" data-s="SPRING"><span class="cond">else if (season == "SPRING")</span><span class="res">spring sky + bird</span></div>
+              <div class="branch" data-s="FALL"><span class="cond">else (FALL)</span><span class="res">fall sky</span></div>
+            </div>
+            <div class="decision">
+              <div class="dh">// ...and what about the time of day?</div>
+              <div class="branch" data-t="night1"><span class="cond">if (timeOfDay &lt; 6)</span><span class="res">night sky</span></div>
+              <div class="branch" data-t="sunrise"><span class="cond">else if (timeOfDay &lt; 10)</span><span class="res">sunrise sky</span></div>
+              <div class="branch" data-t="day"><span class="cond">else if (timeOfDay &lt; 18)</span><span class="res">daytime sky</span></div>
+              <div class="branch" data-t="sunset"><span class="cond">else if (timeOfDay &lt; 20)</span><span class="res">sunset sky</span></div>
+              <div class="branch" data-t="night2"><span class="cond">else</span><span class="res">night sky</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="readout" id="flowReadout"></div>
+      <p class="think-q">Notice the parameter is also named <span class="mono">season</span> — but it doesn't have to be. What flows in is the <i>value</i>, not the name. Try renaming it in your head to <span class="mono">whichSeason</span> — would anything break?</p>
+    </div>
+  </section>
+
+  <!-- 3. THE == TRAP -->
+  <section>
+    <div class="sec-head"><span class="sec-num">03</span><h2>The one-character trap</h2></div>
+    <p class="sec-sub">This bug catches almost everyone, and the project description calls it out for a reason. <strong>One equals sign asks a question. Two equals signs... no, the other way around.</strong> Flip the operator below and read what Java actually hears.</p>
+    <div class="card">
+      <div class="eq-stage">
+        <div class="eq-left">
+          <div class="eq-line">
+            <span class="kw">if</span>&nbsp;(season&nbsp;<button class="op-toggle is-eq" id="opToggle">==</button>&nbsp;<span class="str">"WINTER"</span>)
+          </div>
+          <div class="eq-hint">&uarr; click the operator to flip it</div>
+        </div>
+        <div class="eq-explain good" id="eqExplain"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. THINKING IN RANGES -->
+  <section>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Think in ranges, not 24 cases</h2></div>
+    <p class="sec-sub">There are 24 possible hours, but you do <strong>not</strong> need 24 different looks. The trick is grouping hours into a handful of <em>ranges</em> — and that's exactly what a clean <span class="inline-code">if / else if</span> ladder does. Scrub through the day and watch which range each hour lands in.</p>
+    <div class="card">
+      <div class="track-wrap">
+        <div class="legend">
+          <span><i class="swatch" style="background:#2c3a55"></i> Night</span>
+          <span><i class="swatch" style="background:#e8a44d"></i> Sunrise</span>
+          <span><i class="swatch" style="background:#7ec0e8"></i> Daytime</span>
+          <span><i class="swatch" style="background:#d9794a"></i> Sunset</span>
+          <span><i class="swatch" style="background:#2c3a55"></i> Night</span>
+        </div>
+        <div class="track" id="rangeTrack">
+          <div class="band" style="flex:6;background:#2c3a55"><span class="blabel">0&ndash;5</span></div>
+          <div class="band" style="flex:4;background:#e8a44d"><span class="blabel">6&ndash;9</span></div>
+          <div class="band" style="flex:8;background:#7ec0e8"><span class="blabel">10&ndash;17</span></div>
+          <div class="band" style="flex:2;background:#d9794a"><span class="blabel">18&ndash;19</span></div>
+          <div class="band" style="flex:4;background:#2c3a55"><span class="blabel">20&ndash;23</span></div>
+          <div class="marker" id="rangeMarker" style="left:60%"></div>
+        </div>
+        <div class="hours"><span>12 AM</span><span>6 AM</span><span>Noon</span><span>6 PM</span><span>11 PM</span></div>
+        <div style="margin-top:18px;display:flex;align-items:center;gap:16px;">
+          <input type="range" id="rangeInput" min="0" max="23" value="14" style="width:100%;">
+        </div>
+        <div class="range-read">
+          <span class="big" id="rangeBig">2 PM &rarr; Daytime</span>
+          <span class="cond-chip" id="rangeChip">matches: timeOfDay &lt; 18</span>
+        </div>
+      </div>
+      <p class="think-q">These five bands come from your starter file. But your world doesn't have to keep the same hours. Maybe your dawn lingers, or "night" begins at 9. Where will <i>your</i> boundaries fall — and how many ranges do you actually need?</p>
+    </div>
+  </section>
+
+  <!-- 5. FUNCTION TREE -->
+  <section>
+    <div class="sec-head"><span class="sec-num">05</span><h2>One job per function</h2></div>
+    <p class="sec-sub">The rubric rewards helpers that have a <strong>clear name</strong>, take the <strong>arguments they need</strong>, and do a <strong>single focused task</strong>. Big functions call smaller ones, which call smaller ones still. Here's the decomposition already living in your starter — click any function to see its one job.</p>
+    <div class="card">
+      <div class="tree-stage">
+        <div class="tree">
+          <ul>
+            <li><span class="tree-node root" data-job="setup">setup()</span>
+              <ul>
+                <li><span class="tree-node" data-job="drawSky">drawSky(<span class="args">season, timeOfDay</span>)</span>
+                  <ul>
+                    <li><span class="tree-node" data-job="drawNightSky">drawNightSky()</span></li>
+                    <li><span class="tree-node" data-job="drawSunriseSky">drawSunriseSky()</span></li>
+                    <li><span class="tree-node" data-job="drawDaytimeSky">drawDaytimeSky()</span></li>
+                    <li><span class="tree-node" data-job="drawBird">drawBird()</span></li>
+                  </ul>
+                </li>
+                <li><span class="tree-node" data-job="DrawCloud">DrawCloud(<span class="args">numClouds</span>)</span>
+                  <ul><li><span class="tree-node" data-job="drawONEcloud">drawONEcloud(<span class="args">x, y</span>)</span></li></ul>
+                </li>
+                <li><span class="tree-node" data-job="drawLandscape">drawLandscape(<span class="args">season, timeOfDay</span>)</span>
+                  <ul>
+                    <li><span class="tree-node" data-job="drawTree">drawTree()</span></li>
+                    <li><span class="tree-node" data-job="FruitfulLeaves">FruitfulLeaves(<span class="args">x, y</span>)</span></li>
+                    <li><span class="tree-node" data-job="drawPicnic">drawPicnic(<span class="args">x, y, size</span>)</span></li>
+                    <li><span class="tree-node" data-job="drawSnowman">drawSnowman(<span class="args">size</span>)</span></li>
+                    <li><span class="tree-node" data-job="Drawleaf">Drawleaf()</span>
+                      <ul><li><span class="tree-node" data-job="drawOneLeaf">drawOneLeaf(<span class="args">x, y</span>)</span></li></ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="tree-detail" id="treeDetail">
+          <div class="td-name">&larr; Click a function</div>
+          <div class="td-job">Each box in the tree does exactly one thing. The bigger ones don't draw — they <i>delegate</i>, calling smaller helpers in the right order. That's the whole skill.</div>
+        </div>
+      </div>
+      <div class="naming-note">
+        <b>A genuinely useful nitpick:</b> look closely at the names — the starter mixes styles like <span class="mono">DrawCloud</span>, <span class="mono">drawTree</span>, <span class="mono">drawONEcloud</span>, and <span class="mono">Drawleaf</span>. Capital-first? Lowercase-first? ALLCAPS in the middle? Pick <em>one</em> convention (camelCase — <span class="mono">drawOneCloud</span> — is the standard) and apply it everywhere. Consistent naming is exactly what graders mean by "clear names."
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. EASTER EGGS -->
+  <section>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Plan your easter eggs</h2></div>
+    <p class="sec-sub">Easter eggs are things that appear <strong>only</strong> under specific conditions — snowflakes in winter, a moon at night. Each one is just a small drawing tucked inside a conditional. Tap any square to get a spark for that exact season + time combo (then aim to out-clever it).</p>
+    <div class="card">
+      <div class="egg-grid" id="eggGrid"></div>
+      <div class="egg-detail empty" id="eggDetail">Tap a square above to start brainstorming what only appears <i>there</i>.</div>
+      <p class="think-q">The rubric gives the most points for easter eggs that are clever <i>and</i> appear only when appropriate. So for each idea, ask: which <span class="mono">if</span> statement makes this show up — and stay hidden the rest of the time?</p>
+    </div>
+  </section>
+
+  <!-- 7. RUBRIC -->
+  <section>
+    <div class="sec-head"><span class="sec-num">07</span><h2>How it's graded</h2></div>
+    <p class="sec-sub">Here's the actual rubric — made clickable so you can <strong>honestly self-check</strong> before you submit. Pick the level that fairly describes your work in each row and watch your total. Be tough on yourself; future-you will thank you.</p>
+    <div class="card">
+      <div class="rub-head"><div>Criteria</div><div>Grading Scale</div></div>
+      <div id="rubricBody"></div>
+      <div class="rub-total">
+        <div class="score"><span id="rubScore">0</span><small> / 25</small></div>
+        <div class="rub-bar-wrap"><div class="rub-bar"><div class="rub-bar-fill" id="rubBar"></div></div></div>
+        <button class="rub-clear" id="rubClear">clear</button>
+        <div class="note">This is a reflection tool, not your real grade — but if you're checking these boxes honestly, you're in great shape.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. CHECKLIST -->
+  <section>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Pre-flight checklist</h2></div>
+    <p class="sec-sub">A last sweep before you call it done. Tick each one as you confirm it.</p>
+    <div class="card">
+      <div class="check-list" id="checkList"></div>
+      <div class="check-progress" id="checkProgress"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="eyebrow">Before you start &mdash; the non-negotiables</div>
+    <div class="foot-grid">
+      <div class="foot-pill"><b>1.</b> Create &amp; <b>SAVE</b> your sketch first thing</div>
+      <div class="foot-pill"><b>2.</b> Variables live <b>locally</b> in draw()/setup() — never global</div>
+      <div class="foot-pill"><b>3.</b> Only variable assignments &amp; function calls go in draw()/setup()</div>
+      <div class="foot-pill"><b>4.</b> Format with <b>&#8984; + T</b> before submitting</div>
+      <div class="foot-pill"><b>5.</b> Discuss ideas freely &mdash; but build on your <b>own</b> computer</div>
+    </div>
+    <p class="foot-sign">Now go make a world worth watching the seasons turn in. &mdash; have fun with it.</p>
+  </footer>
+
 </div>
-
-<footer class="foot">
-  <div class="wrap" style="padding-left:0;padding-right:0;max-width:none;">
-    <div class="sign">Plan it, sketch it, then let the code catch up. You've got this.</div>
-    <div class="small">AP CSP · Processing (Java mode) · Changing of the Seasons — planning &amp; reflection sheet</div>
-  </div>
-</footer>
 
 <script>
 (function(){
-  /* ---------- syntax highlighter (no ligatures; IBM Plex Mono) ---------- */
-  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function highlight(code){
-    var re=/(\/\/[^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+(?:\.\d+)?\b)|\b(void|if|else|for|while|return|new|true|false)\b|\b(int|float|double|String|boolean|char|byte|short|long|color)\b|([A-Za-z_]\w*)(?=\s*\()/g;
-    var out='',last=0,m;
-    while((m=re.exec(code))){
-      out+=esc(code.slice(last,m.index));
-      if(m[1])out+='<span class="c-com">'+esc(m[1])+'</span>';
-      else if(m[2])out+='<span class="c-str">'+esc(m[2])+'</span>';
-      else if(m[3])out+='<span class="c-num">'+esc(m[3])+'</span>';
-      else if(m[4])out+='<span class="c-kw">'+esc(m[4])+'</span>';
-      else if(m[5])out+='<span class="c-type">'+esc(m[5])+'</span>';
-      else if(m[6])out+='<span class="c-fn">'+esc(m[6])+'</span>';
-      last=re.lastIndex;
-    }
-    out+=esc(code.slice(last));
-    return out;
+  "use strict";
+
+  // ---------- 02 FOLLOW THE VALUE ----------
+  function phaseKey(h){
+    if(h<6) return "night1";
+    if(h<10) return "sunrise";
+    if(h<18) return "day";
+    if(h<20) return "sunset";
+    return "night2";
   }
-  function runHighlight(){
-    document.querySelectorAll('pre.code code').forEach(function(el){
-      if(el.dataset.hl)return;
-      el.innerHTML=highlight(el.textContent);
-      el.dataset.hl='1';
+  function phaseLabel(k){
+    return {night1:"Night",sunrise:"Sunrise",day:"Daytime",sunset:"Sunset",night2:"Night"}[k];
+  }
+  function fmtHour(h){
+    var ampm = h<12 ? "AM":"PM";
+    var hr = h%12; if(hr===0) hr=12;
+    return hr+" "+ampm;
+  }
+  function pad(h){ return (h<10?"0":"")+h+":00"; }
+
+  function initFlow(){
+    var sSel=document.getElementById("seasonSel"),
+        tRange=document.getElementById("timeRange"),
+        tRead=document.getElementById("timeRead"),
+        vSeason=document.getElementById("vSeason"),
+        vTime=document.getElementById("vTime"),
+        readout=document.getElementById("flowReadout");
+    if(!sSel) return;
+    var sBranches=document.querySelectorAll(".branch[data-s]"),
+        tBranches=document.querySelectorAll(".branch[data-t]");
+
+    function update(pulse){
+      var season=sSel.value, h=parseInt(tRange.value,10);
+      tRead.textContent=pad(h);
+      vSeason.textContent=season;
+      vTime.textContent=h;
+      tRange.style.setProperty("--fill",(h/23*100)+"%");
+      var pk=phaseKey(h);
+      sBranches.forEach(function(b){
+        var on=b.getAttribute("data-s")===season;
+        b.classList.toggle("active",on);
+        if(on&&pulse){b.classList.remove("pulse");void b.offsetWidth;b.classList.add("pulse");}
+      });
+      tBranches.forEach(function(b){
+        var on=b.getAttribute("data-t")===pk;
+        b.classList.toggle("active",on);
+        if(on&&pulse){b.classList.remove("pulse");void b.offsetWidth;b.classList.add("pulse");}
+      });
+      var seasonText={SUMMER:"summer",WINTER:"winter",SPRING:"spring",FALL:"fall"}[season];
+      readout.innerHTML="Right now it's <b>"+fmtHour(h)+"</b> on a <b>"+seasonText+"</b> day. "+
+        "Java walks each ladder top-to-bottom and stops at the first true condition — so the <b>"+phaseLabel(pk).toLowerCase()+" sky</b> and the <b>"+seasonText+"</b> elements are what get drawn.";
+    }
+    sSel.addEventListener("change",function(){update(true);});
+    tRange.addEventListener("input",function(){update(true);});
+    update(false);
+  }
+
+  // ---------- 03 == TRAP ----------
+  function initEquals(){
+    var btn=document.getElementById("opToggle"),
+        box=document.getElementById("eqExplain");
+    if(!btn) return;
+    var assigning=false;
+    function render(){
+      if(!assigning){
+        btn.textContent="==";
+        btn.className="op-toggle is-eq";
+        box.className="eq-explain good";
+        box.innerHTML='<div class="tag">&#10003; comparison &mdash; what you want</div>'+
+          '<h4>"Is season equal to WINTER?"</h4>'+
+          '<p>Two equals signs <b>ask a question</b>. Java looks at <span class="mono">season</span>, compares it, and answers <span class="mono">true</span> or <span class="mono">false</span> — without changing anything. The branch runs only when it&rsquo;s actually winter.</p>'+
+          '<div class="demo">season &rarr; "FALL" &nbsp;|&nbsp; ("FALL" == "WINTER") &rarr; <b>false</b> &nbsp;&#10003; skipped correctly</div>';
+      } else {
+        btn.textContent="=";
+        btn.className="op-toggle is-assign";
+        box.className="eq-explain bad";
+        box.innerHTML='<div class="tag">&#10007; assignment &mdash; the bug</div>'+
+          '<h4>"Make season EQUAL WINTER."</h4>'+
+          '<p>One equals sign is a <b>command</b>. It overwrites your variable, then quietly reports "success" — so the <span class="mono">if</span> always runs, every season turns into winter, and there&rsquo;s no error message to warn you. Sneaky.</p>'+
+          '<div class="demo">season &rarr; "FALL" &nbsp;|&nbsp; (season = "WINTER") &rarr; season is now <b>"WINTER"</b> &nbsp;&#10007; oops</div>';
+      }
+    }
+    btn.addEventListener("click",function(){assigning=!assigning;render();});
+    render();
+  }
+
+  // ---------- 04 RANGES ----------
+  function initRanges(){
+    var inp=document.getElementById("rangeInput"),
+        marker=document.getElementById("rangeMarker"),
+        big=document.getElementById("rangeBig"),
+        chip=document.getElementById("rangeChip");
+    if(!inp) return;
+    var conds={night1:"matches: timeOfDay < 6",sunrise:"matches: timeOfDay < 10",day:"matches: timeOfDay < 18",sunset:"matches: timeOfDay < 20",night2:"matches: else"};
+    function update(){
+      var h=parseInt(inp.value,10);
+      inp.style.setProperty("--fill",(h/23*100)+"%");
+      marker.style.left=((h+0.5)/24*100)+"%";
+      var k=phaseKey(h);
+      big.innerHTML=fmtHour(h)+" &rarr; "+phaseLabel(k);
+      chip.textContent=conds[k];
+    }
+    inp.addEventListener("input",update);
+    update();
+  }
+
+  // ---------- 05 FUNCTION TREE ----------
+  var jobs={
+    setup:["setup()","The control room. It sets the canvas size, stores your variables, and calls the helpers in order. Almost no drawing happens directly here — it just decides who does what.","This is where your variables should be declared, locally."],
+    drawSky:["drawSky(season, timeOfDay)","Decides the whole backdrop. It uses both arguments: one ladder picks the sky color for the season, another picks the look for the time of day.","Takes two arguments because it genuinely needs both facts."],
+    drawNightSky:["drawNightSky()","One job: paint a dark sky and place the moon. Nothing else.","No arguments needed — it always does the same thing."],
+    drawSunriseSky:["drawSunriseSky()","One job: draw the low, warm sun of dawn or dusk.","Notice the starter reuses this for both sunrise AND sunset."],
+    drawDaytimeSky:["drawDaytimeSky()","One job: the bright, high midday sun.","Small and focused — easy to read, easy to fix."],
+    drawBird:["drawBird()","One job: draw a single bird. (In the starter it shows up in spring.)","A perfect easter-egg-sized helper."],
+    DrawCloud:["DrawCloud(numClouds)","Reads a number and draws that many clouds — by calling the single-cloud helper the right number of times.","This is the 'how many of something' variable in action."],
+    drawONEcloud:["drawONEcloud(x, y)","One job: draw ONE cloud at a given spot. Takes coordinates so it can be reused anywhere.","Arguments make it reusable — that's the point of parameters."],
+    drawLandscape:["drawLandscape(season, timeOfDay)","Builds the ground. Chooses grass color and seasonal extras (snowman, picnic, leaves) based on the season.","Delegates the details to smaller helpers instead of drawing it all itself."],
+    drawTree:["drawTree()","One job: the trunk and branches of the tree.","Same tree every season — the leaves are handled separately."],
+    FruitfulLeaves:["FruitfulLeaves(x, y)","One job: a single leafy green blob at a point. Called many times to fill the tree.","Reused with different coordinates — clever, focused design."],
+    drawPicnic:["drawPicnic(x, y, size)","One job: a checkered picnic blanket. Position and size are arguments.","Three arguments, each one earning its place."],
+    drawSnowman:["drawSnowman(size)","One job: build a snowman, scaled by the size argument.","A winter-only easter egg with a tunable size."],
+    Drawleaf:["Drawleaf()","Scatters several falling leaves by calling the single-leaf helper in a loop.","A 'draw many' helper, like DrawCloud."],
+    drawOneLeaf:["drawOneLeaf(x, y)","One job: one falling leaf at a point.","The smallest building block — does the least, reused the most."]
+  };
+  function initTree(){
+    var nodes=document.querySelectorAll(".tree-node"),
+        detail=document.getElementById("treeDetail");
+    if(!nodes.length) return;
+    nodes.forEach(function(n){
+      n.addEventListener("click",function(){
+        nodes.forEach(function(x){x.classList.remove("active");});
+        n.classList.add("active");
+        var j=jobs[n.getAttribute("data-job")];
+        if(j){
+          detail.innerHTML='<div class="td-name">'+j[0]+'</div><div class="td-job">'+j[1]+'</div><div class="td-hint">'+j[2]+'</div>';
+        }
+      });
     });
   }
 
-  /* ---------- scrollspy ---------- */
-  function runSpy(){
-    var links=[].slice.call(document.querySelectorAll('.toc a'));
-    var map={};
-    links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if(e.isIntersecting){
-          links.forEach(function(l){l.classList.remove('active');});
-          if(map[e.target.id])map[e.target.id].classList.add('active');
-        }
+  // ---------- 06 EASTER EGGS ----------
+  var seasons=[["Spring","var(--spring)"],["Summer","var(--summer)"],["Fall","var(--fall)"],["Winter","var(--winter)"]];
+  var phases=["Night","Morning","Midday","Evening"];
+  var sparks={
+    "Spring|Night":["fireflies blinking low in the grass","\uD83E\uDEB2"],
+    "Spring|Morning":["a robin tugging a worm from the ground","\uD83D\uDC26"],
+    "Spring|Midday":["drifting pollen, or a kite on the breeze","\uD83E\uDE81"],
+    "Spring|Evening":["the very first cricket, glowing faintly","\uD83C\uDF31"],
+    "Summer|Night":["a campfire with marshmallows on sticks","\uD83D\uDD25"],
+    "Summer|Morning":["dew sparkling on a fresh green lawn","\u2600\uFE0F"],
+    "Summer|Midday":["a beach ball, or heat shimmer over the road","\uD83C\uDFD6\uFE0F"],
+    "Summer|Evening":["a single firework opening in the sky","\uD83C\uDF86"],
+    "Fall|Night":["a jack-o'-lantern flickering on a porch","\uD83C\uDF83"],
+    "Fall|Morning":["a low fog drifting across the field","\uD83C\uDF2B\uFE0F"],
+    "Fall|Midday":["a rake leaning beside a pile of leaves","\uD83C\uDF42"],
+    "Fall|Evening":["a flock of birds flying south in a V","\uD83D\uDD4A\uFE0F"],
+    "Winter|Night":["northern lights, or one warm glowing window","\u2744\uFE0F"],
+    "Winter|Morning":["frost creeping in from the corners","\u2603\uFE0F"],
+    "Winter|Midday":["a paused snowball fight, mid-throw","\u26C4"],
+    "Winter|Evening":["smoke curling from a chimney","\uD83C\uDFE0"]
+  };
+  function initEggs(){
+    var grid=document.getElementById("eggGrid"),
+        detail=document.getElementById("eggDetail");
+    if(!grid) return;
+    var html='<div class="egg-cellhead"></div>';
+    phases.forEach(function(p){ html+='<div class="egg-cellhead">'+p+'</div>'; });
+    seasons.forEach(function(s){
+      html+='<div class="egg-rowhead" style="color:'+s[1]+'">'+s[0]+'</div>';
+      phases.forEach(function(p){
+        var key=s[0]+"|"+p, sp=sparks[key];
+        html+='<div class="egg-cell" data-key="'+key+'">'+sp[1]+'</div>';
       });
-    },{rootMargin:'-42% 0px -52% 0px'});
-    document.querySelectorAll('section[id]').forEach(function(s){obs.observe(s);});
+    });
+    grid.innerHTML=html;
+    var cells=grid.querySelectorAll(".egg-cell");
+    cells.forEach(function(c){
+      c.addEventListener("click",function(){
+        cells.forEach(function(x){x.classList.remove("active");});
+        c.classList.add("active");
+        var key=c.getAttribute("data-key"), sp=sparks[key];
+        var parts=key.split("|");
+        detail.className="egg-detail";
+        detail.innerHTML='<div class="ed-combo">'+parts[0]+' &middot; '+parts[1]+'</div>'+
+          '<div class="ed-spark">One spark: <b>'+sp[0]+'</b></div>'+
+          '<div class="ed-q">&hellip;but these are just an idea. What would <i>only you</i> hide in this exact moment?</div>';
+      });
+    });
   }
 
-  document.addEventListener('DOMContentLoaded',function(){
-    runHighlight();
-    runSpy();
-
-    /* ---------- §1 argument matcher ---------- */
-    (function(){
-      var chipWrap=document.getElementById('argchips');
-      var fnWrap=document.getElementById('argfns');
-      var msg=document.getElementById('argmsg');
-      if(!chipWrap||!fnWrap) return;
-      var chips=[].slice.call(chipWrap.querySelectorAll('.chip'));
-      var cards=[].slice.call(fnWrap.querySelectorAll('.fncard'));
-      function active(){return chips.filter(function(c){return c.classList.contains('active');}).map(function(c){return c.dataset.var;});}
-      function update(){
-        var act=active();
-        cards.forEach(function(card){
-          var needs=card.dataset.needs.split(/\s+/);
-          card.classList.remove('lit','dim');
-          if(act.length===0) return;
-          var hit=needs.some(function(n){return act.indexOf(n)>-1;});
-          card.classList.add(hit?'lit':'dim');
-        });
-        if(!msg) return;
-        if(act.length===0){
-          msg.innerHTML="Each function should take in <em>only</em> what it needs &mdash; that's worth points on the rubric.";
-          return;
-        }
-        var lit=cards.filter(function(c){return c.classList.contains('lit');})
-          .map(function(c){return c.querySelector('.nm').textContent.replace(/\s*\(.*\)/,'');});
-        if(lit.length===0){
-          msg.textContent="Nothing in this scene needs "+act.join(" or ")+", so you would not pass it anywhere. Try another.";
-        } else {
-          msg.textContent=lit.join(", ")+" need "+act.join(" / ")+". Those are the only places that variable belongs.";
-        }
-      }
-      chips.forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('active'); update();});});
-    })();
-
-    /* ---------- §2 layer stepper ---------- */
-    (function(){
-      var stage=document.getElementById('lstage');
-      var stepsWrap=document.getElementById('lsteps');
-      var next=document.getElementById('lnext');
-      var back=document.getElementById('lback');
-      var cnt=document.getElementById('lcnt');
-      if(!stage||!stepsWrap||!next||!back) return;
-      var layers=[].slice.call(stage.querySelectorAll('.ly'));
-      var steps=[].slice.call(stepsWrap.querySelectorAll('li'));
-      var total=layers.length, n=0;
-      function render(){
-        layers.forEach(function(ly,i){ly.classList.toggle('on', i<n);});
-        steps.forEach(function(li,i){
-          li.classList.toggle('done', i<n && i!==n-1);
-          li.classList.toggle('cur', i===n-1);
-        });
-        if(cnt) cnt.textContent=n+" / "+total+" layers";
-        back.disabled=(n===0);
-        next.disabled=(n===total);
-        next.textContent=(n===total)?"Scene complete \u2713":"Draw next \u25B6";
-      }
-      next.addEventListener('click',function(){if(n<total){n++; render();}});
-      back.addEventListener('click',function(){if(n>0){n--; render();}});
-      render();
-    })();
-
-    /* ---------- §3 == vs = ---------- */
-    (function(){
-      var list=document.getElementById('eqlist');
-      var msg=document.getElementById('eqmsg');
-      if(!list) return;
-      [].slice.call(list.querySelectorAll('.eqrow')).forEach(function(row){
-        var ans=row.dataset.a, why=row.dataset.why;
-        var fb=row.querySelector('.fb');
-        var btns=[].slice.call(row.querySelectorAll('button[data-pick]'));
-        btns.forEach(function(b){
-          b.addEventListener('click',function(){
-            btns.forEach(function(x){x.classList.remove('chosen');});
-            b.classList.add('chosen');
-            var right=(b.dataset.pick===ans);
-            if(fb){fb.textContent=right?"\u2713":"\u2717"; fb.className="fb "+(right?"ok":"bad");}
-            if(msg) msg.textContent=why;
-          });
-        });
+  // ---------- 07 RUBRIC ----------
+  var rubric=[
+    {n:"Code Formatting", note:"\u2318 + T", lv:[
+      {p:1,t:"Done prior to submission"},
+      {p:0,t:"Not done prior to submission"}
+    ]},
+    {n:"3+ Variables", lv:[
+      {p:4,t:"Follow the spec with clear, descriptive names. Initialized locally in setup()."},
+      {p:3,t:"Follow the spec with accurate names, but created globally instead of locally, or not all are used."},
+      {p:2,t:"Close, but do not exactly follow the specifications."},
+      {p:1,t:"Vary strongly from the description, or feature poor naming."},
+      {p:0,t:"Variables not used as shown in the project description."}
+    ]},
+    {n:"Variables in Setup", lv:[
+      {p:2,t:"Includes initializations for 3+ variables as demonstrated."},
+      {p:1,t:"Some values defined initially, but not all."},
+      {p:0,t:"Does not include 3+ variables."}
+    ]},
+    {n:"Function Calling", lv:[
+      {p:3,t:"Calls clearly-named helper functions, passing exactly the arguments they need."},
+      {p:2,t:"Calls helpers but also includes code that belongs in helper functions of its own."},
+      {p:0,t:"Does not call helper functions, or does so ineffectively."}
+    ]},
+    {n:"Helper Functions", lv:[
+      {p:3,t:"Clear names, necessary arguments, and a single focused task each."},
+      {p:2,t:"Could use improvement in naming or focus."},
+      {p:1,t:"Do not properly use arguments."},
+      {p:0,t:"Not present."}
+    ]},
+    {n:"Conditional Logic", lv:[
+      {p:6,t:"Effective throughout: well thought-out conditions, proper formatting, efficient if / else if / else."},
+      {p:5,t:"Generally good, but some room for improvement in the logic."},
+      {p:3,t:"Approaching acceptable, but with multiple errors in logic or formatting."},
+      {p:2,t:"Significant logical or organizational errors / inefficient code."},
+      {p:0,t:"Little to no proper use of conditionals."}
+    ]},
+    {n:"Easter Eggs", lv:[
+      {p:4,t:"Thoughtful / clever and well-executed. Appear only when appropriate."},
+      {p:3,t:"On the right path, but with less-than-adequate effort / polish."},
+      {p:2,t:"Too few or too simple."},
+      {p:1,t:"Only minimal effort shown."},
+      {p:0,t:"Missing."}
+    ]},
+    {n:"4+ Images", lv:[
+      {p:2,t:'4 screenshots of different "scenes" in one doc, submitted with the code.'},
+      {p:0,t:"Missing."}
+    ]}
+  ];
+  function initRubric(){
+    var body=document.getElementById("rubricBody"),
+        scoreEl=document.getElementById("rubScore"),
+        barEl=document.getElementById("rubBar"),
+        clearBtn=document.getElementById("rubClear");
+    if(!body) return;
+    var maxTotal=rubric.reduce(function(a,r){return a+Math.max.apply(null,r.lv.map(function(l){return l.p;}));},0);
+    document.querySelector("#rubScore").parentNode.querySelector("small").textContent=" / "+maxTotal;
+    var selected={};
+    var html="";
+    rubric.forEach(function(r,ri){
+      var maxP=Math.max.apply(null,r.lv.map(function(l){return l.p;}));
+      html+='<div class="rub-row"><div class="rub-crit">'+
+            '<div class="rc-name">'+r.n+'</div>'+
+            (r.note?'<div class="rc-note">'+r.note+'</div>':'')+
+            '<div class="rc-max">max '+maxP+' pts</div></div>'+
+            '<div class="rub-levels">';
+      r.lv.forEach(function(l,li){
+        html+='<div class="level" data-r="'+ri+'" data-l="'+li+'" data-p="'+l.p+'">'+
+              '<div class="pts">'+l.p+'</div><div class="ltxt">'+l.t+'</div></div>';
       });
-    })();
-
-    /* ---------- §4 time-of-day range mapper ---------- */
-    (function(){
-      var slider=document.getElementById('todrange');
-      var val=document.getElementById('todval');
-      var bar=document.getElementById('skybar');
-      var lbl=document.getElementById('skylbl');
-      var box=document.getElementById('branchbox');
-      if(!slider||!bar||!lbl) return;
-      var bls=box?[].slice.call(box.querySelectorAll('.bl')):[];
-      var buckets=[
-        {bg:"linear-gradient(180deg,#0b1d3a,#1f2f5c 70%,#39426f)", label:"NIGHT",   col:"#e9eefc"},
-        {bg:"linear-gradient(180deg,#ffd9a0,#ffb27a 55%,#f59e8c)", label:"SUNRISE", col:"#5a3120"},
-        {bg:"linear-gradient(180deg,#7fc0ec,#a9d7f2 60%,#d9eefb)", label:"DAYTIME", col:"#163b54"},
-        {bg:"linear-gradient(180deg,#ffb56b,#f08a6e 45%,#9a5b8e)", label:"SUNSET",  col:"#fff4ec"},
-        {bg:"linear-gradient(180deg,#0b1d3a,#1f2f5c 70%,#39426f)", label:"NIGHT",   col:"#e9eefc"}
-      ];
-      function idxFor(h){ if(h<6)return 0; if(h<10)return 1; if(h<18)return 2; if(h<20)return 3; return 4; }
-      function pad(h){ return (h<10?"0":"")+h+":00"; }
-      function update(){
-        var h=parseInt(slider.value,10);
-        var i=idxFor(h), b=buckets[i];
-        bar.style.background=b.bg;
-        lbl.textContent=b.label;
-        lbl.style.color=b.col;
-        if(val) val.textContent=pad(h);
-        bls.forEach(function(el){el.classList.toggle('hot', parseInt(el.dataset.idx,10)===i);});
-      }
-      slider.addEventListener('input',update);
-      update();
-    })();
-
-    /* ---------- §5 where-does-this-line-go sorter ---------- */
-    (function(){
-      var list=document.getElementById('sortlist');
-      var score=document.getElementById('sortscore');
-      var msg=document.getElementById('sortmsg');
-      if(!list) return;
-      var rows=[].slice.call(list.querySelectorAll('.sline'));
-      var total=rows.length;
-      function tally(){
-        var answered=0, correct=0;
-        rows.forEach(function(r){
-          if(r.classList.contains('right')){answered++; correct++;}
-          else if(r.classList.contains('wrong')){answered++;}
-        });
-        if(score) score.textContent=answered+" / "+total+" sorted";
-        if(msg){
-          if(answered<total){ msg.textContent=(total-answered)+" line"+((total-answered)===1?"":"s")+" still to place."; }
-          else if(correct===total){ msg.textContent="Nailed it. That is exactly the instinct the Function Calling score rewards."; }
-          else { msg.textContent="Close. Re-check the "+(total-correct)+" highlighted in red \u2014 those belong on the other side."; }
-        }
-      }
-      rows.forEach(function(row){
-        var ans=row.dataset.a, why=row.dataset.why;
-        var btns=[].slice.call(row.querySelectorAll('button[data-pick]'));
-        btns.forEach(function(b){
-          b.addEventListener('click',function(){
-            btns.forEach(function(x){x.classList.remove('chosen');});
-            b.classList.add('chosen');
-            var right=(b.dataset.pick===ans);
-            row.classList.remove('right','wrong');
-            row.classList.add(right?'right':'wrong');
-            var w=row.querySelector('.why');
-            if(!w){ w=document.createElement('div'); w.className='why'; row.appendChild(w); }
-            w.textContent=why;
-            tally();
-          });
-        });
+      html+='</div></div>';
+    });
+    body.innerHTML=html;
+    var levels=body.querySelectorAll(".level");
+    function recompute(){
+      var total=0;
+      for(var k in selected){ total+=selected[k]; }
+      scoreEl.textContent=total;
+      barEl.style.width=(total/maxTotal*100)+"%";
+    }
+    levels.forEach(function(el){
+      el.addEventListener("click",function(){
+        var ri=el.getAttribute("data-r");
+        body.querySelectorAll('.level[data-r="'+ri+'"]').forEach(function(x){x.classList.remove("sel");});
+        el.classList.add("sel");
+        selected[ri]=parseInt(el.getAttribute("data-p"),10);
+        recompute();
       });
-    })();
-
-    /* ---------- §6 easter-egg sparks ---------- */
-    (function(){
-      var grid=document.getElementById('egrid');
-      var when=document.getElementById('sparkwhen');
-      var title=document.getElementById('sparktitle');
-      var ul=document.getElementById('sparklist');
-      var area=document.getElementById('sparkbox');
-      if(!grid||!ul) return;
-      var sparks={
-        "SPRING|Morning":["dew beading on the grass","a robin tugging at a worm"],
-        "SPRING|Midday":["bees drifting between blossoms","a kite snagged in the breeze"],
-        "SPRING|Evening":["fireflies just beginning to blink","loose petals riding the wind"],
-        "SPRING|Night":["a single owl on a bare branch","puddles mirroring the moon"],
-        "SUMMER|Morning":["sprinklers ticking across a lawn","a popsicle already dripping"],
-        "SUMMER|Midday":["heat shimmer rising off the road","a beach ball bouncing past"],
-        "SUMMER|Evening":["long golden shadows off the trees","a lemonade stand closing up"],
-        "SUMMER|Night":["a campfire throwing sparks","a far-off shooting star"],
-        "FALL|Morning":["mist hanging low over the field","a squirrel burying an acorn"],
-        "FALL|Midday":["leaves spiraling down one by one","a scarecrow watching the rows"],
-        "FALL|Evening":["a jack-o'-lantern flickering on a porch","geese cutting a V overhead"],
-        "FALL|Night":["a black cat slipping along a fence","bats looping under the moon"],
-        "WINTER|Morning":["frost feathering across a window","fresh footprints in the snow"],
-        "WINTER|Midday":["a snowman gaining a carrot nose","a snowball caught mid-throw"],
-        "WINTER|Evening":["smoke curling from a chimney","string lights blinking on the eaves"],
-        "WINTER|Night":["snowflakes drifting through lamplight","a bright moon on a white field"]
-      };
-      function cap(s){ return s.charAt(0)+s.slice(1).toLowerCase(); }
-      var notes={}, current=null;
-      var cells=[].slice.call(grid.querySelectorAll('.egcell'));
-      function ideasFor(s,t){
-        return sparks[s+"|"+t] || ["something that only appears in "+cap(s)+" at "+t.toLowerCase(),"a small touch a careful viewer would notice"];
-      }
-      function select(cell){
-        if(current && area) notes[current.dataset.s+"|"+current.dataset.t]=area.value;
-        cells.forEach(function(c){c.classList.remove('sel');});
-        cell.classList.add('sel');
-        current=cell;
-        var s=cell.dataset.s, t=cell.dataset.t;
-        if(when) when.textContent=s+" / "+t;
-        if(title) title.textContent=cap(s)+", "+t.toLowerCase();
-        ul.innerHTML="";
-        ideasFor(s,t).forEach(function(idea){
-          var li=document.createElement('li'); li.textContent=idea; ul.appendChild(li);
-        });
-        if(area) area.value=notes[s+"|"+t]||"";
-      }
-      cells.forEach(function(c){c.addEventListener('click',function(){select(c);});});
-      if(area) area.addEventListener('input',function(){ if(current) notes[current.dataset.s+"|"+current.dataset.t]=area.value; });
-    })();
-
-    /* ---------- §7 rubric self-check ---------- */
-    (function(){
-      var rubric=document.getElementById('rubric');
-      var totalEl=document.getElementById('rtotal');
-      var meter=document.getElementById('rmeter');
-      if(!rubric) return;
-      var rows=[].slice.call(rubric.querySelectorAll('.rrow'));
-      var maxTotal=rows.reduce(function(a,r){return a+parseInt(r.dataset.max,10);},0);
-      function recompute(){
-        var sum=0;
-        rows.forEach(function(r){
-          var on=r.querySelector('.lvl.on');
-          if(on) sum+=parseInt(on.dataset.val,10);
-        });
-        if(totalEl) totalEl.textContent=sum;
-        if(meter) meter.style.width=(maxTotal?Math.round(sum/maxTotal*100):0)+"%";
-      }
-      rows.forEach(function(r){
-        var lvls=[].slice.call(r.querySelectorAll('.lvl'));
-        lvls.forEach(function(b){
-          b.addEventListener('click',function(){
-            lvls.forEach(function(x){x.classList.remove('on');});
-            b.classList.add('on');
-            recompute();
-          });
-        });
-      });
+    });
+    clearBtn.addEventListener("click",function(){
+      selected={};
+      levels.forEach(function(x){x.classList.remove("sel");});
       recompute();
-    })();
+    });
+  }
 
-    /* ---------- §8 pre-flight checklist ---------- */
-    (function(){
-      var recipe=document.querySelector('.recipe');
-      if(!recipe) return;
-      [].slice.call(recipe.querySelectorAll('li')).forEach(function(li){
-        li.addEventListener('click',function(){ li.classList.toggle('done'); });
+  // ---------- 08 CHECKLIST ----------
+  var checks=[
+    'I created the sketch and <b>saved it</b> first thing',
+    'My 3+ variables are declared <b>locally</b> in draw() or setup()',
+    'I have <code>timeOfDay</code>, <code>season</code>, and a <code>num___</code> variable',
+    'My variable <b>names</b> are clear and follow one naming style',
+    'draw()/setup() holds <b>only</b> variable assignments and function calls',
+    'Every comparison uses <code>==</code>, never <code>=</code>',
+    'Each helper function does <b>one focused job</b> with a clear name',
+    'Functions receive <b>exactly the arguments</b> they need',
+    'My scene works across different <b>season + time</b> combinations',
+    'I have <b>easter eggs</b> that appear only in specific conditions',
+    'I ran <b>&#8984; + T</b> to format the code',
+    'I took <b>4 screenshots</b> of different scenes for the doc'
+  ];
+  function initChecklist(){
+    var list=document.getElementById("checkList"),
+        prog=document.getElementById("checkProgress");
+    if(!list) return;
+    var html="";
+    checks.forEach(function(c,i){
+      html+='<div class="check-item" data-i="'+i+'"><div class="check-box">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'+
+        '</div><div class="ctext">'+c+'</div></div>';
+    });
+    list.innerHTML=html;
+    var items=list.querySelectorAll(".check-item");
+    function tally(){
+      var done=list.querySelectorAll(".check-item.done").length;
+      if(done===checks.length){
+        prog.className="check-progress alldone";
+        prog.innerHTML="\u2713 All "+checks.length+" checks complete — go submit it!";
+      } else {
+        prog.className="check-progress";
+        prog.innerHTML="<b>"+done+"</b> / "+checks.length+" ready";
+      }
+    }
+    items.forEach(function(it){
+      it.addEventListener("click",function(){
+        it.classList.toggle("done");
+        tally();
       });
-    })();
-  });
+    });
+    tally();
+  }
+
+  // ---------- REVEAL ----------
+  function initReveal(){
+    var secs=document.querySelectorAll("section");
+    if(!("IntersectionObserver" in window)){
+      secs.forEach(function(s){s.classList.add("in");});
+      return;
+    }
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}
+      });
+    },{threshold:.12});
+    secs.forEach(function(s){io.observe(s);});
+  }
+
+  function start(){
+    initFlow();
+    initEquals();
+    initRanges();
+    initTree();
+    initEggs();
+    initRubric();
+    initChecklist();
+    initReveal();
+  }
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",start);
+  } else { start(); }
 })();
 </script>
 </body>
