@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Conditionals — Processing Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,600&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f1e4; --paper-2:#efe8d6; --card:#fffef9;
+    --ink:#1d2b30; --ink-soft:#3e5158;
+    --grid:#d2dde0; --grid-bold:#bfd0d4;
+    --line:#ddd3bd; --line-strong:#c7b78f;
+    --red:#e8502b; --red-deep:#c33e1d;
+    --blue:#2f6bff; --green:#169d6b; --green-deep:#0f7d52;
+    --teal:#1f857a; --amber:#e0991a; --gold:#e5a93a; --magenta:#a4318f;
+    --highlight:#ffe08a;
+    --code-bg:#fcfbf3; --code-edge:#e9b3ab; --code-text:#26323d;
+    --t-com:#7d9b6e; --t-type:#e8502b; --t-kw:#a4318f; --t-builtin:#2f6bff;
+    --t-fn:#c6841a; --t-num:#169d6b; --t-str:#169d6b; --t-var:#26323d;
+    --shadow:3px 4px 0 rgba(38,50,61,.07);
+    --shadow-hard:5px 5px 0 var(--ink);
+    --display:'Fraunces',Georgia,serif;
+    --body:'DM Sans',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --hand:'Caveat',cursive;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body); color:var(--ink); line-height:1.62; font-size:16px;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+      linear-gradient(var(--grid-bold) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid-bold) 1px,transparent 1px);
+    background-size:25px 25px,25px 25px,125px 125px,125px 125px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--red);color:var(--paper);}
+
+  /* ---------- FIXED LEFT TOC ---------- */
+  nav.toc{
+    position:fixed;left:0;top:0;width:248px;height:100vh;
+    background:rgba(246,241,228,.97);
+    border-right:2px solid var(--line-strong);
+    padding:28px 20px;overflow-y:auto;z-index:20;
+  }
+  .toc-brand{font-family:var(--display);font-weight:900;font-size:21px;line-height:1.05;color:var(--ink);}
+  .toc-brand .dot{color:var(--red);}
+  .toc-sub{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:4px 0 22px;}
+  nav.toc a{
+    display:block;text-decoration:none;color:var(--ink-soft);
+    font-size:13.5px;font-weight:500;padding:7px 11px;margin:2px 0;
+    border-radius:5px;border-left:3px solid transparent;transition:.13s;
+  }
+  .tnum{font-family:var(--mono);font-size:10.5px;color:#b9b49c;margin-right:8px;font-weight:600;}
+  nav.toc a:hover{background:#ede8da;color:var(--ink);}
+  nav.toc a.active{
+    background:var(--card);color:var(--ink);
+    border-left-color:var(--red);font-weight:700;
+    box-shadow:1px 1px 0 rgba(29,43,48,.08);
+  }
+  nav.toc a.active .tnum{color:var(--red);}
+  .toc-div{height:1px;background:var(--line);margin:16px 4px;}
+  .toc-foot{margin-top:18px;font-family:var(--hand);font-size:19px;line-height:1.2;color:var(--ink-soft);transform:rotate(-2deg);display:block;}
+
+  /* ---------- CONTENT SHELL ---------- */
+  .content{margin-left:248px;}
+  .wrap{max-width:880px;margin:0 auto;padding:0 44px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{position:relative;padding:64px 0 26px;overflow:hidden;}
+  .axis-deco{position:absolute;top:44px;right:34px;width:150px;opacity:.5;}
+  .tag{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  h1.title{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,4.4vw,3.1rem);line-height:1.04;margin:14px 0 0;letter-spacing:-.01em;}
+  h1.title .em{color:var(--red);font-style:italic;}
+  .lede{font-size:18px;color:var(--ink-soft);max-width:640px;margin:16px 0 0;}
+  .hero-meta{margin-top:18px;display:flex;gap:9px;flex-wrap:wrap;}
+  .chip{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;padding:5px 11px;border:1.5px solid var(--line-strong);border-radius:20px;background:var(--card);color:var(--ink-soft);}
+
+  /* ---------- SECTIONS ---------- */
+  main{padding-bottom:60px;}
+  section{margin:56px 0;scroll-margin-top:24px;}
+  .section-tag{
+    display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.12em;color:#fff;background:var(--ink);
+    padding:5px 12px;border-radius:3px 12px 3px 12px;margin-bottom:13px;
+  }
+  h2{font-family:var(--display);font-weight:600;font-size:34px;line-height:1.14;margin:4px 0 10px;letter-spacing:-.01em;}
+  h3{font-family:var(--display);font-weight:600;font-size:22px;margin:26px 0 6px;}
+  p{margin:11px 0;}
+  .lead{font-size:18px;}
+  ul.clean,ol.clean{margin:12px 0 12px 4px;padding-left:22px;}
+  ul.clean li,ol.clean li{margin:6px 0;}
+  .hl{background:linear-gradient(transparent 56%,var(--highlight) 56%);padding:0 2px;font-weight:600;}
+  code.inline{font-family:var(--mono);font-size:.88em;background:#f0eedd;border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;color:var(--ink);font-feature-settings:"calt" 0,"liga" 0;}
+  .margin-note{font-family:var(--hand);font-size:23px;color:var(--red);transform:rotate(-3deg);display:inline-block;line-height:1.1;}
+
+  /* ---------- CARDS + CALLOUTS ---------- */
+  .card{background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;padding:22px 24px;box-shadow:var(--shadow);margin:18px 0;}
+  .callout{border-left:6px solid var(--red);background:#fff6f4;padding:15px 19px;border-radius:0 8px 8px 0;margin:18px 0;}
+  .callout .lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:5px;}
+  .callout b{color:var(--red);}
+  .callout.blue{border-left-color:var(--blue);background:#f1f7fc;} .callout.blue .lbl,.callout.blue b{color:var(--blue);}
+  .callout.green{border-left-color:var(--green);background:#f1faf3;} .callout.green .lbl,.callout.green b{color:var(--green-deep);}
+  .callout.amber{border-left-color:var(--amber);background:#fdf6e6;} .callout.amber .lbl,.callout.amber b{color:#b9810f;}
+
+  /* ---------- CODE BLOCKS (light, with tokenizer) ---------- */
+  figure.code{margin:16px 0;}
+  figure.code figcaption{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--teal);background:var(--paper-2);border:1.5px solid var(--line-strong);border-bottom:none;
+    border-radius:8px 8px 0 0;padding:6px 13px;display:inline-block;font-weight:600;
+  }
+  figure.code pre{
+    margin:0;background:var(--code-bg);border:1.5px solid var(--line-strong);
+    border-left:5px solid var(--code-edge);border-radius:0 8px 8px 8px;
+    padding:15px 17px;overflow-x:auto;
+  }
+  figure.code code{font-family:var(--mono);font-size:13.5px;line-height:1.72;white-space:pre;display:block;color:var(--code-text);font-feature-settings:"calt" 0,"liga" 0;letter-spacing:.03em;}
+  .t-com{color:var(--t-com);font-style:italic;} .t-type{color:var(--t-type);font-weight:700;}
+  .t-kw{color:var(--t-kw);font-weight:700;} .t-builtin{color:var(--t-builtin);font-weight:600;}
+  .t-fn{color:var(--t-fn);font-weight:700;} .t-num{color:var(--t-num);} .t-str{color:var(--t-str);} .t-var{color:var(--t-var);}
+
+  /* ---------- INTERACTIVE DEMOS ---------- */
+  .demo{border:1.5px solid var(--ink);border-radius:12px;background:var(--card);box-shadow:var(--shadow-hard);margin:22px 0;overflow:hidden;}
+  .demo-bar{display:flex;align-items:center;gap:7px;padding:9px 14px;background:var(--ink);}
+  .demo-bar .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .demo-bar .dot.r{background:#e8502b;} .demo-bar .dot.y{background:#e5a93a;} .demo-bar .dot.g{background:#46c2a5;}
+  .demo-bar .demo-title{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-left:9px;color:#ccd6cf;}
+  .demo-stage{padding:18px;display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap;background:var(--paper-2);}
+  .stage-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .stage-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+  .demo canvas{background:#fffdf7;border:1.5px solid var(--line-strong);border-radius:7px;display:block;cursor:crosshair;}
+  .demo-readout{font-family:var(--mono);font-size:13px;padding:11px 16px;border-top:1.5px dashed var(--line-strong);background:#fbf8ef;color:var(--ink-soft);min-height:42px;display:flex;align-items:center;}
+  .demo-controls{display:flex;gap:11px;padding:13px 16px;border-top:1.5px solid var(--line-strong);flex-wrap:wrap;align-items:center;}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--card);color:var(--ink);border:1.5px solid var(--ink);border-radius:6px;padding:9px 15px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .12s;}
+  .btn:hover{background:var(--paper-2);}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
+  .btn.on{background:var(--green);color:#fff;border-color:var(--green-deep);box-shadow:2px 2px 0 var(--green-deep);}
+  .hint{font-family:var(--body);font-size:13px;color:var(--ink-soft);font-style:italic;}
+
+  /* ---------- TRUTH TABLE + LOGIC GRID ---------- */
+  .optable{border:1.5px solid var(--line-strong);border-radius:9px;overflow:hidden;margin:14px auto 4px;background:var(--card);font-family:var(--mono);font-size:13px;max-width:340px;width:100%;}
+  .oprow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:9px 15px;border-top:1.5px solid var(--line);}
+  .oprow:first-child{border-top:none;}
+  .opval{font-weight:700;padding:3px 12px;border-radius:20px;font-size:11px;letter-spacing:.04em;min-width:58px;text-align:center;}
+  .opval.t{background:#d8f3e5;color:var(--green-deep);}
+  .opval.f{background:#ece4d3;color:#9b8f74;}
+  .logic-grid{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:stretch;margin:20px 0;}
+  .logic-grid .demo{flex:1 1 260px;margin:0;min-width:258px;display:flex;flex-direction:column;}
+  .logic-grid .demo .demo-stage{flex:1;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:3px solid var(--ink);padding:24px 0 56px;text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);}
+  footer .hand{font-family:var(--hand);font-size:20px;color:var(--red);display:block;margin-bottom:6px;transform:rotate(-1.5deg);}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <div class="toc-brand">Conditional<span class="dot">s.</span></div>
+  <div class="toc-sub">AP CSP · Processing (Java)</div>
+  <a href="#relational"><span class="tnum">01</span>Relational operators</a>
+  <a href="#simple-if"><span class="tnum">02</span>The simple if</a>
+  <a href="#if-else"><span class="tnum">03</span>if / else</a>
+  <a href="#chain"><span class="tnum">04</span>if / else if / else</a>
+  <a href="#order"><span class="tnum">05</span>Order matters</a>
+  <a href="#logic"><span class="tnum">06</span>and · or · not</a>
+  <a href="#nested"><span class="tnum">07</span>Nested vs compound</a>
+  <a href="#functions"><span class="tnum">08</span>Booleans in functions</a>
+  <div class="toc-div"></div>
+  <a href="#recap"><span class="tnum">★</span>Quick recap</a>
+  <span class="toc-foot">every box is live &mdash;<br>poke it and watch ✦</span>
+</nav>
+
+<div class="content">
+<header class="hero">
+  <div class="wrap">
+    <svg class="axis-deco" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+      <path d="M40 100 L88 148 L168 52" stroke="#169d6b" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="tag">AP CSP · Processing (Java Mode)</span>
+    <h1 class="title">Making decisions with <span class="em">conditionals</span></h1>
+    <p class="lede">Now that a sketch knows where the mouse is, it can start asking questions — "is the mouse on the left?" — and act on the answer. That's what <code class="inline">if</code>-statements do. Every panel below is live, so poke at it.</p>
+    <div class="hero-meta">
+      <span class="chip">if · else · else if</span>
+      <span class="chip">&gt; &lt; &gt;= &lt;= == !=</span>
+      <span class="chip">&amp;&amp; · || · !</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<section id="relational" class="reveal">
+  <span class="section-tag">01 — THE QUESTIONS</span>
+  <h2>Relational operators ask <span class="hl">yes/no questions</span></h2>
+  <p class="lead">Every conditional starts with a question that is either <b>true</b> or <b>false</b> — a <b>Boolean expression</b>. Relational operators are how we compare two values to build that question.</p>
+  <ul class="clean">
+    <li><code class="inline">&gt;</code> &nbsp;greater than &nbsp;·&nbsp; <code class="inline">&lt;</code> &nbsp;less than</li>
+    <li><code class="inline">&gt;=</code> &nbsp;greater than or equal &nbsp;·&nbsp; <code class="inline">&lt;=</code> &nbsp;less than or equal</li>
+    <li><code class="inline">==</code> &nbsp;equal to &nbsp;·&nbsp; <code class="inline">!=</code> &nbsp;not equal to</li>
+  </ul>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — compare mouseX to 200</span></div>
+    <div class="demo-stage" style="flex-direction:column;gap:6px;">
+      <canvas id="cv-rel"></canvas>
+      <div class="optable">
+        <div class="oprow"><span>mouseX &gt; 200</span><span class="opval f" id="op-gt">false</span></div>
+        <div class="oprow"><span>mouseX &lt; 200</span><span class="opval f" id="op-lt">false</span></div>
+        <div class="oprow"><span>mouseX &gt;= 200</span><span class="opval f" id="op-ge">false</span></div>
+        <div class="oprow"><span>mouseX &lt;= 200</span><span class="opval f" id="op-le">false</span></div>
+        <div class="oprow"><span>mouseX == 200</span><span class="opval f" id="op-eq">false</span></div>
+        <div class="oprow"><span>mouseX != 200</span><span class="opval f" id="op-ne">false</span></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">↑ Slide your mouse across the canvas and watch all six comparisons flip between <b>true</b> and <b>false</b>. Notice how <code class="inline">&gt;</code> and <code class="inline">&gt;=</code> differ at <i>exactly</i> 200.</p>
+
+  <div class="callout">
+    <span class="lbl">Watch out — == is not =</span>
+    The single biggest beginner bug. <code class="inline">=</code> <b>assigns</b> a value; <code class="inline">==</code> <b>compares</b> two values. In a condition you almost always want <code class="inline">==</code>.
+  </div>
+  <figure class="code">
+    <figcaption>EqualsVsEquals.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+int x = 5;          // one =  : put the value 5 INTO x  (assignment)
+
+if (x == 5) {       // two == : ask "is x equal to 5?"  (comparison)
+  // ...this runs
+}
+    </script>
+  </figure>
+</section>
+
+<section id="simple-if" class="reveal">
+  <span class="section-tag">02 — RUN, OR SKIP</span>
+  <h2>The simple <span class="hl">if</span></h2>
+  <p class="lead">An <code class="inline">if</code> guards a block of code. If the condition is <b>true</b>, the block runs. If it's <b>false</b>, Processing <b>skips the whole block</b> and moves on — no "otherwise," nothing else happens.</p>
+
+  <figure class="code">
+    <figcaption>SimpleIf.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+void draw() {
+  background(245, 240, 228);
+
+  if (mouseX > 280) {            // the question
+    fill(224, 153, 26);          // these lines ONLY run
+    ellipse(width/2, height/2, 84, 84);   //   when it's true
+  }
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — cross the line to turn it on</span></div>
+    <div class="demo-stage"><canvas id="cv-if"></canvas></div>
+    <div class="demo-readout" id="ro-if">loading…</div>
+  </div>
+  <p class="hint">↑ Move right past the dashed line. While <code class="inline">mouseX &gt; 280</code> is true the lamp lights; move back left and the block is simply skipped.</p>
+
+  <div class="callout blue">
+    <span class="lbl">Key idea</span>
+    A lone <code class="inline">if</code> has exactly one outcome to offer: <b>do the block, or don't.</b> "False" just means "skip it" — there's no backup plan unless you add one.
+  </div>
+</section>
+
+<section id="if-else" class="reveal">
+  <span class="section-tag">03 — ONE OR THE OTHER</span>
+  <h2><span class="hl">if / else</span>: always pick a path</h2>
+  <p class="lead">Add <code class="inline">else</code> to give the "otherwise" path. Now <b>exactly one</b> of the two blocks always runs: the <code class="inline">if</code> block when the condition is true, the <code class="inline">else</code> block every other time.</p>
+
+  <figure class="code">
+    <figcaption>IfElse.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+void draw() {
+  if (mouseX < width/2) {
+    background(47, 107, 255);    // left half  → blue
+  } else {
+    background(232, 80, 43);     // right half → red
+  }
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — which half is the mouse on?</span></div>
+    <div class="demo-stage"><canvas id="cv-ifelse"></canvas></div>
+    <div class="demo-readout" id="ro-ifelse">loading…</div>
+  </div>
+  <p class="hint">↑ Cross the middle line. One side always lights up — there's no in-between, because <code class="inline">else</code> covers <i>everything</i> the <code class="inline">if</code> didn't catch.</p>
+
+  <div class="callout green">
+    <span class="lbl">Key idea</span>
+    <code class="inline">if</code> alone = "maybe do something." <code class="inline">if / else</code> = "<b>definitely</b> do one of these two." The <code class="inline">else</code> never has its own condition — it's the catch-all.
+  </div>
+</section>
+
+<section id="chain" class="reveal">
+  <span class="section-tag">04 — MANY PATHS</span>
+  <h2>Chaining with <span class="hl">if / else if / else</span></h2>
+  <p class="lead">When there are more than two cases, chain them. Processing checks each condition <b>in order from the top</b>, runs the <b>first</b> one that's true, then <b>skips all the rest</b>. The final <code class="inline">else</code> catches anything left over.</p>
+
+  <figure class="code">
+    <figcaption>ElseIfChain.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+void draw() {
+  background(245, 240, 228);
+
+  if (mouseX < width/3) {
+    fill(47, 107, 255);          // left third  → blue
+  } else if (mouseX < 2*width/3) {
+    fill(22, 157, 107);          // middle third → green
+  } else {
+    fill(232, 80, 43);           // right third → red
+  }
+
+  ellipse(mouseX, height/2, 64, 64);
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — three zones, one winner</span></div>
+    <div class="demo-stage"><canvas id="cv-chain"></canvas></div>
+    <div class="demo-readout" id="ro-chain">loading…</div>
+  </div>
+  <p class="hint">↑ Drag across the thirds. Only one zone is ever highlighted, because once a branch wins, the chain stops checking.</p>
+
+  <div class="callout amber">
+    <span class="lbl">Order matters</span>
+    The <b>first true branch wins</b> and the rest are ignored. That's why the middle test can simply be <code class="inline">mouseX &lt; 2*width/3</code> — if we got there, we already know <code class="inline">mouseX</code> wasn't in the left third.
+  </div>
+</section>
+
+<section id="order" class="reveal">
+  <span class="section-tag">05 — ORDER MATTERS</span>
+  <h2>Checking conditions in the <span class="hl">right order</span></h2>
+  <p class="lead">In a chain, Processing tests conditions <b>top to bottom</b> and runs the <b>first</b> one that's true. So the <em>order</em> you write them in can change the answer — get it wrong and some branches become impossible to reach.</p>
+  <p>Classic example: greeting someone based on the hour, on a 24-hour clock (<code class="inline">0</code>–<code class="inline">23</code>).</p>
+
+  <figure class="code">
+    <figcaption>Greeting.pde — correct order ✓</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+if (hour < 12) {
+  greeting = "Good morning";
+} else if (hour < 18) {
+  greeting = "Good afternoon";
+} else {
+  greeting = "Good evening";
+}
+    </script>
+  </figure>
+
+  <p>Now watch what happens if we lead with the <em>broad</em> check instead of the narrow one:</p>
+
+  <figure class="code">
+    <figcaption>Greeting.pde — broken order ✗</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+if (hour < 18) {
+  greeting = "Good afternoon";   // this catches the morning hours too!
+} else if (hour < 12) {
+  greeting = "Good morning";     // can NEVER run — already handled above
+} else {
+  greeting = "Good evening";
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — drag to set the hour</span></div>
+    <div class="demo-stage"><canvas id="cv-greeting"></canvas></div>
+    <div class="demo-readout" id="ro-greeting">loading…</div>
+    <div class="demo-controls"><button class="btn on" id="btn-greeting">Chain order: CORRECT</button><span class="hint">flip it to BROKEN, then move into the morning hours</span></div>
+  </div>
+  <p class="hint">↑ Move across the canvas to change the hour. In <b>broken</b> order, every morning hour wrongly says "Good afternoon."</p>
+
+  <div class="callout">
+    <span class="lbl">Watch out</span>
+    At <code class="inline">hour = 9</code>: <code class="inline">9 &lt; 18</code> is true, so the first branch wins and the chain stops checking. The <code class="inline">hour &lt; 12</code> test below it is <b>dead code</b> — it can never run. The fix is to check the <b>narrowest</b> condition first.
+  </div>
+
+  <div class="callout green">
+    <span class="lbl">Key idea</span>
+    When chain conditions overlap, order them from <b>most specific to least specific</b>. Each <code class="inline">else if</code> only ever sees the cases the branches above it didn't already claim.
+  </div>
+</section>
+
+<section id="logic" class="reveal">
+  <span class="section-tag">06 — COMBINING CONDITIONS</span>
+  <h2><span class="hl">and</span> · <span class="hl">or</span> · <span class="hl">not</span></h2>
+  <p class="lead">Logical operators glue yes/no questions together (or flip them), so one condition can test several things at once.</p>
+  <ul class="clean">
+    <li><code class="inline">&amp;&amp;</code> &nbsp;<b>and</b> — true only when <b>both</b> sides are true.</li>
+    <li><code class="inline">||</code> &nbsp;<b>or</b> — true when <b>at least one</b> side is true.</li>
+    <li><code class="inline">!</code> &nbsp;<b>not</b> — <b>flips</b> a Boolean: <code class="inline">!true</code> is false, <code class="inline">!false</code> is true.</li>
+  </ul>
+
+  <div class="logic-grid">
+    <div class="demo">
+      <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">&amp;&amp; · and</span></div>
+      <div class="demo-stage"><canvas id="cv-and"></canvas></div>
+      <div class="demo-readout" id="ro-and">loading…</div>
+    </div>
+    <div class="demo">
+      <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">|| · or</span></div>
+      <div class="demo-stage"><canvas id="cv-or"></canvas></div>
+      <div class="demo-readout" id="ro-or">loading…</div>
+    </div>
+    <div class="demo">
+      <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">! · not</span></div>
+      <div class="demo-stage"><canvas id="cv-not"></canvas></div>
+      <div class="demo-readout" id="ro-not">loading…</div>
+      <div class="demo-controls"><button class="btn on" id="btn-not">paused = false</button><span class="hint">toggle me</span></div>
+    </div>
+  </div>
+  <p class="hint">Left: get the dot fully <b>inside</b> the box — needs <code class="inline">inX &amp;&amp; inY</code>. Middle: touch <b>either</b> edge — <code class="inline">||</code> only needs one. Right: the dot moves only while <code class="inline">!paused</code> is true.</p>
+
+  <figure class="code">
+    <figcaption>Logic.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+// AND — both must be true to be in the middle band
+if (mouseX > 100 && mouseX < 300) {
+  fill(22, 157, 107);
+}
+
+// OR — true if the mouse is in either corner zone
+if (mouseX < 60 || mouseX > width - 60) {
+  fill(47, 107, 255);
+}
+
+// NOT — only animate while we are NOT paused
+if (!paused) {
+  x = x + 2;
+}
+    </script>
+  </figure>
+
+  <div class="callout amber">
+    <span class="lbl">Read ! out loud as "not"</span>
+    <code class="inline">if (!paused)</code> reads as <i>"if NOT paused."</i> Flipping a Boolean with <code class="inline">!</code> is the cleanest way to toggle behavior on and off.
+  </div>
+</section>
+
+<section id="nested" class="reveal">
+  <span class="section-tag">07 — TWO WAYS TO COMBINE</span>
+  <h2><span class="hl">Nested</span> vs <span class="hl">compound</span> conditionals</h2>
+  <p class="lead">Sometimes several things need to be true at once. There are two ways to write that, and it's worth knowing both.</p>
+  <ul class="clean">
+    <li><b>Compound</b> — one <code class="inline">if</code> with conditions joined by <code class="inline">&amp;&amp;</code> or <code class="inline">||</code>.</li>
+    <li><b>Nested</b> — an <code class="inline">if</code> placed <em>inside</em> another <code class="inline">if</code>.</li>
+  </ul>
+
+  <h3>The classic case: is the mouse hovering a rectangle?</h3>
+  <p>A rectangle covers a range of X <em>and</em> a range of Y, so the mouse is "inside" only when it's past all four edges. Using <code class="inline">mouseX</code> and <code class="inline">mouseY</code>, here it is both ways:</p>
+
+  <figure class="code">
+    <figcaption>Compound — one if, joined with &amp;&amp;</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+// rectangle at x = 200, y = 95, width = 180, height = 90
+if (mouseX > 200 && mouseX < 380 && mouseY > 95 && mouseY < 185) {
+  fill(22, 157, 107);    // mouse is over it → highlight green
+} else {
+  fill(243, 239, 226);
+}
+rect(200, 95, 180, 90);
+    </script>
+  </figure>
+
+  <figure class="code">
+    <figcaption>Nested — an if inside an if</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+if (mouseX > 200 && mouseX < 380) {      // horizontally lined up?
+  if (mouseY > 95 && mouseY < 185) {     // ...AND vertically lined up?
+    fill(22, 157, 107);                  // only then: over the rectangle
+  }
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — hover the rectangle</span></div>
+    <div class="demo-stage"><canvas id="cv-rect"></canvas></div>
+    <div class="demo-readout" id="ro-rect">loading…</div>
+  </div>
+  <p class="hint">↑ Move over the box. The four edge checks at the bottom light up one at a time — the rectangle only highlights when <b>all four</b> are true.</p>
+
+  <div class="callout blue">
+    <span class="lbl">Which should I use?</span>
+    For a plain "all of these must be true," <b>compound with <code class="inline">&amp;&amp;</code> is cleaner and easier to read.</b> Reach for <b>nesting</b> when you also want to act at the in-between step — e.g., "if the mouse is in the right column, dim it; and <em>if</em> it's also in the right row, select it." Nesting lets each layer do its own thing.
+  </div>
+
+  <div class="callout amber">
+    <span class="lbl">Good to know</span>
+    A nested <code class="inline">if</code> with nothing else around it does the exact same job as a single compound <code class="inline">&amp;&amp;</code>. They're logically equivalent — so when you only need the innermost result, prefer the compound version to keep the code flat.
+  </div>
+</section>
+
+<section id="functions" class="reveal">
+  <span class="section-tag">08 — PUTTING IT TOGETHER</span>
+  <h2>Booleans inside <span class="hl">functions</span></h2>
+  <p class="lead">A Boolean can be <b>stored in a variable</b> to remember an answer, and a <b>function can return one</b>. That lets you give a complicated condition a clear name — and then your <code class="inline">if</code>-statements read like plain English.</p>
+  <p>Here's a real button: <code class="inline">isOverButton()</code> bundles a relational <code class="inline">&amp;&amp;</code> chain and hands back <b>true/false</b>. We use it to highlight on hover, and a <code class="inline">lampOn</code> Boolean (flipped with <code class="inline">!</code>) decides whether the lamp's glow gets drawn <i>at all</i>.</p>
+
+  <figure class="code">
+    <figcaption>ButtonAndLamp.pde</figcaption>
+    <pre><code class="proc"></code></pre>
+    <script type="text/x-processing">
+boolean lampOn = false;     // remembers whether the lamp is on
+
+void draw() {
+  background(245, 240, 228);
+
+  // a boolean function decides the button's look
+  if (isOverButton()) {
+    fill(30);               // highlight while hovering
+  } else {
+    fill(243, 239, 226);
+  }
+  rect(120, 220, 160, 50);
+
+  // the lampOn boolean decides whether to draw the glow
+  if (lampOn) {
+    fill(229, 169, 58);     // ON  → glowing
+  } else {
+    fill(217, 210, 191);    // OFF → dim
+  }
+  ellipse(200, 110, 96, 96);
+}
+
+// a function that RETURNS a boolean
+boolean isOverButton() {
+  return mouseX > 120 && mouseX < 280
+      && mouseY > 220 && mouseY < 270;
+}
+
+void mousePressed() {
+  if (isOverButton()) {     // only when the click lands on the button
+    lampOn = !lampOn;       // ! flips it: on becomes off, off becomes on
+  }
+}
+    </script>
+  </figure>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Run it — hover, then click the button</span></div>
+    <div class="demo-stage"><canvas id="cv-lamp"></canvas></div>
+    <div class="demo-readout" id="ro-lamp">loading…</div>
+  </div>
+  <p class="hint">↑ Hover the button — <code class="inline">isOverButton()</code> returns <b>true</b> and it darkens. Click it to flip <code class="inline">lampOn</code>; the <code class="inline">if (lampOn)</code> is what makes the glow appear or not. <span class="margin-note">name your conditions!</span></p>
+
+  <div class="callout green">
+    <span class="lbl">Key idea</span>
+    A Boolean-returning function lets you <b>name a messy condition once</b> (<code class="inline">isOverButton()</code>) and reuse it. The <code class="inline">if</code> that draws the glow shows the whole point of Booleans: they let your program decide <b>whether something happens at all</b>.
+  </div>
+</section>
+
+<section id="recap" class="reveal">
+  <span class="section-tag">★ — QUICK RECAP</span>
+  <h2>Everything, on <span class="hl">one screen</span></h2>
+  <div class="card">
+    <ul class="clean" style="margin:0;">
+      <li>A <b>condition</b> is a Boolean expression — it's either <b>true</b> or <b>false</b>.</li>
+      <li><b>Relational ops</b> compare values: <code class="inline">&gt; &lt; &gt;= &lt;= == !=</code>. Remember <code class="inline">==</code> compares, <code class="inline">=</code> assigns.</li>
+      <li><b><code class="inline">if</code></b> runs a block when true, skips it when false. No backup plan on its own.</li>
+      <li><b><code class="inline">if / else</code></b> always runs exactly one of two blocks.</li>
+      <li><b><code class="inline">if / else if / else</code></b> picks one of many — the <b>first true branch wins</b>, the rest are skipped.</li>
+      <li><b>Order matters:</b> in a chain, check the <b>most specific condition first</b> — a broad condition placed early can swallow cases meant for a later branch (dead code).</li>
+      <li><b>Logic:</b> <code class="inline">&amp;&amp;</code> needs both true, <code class="inline">||</code> needs one, <code class="inline">!</code> flips a Boolean.</li>
+      <li><b>Compound vs nested:</b> join tests in one <code class="inline">if</code> with <code class="inline">&amp;&amp;</code>/<code class="inline">||</code> (compound), or put an <code class="inline">if</code> inside another (nested). Hovering a rectangle needs all four edges true.</li>
+      <li>Booleans can be <b>stored in variables</b> and <b>returned by functions</b> to decide whether something happens.</li>
+    </ul>
+  </div>
+  <p style="margin-top:18px;">Pair this with the <i>Static &amp; Dynamic</i> page: a dynamic sketch reads <code class="inline">mouseX</code>/<code class="inline">mouseY</code> every frame, and conditionals turn those live numbers into decisions. That combo is the foundation of every interactive program.</p>
+</section>
+
+</main>
+
+<footer>
+  <span class="hand">if (youGotThis) { celebrate(); } ✦</span>
+  AP Computer Science Principles · Processing (Java Mode) · Study Reference
+</footer>
+</div>
+
+<script>
+/* ============ SYNTAX HIGHLIGHTER ============ */
+(function(){
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function dedent(s){
+    s=s.replace(/^\n+/,'').replace(/\s+$/,'');
+    var ls=s.split('\n'),m=Infinity;
+    for(var i=0;i<ls.length;i++){if(!ls[i].trim())continue;var n=ls[i].match(/^[ \t]*/)[0].length;if(n<m)m=n;}
+    if(!isFinite(m))m=0;
+    return ls.map(function(l){return l.slice(m);}).join('\n');
+  }
+  var reType='(?:void|int|float|double|long|short|byte|boolean|char|color|String)';
+  var reKw='(?:if|else|for|while|do|switch|case|break|continue|return|new|null|true|false|final|static|public|private|class|import|this)';
+  var reSys='(?:mouseX|mouseY|pmouseX|pmouseY|mousePressed|mouseButton|width|height|frameCount|frameRate|key|keyCode|displayWidth|displayHeight|PI|TWO_PI|HALF_PI|TAU|CENTER|CORNER|CORNERS|RADIUS|LEFT|RIGHT|TOP|BOTTOM|BASELINE)';
+  var master=new RegExp('(\\/\\/[^\\n]*)|(\\/\\*[\\s\\S]*?\\*\\/)|("(?:[^"\\\\]|\\\\.)*")|(\'(?:[^\'\\\\]|\\\\.)*\')|(\\b\\d+\\.?\\d*f?\\b)|(\\b'+reType+'\\b)|(\\b'+reKw+'\\b)|(\\b'+reSys+'\\b)|([A-Za-z_]\\w*)(?=\\s*\\()','g');
+  function hl(code){
+    var out='',last=0,m;master.lastIndex=0;
+    while((m=master.exec(code))){
+      if(m.index>last)out+=esc(code.slice(last,m.index));
+      var cls=(m[1]||m[2])?'t-com':m[3]?'t-str':m[4]?'t-str':m[5]?'t-num':m[6]?'t-type':m[7]?'t-kw':m[8]?'t-builtin':m[9]?'t-fn':'';
+      out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+      last=m.index+m[0].length;
+      if(m[0].length===0)master.lastIndex++;
+    }
+    out+=esc(code.slice(last));
+    return out;
+  }
+  document.querySelectorAll('figure.code').forEach(function(f){
+    var sc=f.querySelector('script'),co=f.querySelector('code');
+    if(sc&&co)co.innerHTML=hl(dedent(sc.textContent));
+  });
+})();
+
+/* ============ MINI SKETCH ENGINE ============ */
+var PAL={card:'#fffdf7',bg:'#f6f1e4',panel:'#efe8d6',ink:'#1d2b30',inkSoft:'#3e5158',red:'#e8502b',redDeep:'#c33e1d',blue:'#2f6bff',green:'#169d6b',teal:'#1f857a',amber:'#e0991a',gold:'#e5a93a',line:'#c7b78f',grid:'#e4ebda',off:'#a59c86'};
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+function sketch(canvas,opts){
+  var ctx=canvas.getContext('2d');
+  var dpr=Math.max(1,window.devicePixelRatio||1);
+  var W=opts.w,H=opts.h;
+  canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  var s={mx:W/2,my:H/2,over:false,down:false,frame:0,W:W,H:H,d:{}};
+  canvas.addEventListener('mousemove',function(e){var r=canvas.getBoundingClientRect();s.mx=(e.clientX-r.left)*(W/r.width);s.my=(e.clientY-r.top)*(H/r.height);});
+  canvas.addEventListener('mouseenter',function(){s.over=true;});
+  canvas.addEventListener('mouseleave',function(){s.over=false;});
+  canvas.addEventListener('mousedown',function(){s.down=true;if(opts.press)opts.press(s,ctx);});
+  window.addEventListener('mouseup',function(){s.down=false;});
+  if(opts.setup)opts.setup(s,ctx);
+  function loop(){s.frame++;opts.draw(ctx,s);requestAnimationFrame(loop);}
+  if(opts.once){opts.draw(ctx,s);}else{loop();}
+  return s;
+}
+var $=function(id){return document.getElementById(id);};
+function mono(c,px){c.font=(px||12)+'px JetBrains Mono, monospace';}
+function clampv(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+/* ============ DEMO 1 — RELATIONAL PLAYGROUND ============ */
+(function(){
+  var cv=$('cv-rel'); if(!cv)return;
+  function set(id,val){var el=$(id);if(!el)return;el.textContent=val?'true':'false';el.className='opval '+(val?'t':'f');}
+  sketch(cv,{w:400,h:150,draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    var v=Math.round(s.over?clampv(s.mx,0,s.W)/s.W*400:200);
+    var y=78;
+    function px(val){return 24+(val/400)*(s.W-48);}
+    c.strokeStyle=PAL.line;c.lineWidth=2;c.beginPath();c.moveTo(24,y);c.lineTo(s.W-24,y);c.stroke();
+    c.fillStyle=PAL.inkSoft;mono(c,10);c.textAlign='center';c.fillText('0',24,y+22);c.fillText('400',s.W-24,y+22);
+    var tx=px(200);
+    c.strokeStyle=PAL.teal;c.setLineDash([4,4]);c.lineWidth=2;c.beginPath();c.moveTo(tx,y-30);c.lineTo(tx,y+12);c.stroke();c.setLineDash([]);
+    c.fillStyle=PAL.teal;c.fillText('200',tx,y+22);
+    var vx=px(v);
+    c.fillStyle=PAL.red;c.beginPath();c.arc(vx,y,8,0,7);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();
+    c.fillStyle=PAL.ink;c.font='700 13px JetBrains Mono, monospace';c.fillText('mouseX = '+v,clampv(vx,40,s.W-40),y-20);
+    if(!s.over){c.fillStyle=PAL.off;mono(c,11);c.fillText('hover to slide mouseX along the line',s.W/2,28);}
+    set('op-gt',v>200);set('op-lt',v<200);set('op-ge',v>=200);set('op-le',v<=200);set('op-eq',v==200);set('op-ne',v!=200);
+  }});
+})();
+
+/* ============ DEMO 2 — SIMPLE IF ============ */
+(function(){
+  var cv=$('cv-if'); if(!cv)return; var ro=$('ro-if');
+  sketch(cv,{w:560,h:230,draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    var v=Math.round(s.over?clampv(s.mx,0,s.W):150);
+    var cond=v>280;
+    c.strokeStyle=PAL.teal;c.setLineDash([5,5]);c.lineWidth=2;c.beginPath();c.moveTo(280,0);c.lineTo(280,s.H);c.stroke();c.setLineDash([]);
+    c.fillStyle=PAL.teal;mono(c,10.5);c.textAlign='center';c.fillText('mouseX > 280 ?',280,18);
+    c.save();c.translate(s.W*0.5,s.H*0.44);
+    if(cond){c.shadowColor='rgba(224,153,26,.75)';c.shadowBlur=46;c.fillStyle=PAL.gold;}else{c.fillStyle='#d9d2bf';}
+    c.beginPath();c.arc(0,0,42,0,7);c.fill();c.restore();
+    c.fillStyle=cond?PAL.green:PAL.off;c.font='700 14px JetBrains Mono, monospace';c.textAlign='center';
+    c.fillText(cond?'TRUE → run the block':'FALSE → skip the block',s.W/2,s.H*0.44+74);
+    c.fillStyle=PAL.ink;c.beginPath();c.arc(clampv(v,8,s.W-8),s.H-22,7,0,7);c.fill();
+    c.font='700 11px JetBrains Mono, monospace';c.fillText('mouseX='+v,clampv(v,40,s.W-40),s.H-34);
+    if(ro)ro.textContent=cond?'if (mouseX > 280)  →  TRUE  →  the light turns on':'if (mouseX > 280)  →  FALSE  →  nothing happens, block skipped';
+  }});
+})();
+
+/* ============ DEMO 3 — IF / ELSE ============ */
+(function(){
+  var cv=$('cv-ifelse'); if(!cv)return; var ro=$('ro-ifelse');
+  sketch(cv,{w:560,h:230,draw:function(c,s){
+    var v=s.over?s.mx:s.W/2-1; var left=v<s.W/2;
+    c.fillStyle=left?'#dde8ff':'#f3efe2';c.fillRect(0,0,s.W/2,s.H);
+    c.fillStyle=!left?'#ffe1d9':'#f3efe2';c.fillRect(s.W/2,0,s.W/2,s.H);
+    c.strokeStyle=PAL.line;c.lineWidth=2;c.beginPath();c.moveTo(s.W/2,0);c.lineTo(s.W/2,s.H);c.stroke();
+    c.textAlign='center';
+    c.fillStyle=left?PAL.blue:PAL.off;c.font='700 17px Fraunces, serif';c.fillText('if branch',s.W*0.25,s.H/2);
+    mono(c,10.5);c.fillStyle=left?PAL.blue:PAL.off;c.fillText('mouseX < width/2',s.W*0.25,s.H/2+22);
+    c.fillStyle=!left?PAL.red:PAL.off;c.font='700 17px Fraunces, serif';c.fillText('else branch',s.W*0.75,s.H/2);
+    mono(c,10.5);c.fillStyle=!left?PAL.red:PAL.off;c.fillText('everything else',s.W*0.75,s.H/2+22);
+    c.fillStyle=PAL.ink;c.beginPath();c.arc(clampv(v,8,s.W-8),s.H-20,6,0,7);c.fill();
+    if(ro)ro.textContent=left?'mouseX < width/2 → TRUE → the if branch runs (blue)':'mouseX < width/2 → FALSE → the else branch runs (red)';
+  }});
+})();
+
+/* ============ DEMO 4 — ELSE-IF CHAIN ============ */
+(function(){
+  var cv=$('cv-chain'); if(!cv)return; var ro=$('ro-chain');
+  sketch(cv,{w:570,h:230,draw:function(c,s){
+    var W=s.W,t=W/3,v=s.over?s.mx:W/2;
+    var zone=v<t?0:(v<2*t?1:2);
+    var cols=['#dde8ff','#e1f6ed','#ffe1d9'],accent=[PAL.blue,PAL.green,PAL.red];
+    var labels=['LEFT third','MIDDLE third','RIGHT third'];
+    var conds=['if mouseX < width/3','else if < 2*width/3','else'];
+    for(var i=0;i<3;i++){c.fillStyle=(zone===i)?cols[i]:'#f3efe2';c.fillRect(i*t,0,t,s.H);}
+    c.strokeStyle=PAL.line;c.lineWidth=2;c.beginPath();c.moveTo(t,0);c.lineTo(t,s.H);c.moveTo(2*t,0);c.lineTo(2*t,s.H);c.stroke();
+    c.textAlign='center';
+    for(var j=0;j<3;j++){
+      c.fillStyle=(zone===j)?accent[j]:PAL.off;c.font='700 15px Fraunces, serif';c.fillText(labels[j],j*t+t/2,s.H/2);
+      mono(c,9.5);c.fillText(conds[j],j*t+t/2,s.H/2+20);
+    }
+    c.fillStyle=PAL.ink;c.beginPath();c.arc(clampv(v,8,W-8),s.H-20,6,0,7);c.fill();
+    if(ro)ro.textContent='mouse is in the '+labels[zone]+' → only that branch runs';
+  }});
+})();
+
+/* ============ DEMO 5a — AND (&&) ============ */
+(function(){
+  var cv=$('cv-and'); if(!cv)return; var ro=$('ro-and');
+  sketch(cv,{w:280,h:210,draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    var bx=80,by=60,bw=120,bh=80;
+    var inX=s.over&&s.mx>bx&&s.mx<bx+bw;
+    var inY=s.over&&s.my>by&&s.my<by+bh;
+    var inside=inX&&inY;
+    rr(c,bx,by,bw,bh,10);c.fillStyle=inside?'#d6f4e4':'#f3efe2';c.fill();c.lineWidth=2.5;c.strokeStyle=inside?PAL.green:PAL.line;c.stroke();
+    c.textAlign='center';c.fillStyle=inside?PAL.green:PAL.off;c.font='700 13px JetBrains Mono, monospace';
+    c.fillText(inside?'INSIDE':'outside',bx+bw/2,by+bh/2+5);
+    c.fillStyle=PAL.inkSoft;mono(c,10.5);c.fillText('inX '+(inX?'✓':'✗')+'   &&   inY '+(inY?'✓':'✗'),s.W/2,s.H-16);
+    if(s.over){c.fillStyle=PAL.red;c.beginPath();c.arc(s.mx,s.my,4,0,7);c.fill();}
+    if(ro)ro.textContent=inside?'inX && inY → BOTH true → highlighted':'&& needs BOTH true';
+  }});
+})();
+
+/* ============ DEMO 5b — OR (||) ============ */
+(function(){
+  var cv=$('cv-or'); if(!cv)return; var ro=$('ro-or');
+  sketch(cv,{w:280,h:210,draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    var v=s.over?s.mx:s.W/2;
+    var nearL=s.over&&v<66,nearR=s.over&&v>s.W-66,on=nearL||nearR;
+    c.fillStyle=nearL?'#dde8ff':'#f3efe2';c.fillRect(0,0,66,s.H);
+    c.fillStyle=nearR?'#dde8ff':'#f3efe2';c.fillRect(s.W-66,0,66,s.H);
+    c.strokeStyle=PAL.line;c.lineWidth=1.5;c.strokeRect(0.75,0.75,65,s.H-1.5);c.strokeRect(s.W-65.75,0.75,65,s.H-1.5);
+    c.textAlign='center';c.fillStyle=on?PAL.blue:PAL.off;c.font='700 15px JetBrains Mono, monospace';c.fillText(on?'ON':'off',s.W/2,s.H/2-4);
+    mono(c,9.5);c.fillStyle=PAL.inkSoft;c.fillText('left edge OR right edge',s.W/2,s.H/2+18);
+    if(s.over){c.fillStyle=PAL.red;c.beginPath();c.arc(clampv(v,6,s.W-6),s.H-16,5,0,7);c.fill();}
+    if(ro)ro.textContent=on?'nearLeft || nearRight → one is true → ON':'|| needs only ONE — touch an edge';
+  }});
+})();
+
+/* ============ DEMO 5c — NOT (!) ============ */
+(function(){
+  var cv=$('cv-not'); if(!cv)return; var btn=$('btn-not'),ro=$('ro-not');
+  var st=sketch(cv,{w:280,h:210,setup:function(s){s.d.paused=false;s.d.x=40;s.d.dir=1;},draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    if(!s.d.paused){s.d.x+=s.d.dir*2.4;if(s.d.x>s.W-32||s.d.x<32)s.d.dir*=-1;}
+    c.fillStyle=s.d.paused?'#d9d2bf':PAL.teal;c.beginPath();c.arc(s.d.x,s.H/2-6,18,0,7);c.fill();
+    c.fillStyle=PAL.inkSoft;mono(c,10);c.textAlign='center';
+    c.fillText(s.d.paused?'paused = true':'paused = false',s.W/2,s.H-16);
+  }});
+  function upd(){if(btn){btn.textContent=st.d.paused?'paused = true':'paused = false';btn.classList.toggle('on',!st.d.paused);}if(ro)ro.textContent=st.d.paused?'if(!paused): !true = false → motion skipped':'if(!paused): !false = true → motion runs';}
+  upd();
+  if(btn)btn.addEventListener('click',function(){st.d.paused=!st.d.paused;upd();});
+})();
+
+/* ============ DEMO 6 — CAPSTONE: BOOLEANS IN FUNCTIONS ============ */
+(function(){
+  var cv=$('cv-lamp'); if(!cv)return; var ro=$('ro-lamp');
+  function btn(s){return {x:s.W/2-82,y:228,w:164,h:50};}
+  sketch(cv,{w:560,h:310,setup:function(s){s.d.on=false;},press:function(s){
+    var b=btn(s);
+    if(s.mx>b.x&&s.mx<b.x+b.w&&s.my>b.y&&s.my<b.y+b.h){s.d.on=!s.d.on;}
+  },draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    c.save();c.translate(s.W/2,116);
+    if(s.d.on){c.shadowColor='rgba(224,153,26,.78)';c.shadowBlur=58;c.fillStyle=PAL.gold;}else{c.fillStyle='#d9d2bf';}
+    c.beginPath();c.arc(0,0,48,0,7);c.fill();c.restore();
+    c.strokeStyle=s.d.on?PAL.amber:'#cfc7b3';c.lineWidth=3;c.beginPath();c.moveTo(s.W/2,164);c.lineTo(s.W/2,196);c.stroke();
+    c.fillStyle=s.d.on?PAL.amber:PAL.off;c.textAlign='center';mono(c,11);
+    c.fillText(s.d.on?'lampOn = true':'lampOn = false',s.W/2,188);
+    var b=btn(s),over=s.over&&s.mx>b.x&&s.mx<b.x+b.w&&s.my>b.y&&s.my<b.y+b.h;
+    rr(c,b.x,b.y,b.w,b.h,9);c.fillStyle=over?PAL.ink:'#f3efe2';c.fill();c.lineWidth=2.5;c.strokeStyle=PAL.ink;c.stroke();
+    c.fillStyle=over?'#fff':PAL.ink;c.font='700 15px JetBrains Mono, monospace';c.fillText('CLICK ME',s.W/2,b.y+b.h/2+5);
+    if(ro)ro.textContent='isOverButton() = '+(over?'true':'false')+'        lampOn = '+(s.d.on?'true':'false');
+  }});
+})();
+
+/* ============ DEMO — ORDER MATTERS (greeting) ============ */
+(function(){
+  var cv=$('cv-greeting'); if(!cv)return;
+  var ro=$('ro-greeting'), btn=$('btn-greeting');
+  function correct(h){ if(h<12)return 'Good morning'; else if(h<18)return 'Good afternoon'; else return 'Good evening'; }
+  function broken(h){ if(h<18)return 'Good afternoon'; else if(h<12)return 'Good morning'; else return 'Good evening'; }
+  var st=sketch(cv,{w:580,h:250,setup:function(s){s.d.broken=false;},draw:function(c,s){
+    var hour=s.over?Math.floor(clampv(s.mx,0,s.W-0.001)/s.W*24):9;
+    var sky;
+    if(hour<6||hour>=20)sky='#243049';
+    else if(hour<8)sky='#e0915e';
+    else if(hour<17)sky='#8fc4ec';
+    else sky='#df7440';
+    c.fillStyle=sky;c.fillRect(0,0,s.W,s.H);
+    var day=(hour>=6&&hour<20);
+    if(day){
+      var p=clampv((hour-6)/14,0,1);
+      var sx=clampv(40+p*(s.W-80),22,s.W-22), sy=190-Math.sin(p*Math.PI)*120;
+      c.fillStyle='#ffd24d';c.beginPath();c.arc(sx,sy,22,0,7);c.fill();
+    }else{
+      c.fillStyle='#eef0e0';c.beginPath();c.arc(s.W-72,52,16,0,7);c.fill();
+    }
+    var night=(hour<6||hour>=20);
+    var shown=s.d.broken?broken(hour):correct(hour), wrong=(shown!==correct(hour));
+    c.textAlign='center';
+    c.fillStyle=night?'#fff':'#1d2b30';
+    c.font='700 36px Fraunces, serif';c.fillText(shown,s.W/2,s.H/2+8);
+    c.font='600 14px IBM Plex Mono, monospace';c.fillStyle=night?'#cdd6e0':'#3e5158';
+    c.fillText('hour = '+(hour<10?'0':'')+hour+':00',s.W/2,s.H/2+38);
+    if(s.d.broken&&wrong){c.fillStyle='#ffd9cf';c.font='700 13px IBM Plex Mono, monospace';c.fillText('✗ WRONG — it is really '+correct(hour).toLowerCase(),s.W/2,30);}
+    if(!s.over){c.fillStyle=night?'#cdd6e0':'#3e5158';c.font='12px IBM Plex Mono, monospace';c.fillText('move across to change the hour →',s.W/2,s.H-16);}
+    if(ro)ro.textContent='hour '+hour+':00 → "'+shown+'"'+(s.d.broken?(wrong?'   ✗ wrong! morning got caught by hour < 18':'   (matches)'):'   ✓ correct order');
+  }});
+  function upd(){if(btn){btn.textContent=st.d.broken?'Chain order: BROKEN':'Chain order: CORRECT';btn.classList.toggle('on',!st.d.broken);}}
+  upd();
+  if(btn)btn.addEventListener('click',function(){st.d.broken=!st.d.broken;upd();});
+})();
+
+/* ============ DEMO — RECTANGLE HOVER (nested vs compound) ============ */
+(function(){
+  var cv=$('cv-rect'); if(!cv)return; var ro=$('ro-rect');
+  sketch(cv,{w:580,h:280,draw:function(c,s){
+    c.fillStyle=PAL.card;c.fillRect(0,0,s.W,s.H);
+    var rx=200,ry=95,rw=180,rh=90;
+    var c1=s.over&&s.mx>rx, c2=s.over&&s.mx<rx+rw, c3=s.over&&s.my>ry, c4=s.over&&s.my<ry+rh;
+    var over=c1&&c2&&c3&&c4;
+    rr(c,rx,ry,rw,rh,10);
+    c.fillStyle=over?'#d6f4e4':'#f3efe2';c.fill();
+    c.lineWidth=over?3:2;c.strokeStyle=over?PAL.green:PAL.line;c.stroke();
+    c.textAlign='center';c.fillStyle=over?PAL.green:PAL.off;c.font='700 16px Fraunces, serif';
+    c.fillText(over?'HOVERING':'not hovering',rx+rw/2,ry+rh/2+6);
+    c.textAlign='left';c.font='600 11px IBM Plex Mono, monospace';
+    function ind(x,label,ok){c.fillStyle=ok?PAL.green:PAL.off;c.fillText((ok?'✓ ':'·  ')+label,x,s.H-16);}
+    ind(18,'mouseX > 200',c1);ind(160,'mouseX < 380',c2);ind(302,'mouseY > 95',c3);ind(444,'mouseY < 185',c4);
+    if(s.over){c.fillStyle=PAL.red;c.beginPath();c.arc(s.mx,s.my,4,0,7);c.fill();}
+    if(ro)ro.textContent=over?'all four conditions true → the mouse is over the rectangle':'need all four true (compound &&) — move fully inside the box';
+  }});
+})();
+
+/* ============ SCROLLSPY + REVEAL ============ */
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.toc a[href^="#"]'));
+  var map={};links.forEach(function(a){var id=a.getAttribute('href').slice(1);var el=document.getElementById(id);if(el)map[id]=a;});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.remove('active');});if(map[e.target.id])map[e.target.id].classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  Object.keys(map).forEach(function(id){io.observe(document.getElementById(id));});
+  var io2=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io2.unobserve(e.target);}});},{threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(function(el){io2.observe(el);});
+})();
+</script>
+</body>
+</html>
