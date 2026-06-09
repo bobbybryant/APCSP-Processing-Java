@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loop City — A Planning Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf0;
+  --ink:#2b2a26;
+  --ink-soft:#5c574d;
+  --ink-faint:#8c8676;
+  --coral:#e8624a;
+  --teal:#2b8f82;
+  --gold:#d99a16;
+  --red:#d6453b;
+  --blue:#3a7bd5;
+  --line:rgba(60,70,90,0.055);
+  --line-major:rgba(60,70,90,0.10);
+  --card:#fffef8;
+  --shadow:#dfd8c4;
+  --code-bg:#f4eedd;
+  --recipe:#1d2630;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'DM Sans',sans-serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--line-major) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-major) 1px,transparent 1px),
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:140px 140px,140px 140px,28px 28px,28px 28px;
+  font-size:17px;
+  line-height:1.6;
+}
+a{color:inherit;}
+
+/* ---- layout ---- */
+.shell{display:flex;align-items:flex-start;}
+nav.toc{
+  position:fixed;top:0;left:0;width:248px;height:100vh;
+  padding:34px 22px 34px 30px;
+  border-right:1.5px solid #e4ddca;
+  background:rgba(251,250,240,0.86);
+  backdrop-filter:blur(2px);
+  overflow-y:auto;
+}
+nav.toc .brand{
+  font-family:'Fraunces',serif;font-weight:900;font-size:21px;line-height:1.05;
+  letter-spacing:-0.5px;margin-bottom:4px;
+}
+nav.toc .brand .b2{color:var(--coral);}
+nav.toc .kick{
+  font-family:'Caveat',cursive;font-size:20px;color:var(--teal);
+  transform:rotate(-2deg);display:inline-block;margin-bottom:24px;
+}
+nav.toc ol{list-style:none;margin:0;padding:0;}
+nav.toc li{margin:0;}
+nav.toc a.tlink{
+  display:flex;gap:11px;align-items:baseline;
+  text-decoration:none;color:var(--ink-soft);
+  font-size:14.5px;font-weight:500;
+  padding:7px 10px 7px 8px;border-radius:7px 2px 7px 2px;
+  position:relative;transition:color .15s,background .15s;
+}
+nav.toc a.tlink .tnum{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-faint);
+  min-width:20px;
+}
+nav.toc a.tlink:hover{color:var(--ink);background:#f1ead6;}
+nav.toc a.tlink.active{color:var(--ink);font-weight:700;background:#f4ecd6;}
+nav.toc a.tlink.active::before{
+  content:"";position:absolute;left:-30px;top:6px;bottom:6px;width:5px;
+  background:var(--red);border-radius:3px;
+}
+
+main{margin-left:248px;flex:1;padding:60px 64px 120px;max-width:1000px;}
+
+/* ---- hero ---- */
+.hero{margin-bottom:54px;}
+.hero .eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Fraunces',serif;font-weight:900;font-size:58px;line-height:0.98;
+  letter-spacing:-1.5px;margin:0 0 18px;
+}
+.hero h1 .c{color:var(--coral);}
+.hero .lede{font-size:19px;color:var(--ink-soft);max-width:660px;margin:0;}
+.hero .scrawl{
+  font-family:'Caveat',cursive;font-size:23px;color:var(--teal);
+  transform:rotate(-1.4deg);display:inline-block;margin-top:18px;
+}
+
+/* ---- sections ---- */
+section{margin-bottom:58px;scroll-margin-top:30px;}
+.tag{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 13px;border-radius:11px 3px 11px 3px;margin-bottom:16px;
+  border:1.5px solid var(--ink);
+}
+.tag.coral{background:#fbe4de;color:var(--coral);border-color:#f0b6aa;}
+.tag.teal{background:#dcefec;color:var(--teal);border-color:#a9d6cf;}
+.tag.gold{background:#f8eccb;color:#a9760a;border-color:#e6c884;}
+h2{
+  font-family:'Fraunces',serif;font-weight:900;font-size:33px;line-height:1.08;
+  letter-spacing:-0.6px;margin:0 0 16px;
+}
+h3{
+  font-family:'Fraunces',serif;font-weight:600;font-size:21px;
+  margin:30px 0 10px;letter-spacing:-0.2px;
+}
+p{margin:0 0 15px;}
+.lead-note{color:var(--ink-soft);}
+strong{font-weight:700;}
+code.ic{
+  font-family:'IBM Plex Mono',monospace;font-size:0.86em;
+  background:var(--code-bg);padding:2px 6px;border-radius:5px;
+  border:1px solid #e7dcc0;color:#7a4e12;
+}
+
+/* cards & callouts */
+.card{
+  background:var(--card);border:1.5px solid var(--ink);
+  border-radius:14px 4px 14px 4px;padding:24px 26px;
+  box-shadow:7px 7px 0 var(--shadow);margin:22px 0;
+}
+.ask{
+  border-left:5px solid var(--teal);background:#eef7f5;
+  border-radius:3px 12px 12px 3px;padding:16px 20px;margin:18px 0;
+}
+.ask .h{font-family:'Caveat',cursive;font-size:21px;color:var(--teal);font-weight:700;margin-bottom:2px;}
+.watch{
+  border-left:5px solid var(--coral);background:#fdeee9;
+  border-radius:3px 12px 12px 3px;padding:16px 20px;margin:18px 0;
+}
+.watch .h{font-family:'Caveat',cursive;font-size:21px;color:var(--coral);font-weight:700;margin-bottom:2px;}
+.recall{
+  border-left:5px solid var(--gold);background:#fbf2db;
+  border-radius:3px 12px 12px 3px;padding:16px 20px;margin:18px 0;
+}
+.recall .h{font-family:'Caveat',cursive;font-size:21px;color:#a9760a;font-weight:700;margin-bottom:2px;}
+.q-list{margin:6px 0 0;padding-left:20px;}
+.q-list li{margin:7px 0;}
+
+/* margin note */
+.margin-note{
+  font-family:'Caveat',cursive;font-size:20px;color:var(--ink-faint);
+  transform:rotate(-1.2deg);margin:10px 0 10px 6px;
+}
+
+/* generic pattern block (NOT solution code) */
+.pattern{
+  font-family:'IBM Plex Mono',monospace;font-size:14.5px;line-height:1.7;
+  background:var(--code-bg);border:1.5px solid #e7dcc0;border-radius:10px;
+  padding:16px 20px;margin:16px 0;color:#3f3a2c;white-space:pre-wrap;
+}
+.pattern .cm{color:#9a9078;font-style:italic;}
+.pattern .kw{color:var(--coral);font-weight:600;}
+.pattern .fn{color:var(--blue);}
+
+/* ---- interactive widget frame ---- */
+.widget{
+  background:var(--card);border:1.5px solid var(--ink);border-radius:14px 4px 14px 4px;
+  box-shadow:7px 7px 0 var(--shadow);padding:24px 26px;margin:24px 0;
+}
+.widget .wlabel{
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;
+}
+.ctl-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:10px 0;}
+button.btn{
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;cursor:pointer;
+  background:var(--ink);color:var(--paper);border:none;
+  padding:9px 18px;border-radius:9px 3px 9px 3px;transition:transform .08s,background .15s;
+}
+button.btn:hover{background:#000;}
+button.btn:active{transform:translate(1px,1px);}
+button.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+button.btn.ghost:hover{background:#f1ead6;}
+input[type=range]{accent-color:var(--coral);width:240px;height:4px;cursor:pointer;}
+.bignum{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;
+}
+.chip{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;
+  padding:4px 10px;border-radius:7px 2px 7px 2px;border:1.5px solid var(--ink);
+}
+.chip.h{background:#fdeae9;color:var(--coral);border-color:#f0b6aa;}
+.chip.o{background:#eaf2fb;color:var(--blue);border-color:#aecbed;}
+.chip.g{background:#eaf6ee;color:var(--teal);border-color:#a9d6cf;}
+.mono-out{font-family:'IBM Plex Mono',monospace;font-size:15px;}
+
+/* quiz */
+.quiz-q{margin:22px 0;}
+.quiz-q .stem{font-weight:700;margin-bottom:10px;}
+.opt{
+  display:block;width:100%;text-align:left;font-family:'DM Sans',sans-serif;font-size:15.5px;
+  background:var(--card);border:1.5px solid #d8cfb6;border-radius:9px 3px 9px 3px;
+  padding:11px 15px;margin:8px 0;cursor:pointer;transition:background .12s,border-color .12s;
+}
+.opt:hover{background:#f4ecd6;}
+.opt.correct{background:#e3f4ea;border-color:var(--teal);}
+.opt.wrong{background:#fbe3de;border-color:var(--coral);}
+.fb{font-size:14.5px;color:var(--ink-soft);margin-top:8px;min-height:0;}
+.fb.show{margin-top:10px;}
+
+/* checklist */
+.check{list-style:none;margin:6px 0;padding:0;}
+.check li{
+  display:flex;gap:12px;align-items:flex-start;padding:10px 0;
+  border-bottom:1px dashed #ded5bd;cursor:pointer;
+}
+.check li:last-child{border-bottom:none;}
+.check .box{
+  width:22px;height:22px;border:2px solid var(--ink);border-radius:6px 2px 6px 2px;
+  flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;
+  font-family:'IBM Plex Mono',monospace;font-weight:700;color:transparent;transition:all .12s;
+}
+.check li.done .box{background:var(--teal);border-color:var(--teal);color:#fff;}
+.check li.done .lbl{color:var(--ink-faint);text-decoration:line-through;}
+
+/* cheat sheet recipe card */
+.recipe-card{
+  background:var(--recipe);color:#e8e4d8;border-radius:16px 5px 16px 5px;
+  padding:30px 34px;margin:26px 0;box-shadow:8px 8px 0 #c9c2ad;
+}
+.recipe-card .rc-title{
+  font-family:'Caveat',cursive;font-size:30px;color:#ffd27a;font-weight:700;
+  transform:rotate(-1deg);display:inline-block;margin-bottom:14px;
+}
+.recipe-card ul{margin:0;padding-left:0;list-style:none;}
+.recipe-card li{
+  padding:9px 0;border-bottom:1px dashed #3c4754;
+  font-family:'IBM Plex Mono',monospace;font-size:14.5px;line-height:1.55;
+}
+.recipe-card li:last-child{border-bottom:none;}
+.recipe-card li b{color:#7fd3c6;}
+.recipe-card .ask-self{color:#ffd27a;}
+
+/* footer */
+footer{
+  margin-top:60px;padding-top:24px;border-top:1.5px dashed #d8cfb6;
+}
+footer .sig{
+  font-family:'Caveat',cursive;font-size:24px;color:var(--ink-faint);
+  transform:rotate(-1.6deg);display:inline-block;
+}
+
+.svgwrap{width:100%;overflow:hidden;border-radius:10px;border:1.5px solid #e7dcc0;background:#eef6fb;}
+svg{display:block;}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-soft);margin-top:10px;}
+.legend span{display:inline-flex;align-items:center;gap:7px;}
+.legend i{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,0.2);}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="toc">
+  <div class="brand">Loop <span class="b2">City</span></div>
+  <div class="kick">a planning guide</div>
+  <ol id="toc-list">
+    <li><a class="tlink" href="#brief"><span class="tnum">00</span><span>The Brief</span></a></li>
+    <li><a class="tlink" href="#decompose"><span class="tnum">01</span><span>Think in Building Blocks</span></a></li>
+    <li><a class="tlink" href="#order"><span class="tnum">02</span><span>What Gets Drawn First?</span></a></li>
+    <li><a class="tlink" href="#modulo"><span class="tnum">03</span><span>The Modulo Dispatcher</span></a></li>
+    <li><a class="tlink" href="#position"><span class="tnum">04</span><span>Same Width, Easy Math</span></a></li>
+    <li><a class="tlink" href="#floors"><span class="tnum">05</span><span>Stacking the Floors</span></a></li>
+    <li><a class="tlink" href="#anchor"><span class="tnum">06</span><span>Anchoring to the Road</span></a></li>
+    <li><a class="tlink" href="#road"><span class="tnum">07</span><span>The Dashed Road</span></a></li>
+    <li><a class="tlink" href="#checklist"><span class="tnum">08</span><span>Planning Checklist</span></a></li>
+    <li><a class="tlink" href="#stretch"><span class="tnum">09</span><span>Stretch Goals</span></a></li>
+    <li><a class="tlink" href="#quiz"><span class="tnum">10</span><span>Check Yourself</span></a></li>
+    <li><a class="tlink" href="#cheat"><span class="tnum">11</span><span>Questions to Ask</span></a></li>
+  </ol>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="eyebrow">Processing · Java Mode · Functions + Loops</div>
+    <h1>You're the new architect of <span class="c">Loop&nbsp;City</span>.</h1>
+    
+    <div class="scrawl">no copy-paste solutions in here — just the way to think about it ✎</div>
+  </div>
+
+  <!-- 00 BRIEF -->
+  <section id="brief">
+    <span class="tag coral">00 · the mission</span>
+    <h2>What the City Council is actually asking for</h2>
+    <p>Strip away the story and the job is this: build a <strong>1400 × 800</strong> scene out of <em>reusable parts</em>. The assignment already hands you three function signatures — that's a gift, not a suggestion. Your structures must be drawable anywhere on the block just by changing the numbers you pass in.</p>
+    <div class="card">
+      <p style="margin-bottom:10px"><strong>The three you're given:</strong></p>
+      <p style="margin:6px 0"><span class="chip h">drawHospital(int x, int y)</span> &nbsp; triangular roof + a red cross</p>
+      <p style="margin:6px 0"><span class="chip o">drawOffice(int x, int y, int numFloors)</span> &nbsp; height grows with the floor count</p>
+      <p style="margin:6px 0"><span class="chip g">drawThird(int x, int y)</span> &nbsp; a structure of your choosing</p>
+      <p class="lead-note" style="margin:12px 0 0">Then one main loop places them along a road, choosing the type with a <strong>modulo pattern</strong>. Offices roll <code class="ic">random(3, 7)</code> floors.</p>
+    </div>
+    <div class="recall"><div class="h">Things we've already covered that you'll lean on</div>
+      Functions with parameters · the <code class="ic">for</code> loop · the <code class="ic">%</code> modulo operator · <code class="ic">if</code>/<code class="ic">else if</code> chains · <code class="ic">random()</code> · drawing order with <code class="ic">rect</code>, <code class="ic">triangle</code>, <code class="ic">circle</code>, <code class="ic">fill</code>.
+    </div>
+  </section>
+
+  <!-- 01 DECOMPOSE -->
+  <section id="decompose">
+    <span class="tag teal">01 · decomposition</span>
+    <h2>Think in building blocks, not in one giant pile</h2>
+    <p>The whole point of the assignment is in its name. A good Loop City has a tiny <code class="ic">setup()</code> that reads almost like a to-do list, and the messy details live inside helper functions. If <code class="ic">setup()</code> is 200 lines long, something's gone sideways.</p>
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>What is the <em>one job</em> of <code class="ic">setup()</code> here — to draw rectangles, or to <em>arrange</em> things that already know how to draw themselves?</li>
+        <li>If I wanted to drop a hospital at a totally different spot tomorrow, what's the <em>only</em> thing that should need to change?</li>
+        <li>Inside <code class="ic">drawOffice</code>, every <code class="ic">rect</code> and <code class="ic">circle</code> is positioned relative to what? (Hint: not the absolute screen — the <code class="ic">x</code> and <code class="ic">y</code> that got passed in.)</li>
+      </ul>
+    </div>
+    <p>That last point is the secret to a reusable function: <strong>everything inside is measured from the parameters</strong>, never from a fixed screen coordinate. A window isn't at "x = 320." It's at "the building's x, plus 80."</p>
+    <div class="watch"><div class="h">Watch out</div>
+      If you find yourself typing a specific number like <code class="ic">600</code> inside a draw function, pause. Should that be <code class="ic">x + 600</code> instead? A function that hard-codes screen positions can only ever draw one building, in one place.
+    </div>
+  </section>
+
+  <!-- 02 DRAW ORDER -->
+  <section id="order">
+    <span class="tag gold">02 · layering</span>
+    <h2>Whatever you draw last lands on top</h2>
+    <p>Processing paints like a stack of stickers — each shape covers whatever's underneath it. Get the order wrong and your buildings vanish behind the grass, or the sun hides behind a cloud that should be in front. Step through the layers below and watch the scene assemble.</p>
+
+    <div class="widget">
+      <div class="wlabel">Painter's order — press Paint Next Layer</div>
+      <div class="svgwrap"><svg id="orderSvg" viewBox="0 0 560 300" width="100%"></svg></div>
+      <div class="ctl-row" style="margin-top:14px">
+        <button class="btn" id="orderNext">Paint next layer ▸</button>
+        <button class="btn ghost" id="orderReset">Reset</button>
+        <span class="mono-out" id="orderLabel" style="color:var(--ink-soft)"></span>
+      </div>
+    </div>
+
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>If the grey ground is drawn <em>after</em> the buildings, what happens to the buildings?</li>
+        <li>Should the road's dashed lines come before or after the grey road surface? Why?</li>
+        <li>Where in the order does the sky belong — and what would it cover if you drew it late?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 03 MODULO -->
+  <section id="modulo">
+    <span class="tag coral">03 · the engine</span>
+    <h2>One loop, three buildings: the modulo dispatcher</h2>
+    <p>This is the heart of the assignment. A single <code class="ic">for</code> loop counts <code class="ic">0, 1, 2, 3, …</code> and on each pass you decide <em>which</em> building to draw. The trick is the remainder operator <code class="ic">%</code>: dividing the counter by 3 gives you a remainder that cycles <code class="ic">0, 1, 2, 0, 1, 2, …</code> forever. That repeating cycle <em>is</em> your pattern.</p>
+
+    <div class="widget">
+      <div class="wlabel">Modulo dispatcher — drag the counter</div>
+      <div class="ctl-row">
+        <span class="bignum">loop counter&nbsp; x =</span>
+        <input type="range" id="modRange" min="0" max="11" value="0" step="1">
+        <span class="bignum" id="modX" style="color:var(--coral)">0</span>
+      </div>
+      <div class="mono-out" id="modCalc" style="margin:8px 0 16px"></div>
+      <div class="ctl-row" id="modChips" style="gap:10px"></div>
+      <div class="svgwrap" style="margin-top:16px"><svg id="modSvg" viewBox="0 0 560 170" width="100%"></svg></div>
+    </div>
+
+    <div class="recall"><div class="h">Why remainders cycle</div>
+      <code class="ic">0%3=0</code>, <code class="ic">1%3=1</code>, <code class="ic">2%3=2</code>, then <code class="ic">3%3=0</code> again. The remainder can only ever be 0, 1, or 2 — exactly three buckets, one per building type. That's why <code class="ic">% 3</code> and not <code class="ic">% 2</code> or <code class="ic">% 4</code>.
+    </div>
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>You have three remainder cases. What structure have we used that runs <em>one</em> branch out of several based on a condition? (Think <code class="ic">if</code> … <code class="ic">else if</code> … <code class="ic">else if</code>.)</li>
+        <li>If you wanted the pattern hospital → office → store, which remainder should trigger which function?</li>
+        <li>What would <code class="ic">% 4</code> do to your pattern — and would you have a fourth building to fill it?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 04 POSITION -->
+  <section id="position">
+    <span class="tag teal">04 · spacing</span>
+    <h2>Same width makes the math almost disappear</h2>
+    <p>Here's the rule I keep hammering: <strong>your loop starts at 0 and changes by 1.</strong> No clever <code class="ic">x = x + 250</code> in the loop header. The counter just counts; <em>you</em> do the spacing math inside, every single time, from the counter. And it's far easier if every building is the <em>same width</em> — pick one width (250, 300, whatever) and stick to it.</p>
+    <p>Then the left edge of building number <code class="ic">i</code> is simply <strong>width × i</strong> (plus maybe a small starting offset). Slide the controls and watch the positions fall out of the counter.</p>
+
+    <div class="widget">
+      <div class="wlabel">Position calculator — width × counter</div>
+      <div class="ctl-row">
+        <span class="bignum">building width</span>
+        <input type="range" id="posW" min="160" max="280" value="220" step="10">
+        <span class="bignum" id="posWv" style="color:var(--coral)">220</span>
+      </div>
+      <div class="ctl-row">
+        <span class="bignum">how many</span>
+        <input type="range" id="posN" min="2" max="6" value="5" step="1">
+        <span class="bignum" id="posNv" style="color:var(--coral)">5</span>
+      </div>
+      <div class="mono-out" id="posCalc" style="margin:10px 0 14px;line-height:1.9"></div>
+      <div class="svgwrap"><svg id="posSvg" viewBox="0 0 560 150" width="100%"></svg></div>
+    </div>
+
+    <div class="watch"><div class="h">Watch out</div>
+      If you let widths differ, <code class="ic">width × i</code> stops working and you'll need a running "where does the next one start" variable instead. Doable — but you've just made the assignment harder. Keep them equal and the multiply does all the work.
+    </div>
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>If width is 220 and the counter is 3, what's the left edge? Did you get 660? Now where's building 0?</li>
+        <li>Why must the spacing math happen <em>inside</em> the loop body and not in the loop header?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 05 FLOORS -->
+  <section id="floors">
+    <span class="tag gold">05 · the nested loop</span>
+    <h2>Stacking floors — and the off-by-one that trips everyone</h2>
+    <p>The office is the only building whose height changes, so it needs its <em>own</em> loop, living inside <code class="ic">drawOffice</code> — a loop inside a function. The ground floor is special (it gets a door and a bush), and <em>every floor above it</em> is a copy of the same window-floor, stacked higher.</p>
+    <p>Read the spec carefully: <em>"if floors is 3, there's a ground floor and then 2 floors of windows."</em> So the number of window floors is <strong>numFloors − 1</strong>, not numFloors. Slide it and watch the count.</p>
+
+    <div class="widget">
+      <div class="wlabel">Floor stepper — what does numFloors actually build?</div>
+      <div class="ctl-row">
+        <span class="bignum">numFloors =</span>
+        <input type="range" id="flR" min="1" max="7" value="3" step="1">
+        <span class="bignum" id="flV" style="color:var(--coral)">3</span>
+      </div>
+      <div class="mono-out" id="flCalc" style="margin:8px 0 14px"></div>
+      <div class="svgwrap" style="background:#eef6fb"><svg id="flSvg" viewBox="0 0 560 240" width="100%"></svg></div>
+    </div>
+
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>Your floor loop counts from 0 and changes by 1 (always). How do you turn "floor number" into a <em>height offset</em> so each floor sits on top of the last? (Multiply inside, like before.)</li>
+        <li>Should the ground floor be drawn by the loop, or before it? Why might keeping it separate be cleaner?</li>
+        <li><strong>The random trap:</strong> the spec wants 3 to 7 floors. What numbers can <code class="ic">int(random(3, 7))</code> actually return? Try it on paper — does 7 ever appear? If you need 7 included, what should the second number be?</li>
+      </ul>
+    </div>
+    <div class="recall"><div class="h">Loop-inside-a-function is still just a loop</div>
+      Same rules: start at 0, step by 1, do the math in the body. The only new idea is that this loop's <em>count</em> comes from a parameter (<code class="ic">numFloors</code>) instead of a fixed number.
+    </div>
+  </section>
+
+  <!-- 06 ANCHOR -->
+  <section id="anchor">
+    <span class="tag coral">06 · the reference line</span>
+    <h2>Anchor everything to the road with negative heights</h2>
+    <p>Buildings of different heights all need to sit on the <em>same</em> ground line. The clean trick — and the one I recommended — is to treat the road's top edge as your baseline <code class="ic">y</code>, and grow shapes <em>upward</em> using a <strong>negative height</strong>. Then no matter how tall a building is, its feet stay glued to the road.</p>
+
+    <div class="widget">
+      <div class="wlabel">Negative-height anchor — drag the height</div>
+      <div class="ctl-row">
+        <span class="bignum">height</span>
+        <input type="range" id="anH" min="40" max="220" value="120" step="10">
+        <span class="bignum" id="anHv" style="color:var(--coral)">120</span>
+        <button class="btn ghost" id="anFlip">Flip: grow downward</button>
+      </div>
+      <div class="mono-out" id="anCalc" style="margin:8px 0 14px"></div>
+      <div class="svgwrap"><svg id="anSvg" viewBox="0 0 560 250" width="100%"></svg></div>
+      <div class="legend"><span><i style="background:#9aa7b3"></i>building</span><span><i style="background:#f0c419"></i>road baseline (your y)</span></div>
+    </div>
+
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>When the height grows upward from the baseline, which coordinate stays fixed — the top of the building or the bottom?</li>
+        <li>If you grew buildings <em>downward</em> from a fixed top instead, what would happen to a short building versus a tall one along the road?</li>
+        <li>Inside the office, every floor stacks above the one below. How does a shared baseline make that stacking predictable?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 07 ROAD -->
+  <section id="road">
+    <span class="tag teal">07 · finishing touches</span>
+    <h2>The dashed road is just one more loop</h2>
+    <p>The center line of a road is a row of evenly spaced dashes — which is exactly what a loop is good at. Same rules apply: count from 0, step by 1, compute each dash's position from the counter.</p>
+    <div class="ask"><div class="h">Ask yourself</div>
+      <ul class="q-list">
+        <li>How wide is one dash, and how big is the gap after it? Together those decide the spacing per step.</li>
+        <li>If each dash is at <code class="ic">spacing × i</code>, how many dashes do you need to cross a 1400-wide screen?</li>
+        <li>The road itself is a single rectangle. Should it be drawn before or after the dashes sit on top of it?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 08 CHECKLIST -->
+  <section id="checklist">
+    <span class="tag gold">08 · before you submit</span>
+    <h2>Planning checklist</h2>
+    <p>Tick these off as you build. If you can't tick one yet, you've found your next task. (This is just for you — nothing is saved.)</p>
+    <div class="card">
+      <ul class="check" id="checkList">
+        <li data-k="1"><span class="box">✓</span><span class="lbl"><code class="ic">size(1400, 800)</code> and a background are set in <code class="ic">setup()</code>.</span></li>
+        <li data-k="2"><span class="box">✓</span><span class="lbl">Three separate draw functions exist, each taking an <code class="ic">x</code> and <code class="ic">y</code>.</span></li>
+        <li data-k="3"><span class="box">✓</span><span class="lbl">Every shape inside a draw function is measured from its parameters, not fixed screen numbers.</span></li>
+        <li data-k="4"><span class="box">✓</span><span class="lbl">The hospital has a triangular roof and a red cross.</span></li>
+        <li data-k="5"><span class="box">✓</span><span class="lbl">The office uses its own loop to stack <code class="ic">numFloors − 1</code> window floors above a ground floor.</span></li>
+        <li data-k="6"><span class="box">✓</span><span class="lbl">Offices pick a random floor count in the 3–7 range.</span></li>
+        <li data-k="7"><span class="box">✓</span><span class="lbl">One main loop places buildings, counting from 0 and stepping by 1.</span></li>
+        <li data-k="8"><span class="box">✓</span><span class="lbl">A <code class="ic">% 3</code> modulo pattern decides which building each pass draws.</span></li>
+        <li data-k="9"><span class="box">✓</span><span class="lbl">The road has dashed lines made with a loop.</span></li>
+        <li data-k="10"><span class="box">✓</span><span class="lbl">Drawing order is correct — sky and ground are behind the buildings.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 09 STRETCH -->
+  <section id="stretch">
+    <span class="tag coral">09 · if you're flying</span>
+    <h2>Stretch goals to give the city life</h2>
+    <p>Finished early? These are optional and they nudge you toward ideas we'll meet later — no pressure, just fun.</p>
+    <div class="ask"><div class="h">A car that drives down the street</div>
+      <ul class="q-list">
+        <li>What single variable would have to <em>change a little every frame</em> to make a car appear to move?</li>
+        <li>When the car runs off the right edge, how would you send it back to the start? (What does it mean for its x to "wrap around"?)</li>
+        <li>Harder: to drive one way and then back, what would have to flip — the position, or the <em>amount</em> you add each frame?</li>
+      </ul>
+    </div>
+    <div class="ask"><div class="h">Clouds and other signs of life</div>
+      <ul class="q-list">
+        <li>You already have a function that draws a cluster of circles. Could it become a reusable <code class="ic">drawCloud(int x, int y)</code> you call a few times?</li>
+        <li>Where in the draw order do clouds belong so they float in front of the sky but behind nothing important?</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10 QUIZ -->
+  <section id="quiz">
+    <span class="tag teal">10 · check yourself</span>
+    <h2>Five quick gut-checks</h2>
+    <p>Answer before you peek. These are the exact spots students lose points.</p>
+    <div id="quizRoot"></div>
+  </section>
+
+  <!-- 11 CHEAT -->
+  <section id="cheat">
+    <span class="tag gold">11 · the recipe card</span>
+    <h2>Questions to ask yourself, start to finish</h2>
+    <p>No code here on purpose. If you can answer every line below in your own words, you can write Loop City.</p>
+    <div class="recipe-card">
+      <span class="rc-title">Loop City — the planning recipe ✎</span>
+      <ul>
+        <li><span class="ask-self">Decompose →</span> What's the <b>one job</b> of <b>setup()</b>, and what belongs in helper functions instead?</li>
+        <li><span class="ask-self">Reuse →</span> Is every shape inside a function measured from its <b>x, y parameters</b>?</li>
+        <li><span class="ask-self">Order →</span> Am I drawing back-to-front — <b>sky, ground, road, then buildings</b> on top?</li>
+        <li><span class="ask-self">Dispatch →</span> Does my main loop count <b>0, 1, 2, …</b> and use <b>% 3</b> to choose the building?</li>
+        <li><span class="ask-self">Branch →</span> Three remainders, three cases — which control structure runs <b>one branch of several</b>?</li>
+        <li><span class="ask-self">Spacing →</span> Same width for all? Then is each left edge just <b>width × counter</b>, computed <b>inside</b> the loop?</li>
+        <li><span class="ask-self">Floors →</span> Does the office loop stack <b>numFloors − 1</b> window floors above the ground floor?</li>
+        <li><span class="ask-self">Random →</span> What values can <b>int(random(3, 7))</b> really produce — is 7 included?</li>
+        <li><span class="ask-self">Anchor →</span> Do my heights grow <b>upward from the road baseline</b> so feet stay on the road?</li>
+        <li><span class="ask-self">Loop rule →</span> Every loop: <b>start at 0, change by 1, do the math in the body.</b></li>
+      </ul>
+    </div>
+  </section>
+
+
+  <footer>
+    <span class="sig">Plan it on paper first. The code is just you typing up a plan you already made. ✦</span>
+  </footer>
+</main>
+</div>
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const COR="#e8624a", TEAL="#2b8f82", BLUE="#3a7bd5", GOLD="#e0a020", INK="#2b2a26";
+
+  /* ---------- scrollspy ---------- */
+  const links = Array.from(document.querySelectorAll("nav.toc a.tlink"));
+  const map = {};
+  links.forEach(l => map[l.getAttribute("href").slice(1)] = l);
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        links.forEach(l => l.classList.remove("active"));
+        const a = map[e.target.id];
+        if(a) a.classList.add("active");
+      }
+    });
+  }, {rootMargin:"-20% 0px -70% 0px", threshold:0});
+  document.querySelectorAll("main section").forEach(s => obs.observe(s));
+
+  /* ---------- 02 painter's order ---------- */
+  const orderSteps = [
+    {n:"Empty canvas", f:()=>""},
+    {n:"1 · Sky + sun", f:()=>`<rect x="0" y="0" width="560" height="300" fill="#9ed0f5"/><circle cx="80" cy="60" r="36" fill="#ffe34d"/>`},
+    {n:"2 · Clouds", f:()=>`<g fill="#ffffff"><circle cx="300" cy="55" r="22"/><circle cx="325" cy="55" r="26"/><circle cx="352" cy="58" r="20"/><circle cx="430" cy="90" r="18"/><circle cx="452" cy="90" r="22"/><circle cx="472" cy="92" r="16"/></g>`},
+    {n:"3 · Road surface", f:()=>`<rect x="0" y="220" width="560" height="80" fill="#7d7d7d"/>`},
+    {n:"4 · Dashed line", f:()=>{let s="";for(let i=0;i<8;i++){s+=`<rect x="${20+i*70}" y="256" width="40" height="8" fill="#ffe603"/>`;}return s;}},
+    {n:"5 · Buildings (on top!)", f:()=>`<rect x="60" y="120" width="90" height="100" fill="${COR}" stroke="#1d2630"/><polygon points="60,120 105,80 150,120" fill="#c94a36"/><rect x="210" y="90" width="90" height="130" fill="${BLUE}" stroke="#1d2630"/><rect x="360" y="150" width="90" height="70" fill="${TEAL}" stroke="#1d2630"/>`}
+  ];
+  let orderAt = 0;
+  function renderOrder(){
+    let svg="";
+    for(let i=0;i<=orderAt;i++){ svg += orderSteps[i].f(); }
+    if(orderAt===0) svg = `<rect x="0" y="0" width="560" height="300" fill="#eef6fb"/><text x="280" y="155" text-anchor="middle" fill="#8c8676" font-family="IBM Plex Mono,monospace" font-size="15">press “Paint next layer”</text>`;
+    $("orderSvg").innerHTML = svg;
+    $("orderLabel").textContent = orderSteps[orderAt].n;
+  }
+  $("orderNext").onclick = () => { orderAt = Math.min(orderAt+1, orderSteps.length-1); renderOrder(); };
+  $("orderReset").onclick = () => { orderAt = 0; renderOrder(); };
+  renderOrder();
+
+  /* ---------- 03 modulo dispatcher ---------- */
+  const TYPES = [
+    {name:"Hospital", color:COR},
+    {name:"Office",   color:BLUE},
+    {name:"Store",    color:TEAL}
+  ];
+  function buildingGlyph(rem, cx, baseY){
+    const c = TYPES[rem].color;
+    if(rem===0){ // hospital w/ roof
+      return `<rect x="${cx-18}" y="${baseY-46}" width="36" height="46" fill="${c}" stroke="#1d2630"/><polygon points="${cx-18},${baseY-46} ${cx},${baseY-64} ${cx+18},${baseY-46}" fill="#c94a36" stroke="#1d2630"/><rect x="${cx-3}" y="${baseY-38}" width="6" height="18" fill="#fff"/><rect x="${cx-9}" y="${baseY-32}" width="18" height="6" fill="#fff"/>`;
+    } else if(rem===1){ // office tall
+      return `<rect x="${cx-16}" y="${baseY-62}" width="32" height="62" fill="${c}" stroke="#1d2630"/><rect x="${cx-9}" y="${baseY-54}" width="7" height="9" fill="#dff"/><rect x="${cx+2}" y="${baseY-54}" width="7" height="9" fill="#dff"/><rect x="${cx-9}" y="${baseY-38}" width="7" height="9" fill="#dff"/><rect x="${cx+2}" y="${baseY-38}" width="7" height="9" fill="#dff"/>`;
+    }
+    return `<rect x="${cx-20}" y="${baseY-36}" width="40" height="36" fill="${c}" stroke="#1d2630"/><polygon points="${cx-20},${baseY-36} ${cx},${baseY-50} ${cx+20},${baseY-36}" fill="#1f6a60" stroke="#1d2630"/>`; // store
+  }
+  function renderMod(){
+    const x = +$("modRange").value;
+    const rem = x % 3;
+    $("modX").textContent = x;
+    $("modCalc").innerHTML = `<span style="color:var(--ink-faint)">compute &nbsp;</span> x % 3 &nbsp;=&nbsp; ${x} % 3 &nbsp;=&nbsp; <b style="color:${TYPES[rem].color}">remainder ${rem}</b> &nbsp;→&nbsp; draw a <b style="color:${TYPES[rem].color}">${TYPES[rem].name}</b>`;
+    // chips
+    $("modChips").innerHTML = TYPES.map((t,i)=>{
+      const cls = i===0?"h":(i===1?"o":"g");
+      const on = i===rem;
+      return `<span class="chip ${cls}" style="${on?`outline:3px solid ${t.color};outline-offset:2px;`:'opacity:.45;'}">rem ${i} → ${t.name}</span>`;
+    }).join("");
+    // skyline up to x
+    const baseY=150, slot=46, startX=30;
+    let svg=`<line x1="0" y1="150" x2="560" y2="150" stroke="#cdbf9a" stroke-width="2"/>`;
+    for(let i=0;i<=x;i++){
+      const cx = startX + i*slot;
+      if(cx>540) break;
+      const op = i===x ? 1 : 0.85;
+      svg += `<g opacity="${op}">${buildingGlyph(i%3, cx, baseY)}</g>`;
+      svg += `<text x="${cx}" y="166" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="${i===x?TYPES[i%3].color:'#9a9078'}">${i}</text>`;
+    }
+    $("modSvg").innerHTML = svg;
+  }
+  $("modRange").oninput = renderMod;
+  renderMod();
+
+  /* ---------- 04 position calculator ---------- */
+  function renderPos(){
+    const W = +$("posW").value, N = +$("posN").value;
+    $("posWv").textContent = W; $("posNv").textContent = N;
+    let rows=[];
+    for(let i=0;i<N;i++){ rows.push(`i=${i} → ${W}×${i} = <b style="color:${COR}">${W*i}</b>`); }
+    $("posCalc").innerHTML = `left edge of building i = <b>width × i</b> &nbsp;= ${W} × i<br>` + rows.join(" &nbsp;·&nbsp; ");
+    // svg: tile flush, scale to fit
+    const totalReal = W*N;
+    const scale = Math.min(1, 540/totalReal);
+    const baseY=130;
+    let svg=`<line x1="0" y1="130" x2="560" y2="130" stroke="#cdbf9a" stroke-width="2"/>`;
+    const cols=[COR,BLUE,TEAL,GOLD];
+    for(let i=0;i<N;i++){
+      const left = 10 + (W*i)*scale;
+      const w = W*scale;
+      const h = 50 + (i%3)*22;
+      svg += `<rect x="${left}" y="${baseY-h}" width="${w-2}" height="${h}" fill="${cols[i%4]}" opacity="0.85" stroke="#1d2630"/>`;
+      svg += `<text x="${left+w/2}" y="${baseY-h-6}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" fill="#5c574d">${W*i}</text>`;
+    }
+    $("posSvg").innerHTML = svg;
+  }
+  $("posW").oninput = renderPos; $("posN").oninput = renderPos;
+  renderPos();
+
+  /* ---------- 05 floor stepper ---------- */
+  function renderFloors(){
+    const nf = +$("flR").value;
+    $("flV").textContent = nf;
+    const win = nf-1;
+    $("flCalc").innerHTML = `Ground floor: <b>1</b> &nbsp;·&nbsp; Window floors: <b>numFloors − 1</b> = ${nf} − 1 = <b style="color:${COR}">${win}</b> &nbsp;·&nbsp; total floors drawn: <b>${nf}</b>`;
+    const baseY=220, fh=24, bw=120, bx=220;
+    let svg=`<line x1="0" y1="${baseY}" x2="560" y2="${baseY}" stroke="#cdbf9a" stroke-width="2"/>`;
+    // ground floor
+    svg += `<rect x="${bx}" y="${baseY-fh}" width="${bw}" height="${fh}" fill="#F0EBE8" stroke="#1d2630"/>`;
+    svg += `<rect x="${bx+50}" y="${baseY-fh+4}" width="14" height="${fh-4}" fill="#409CFC" stroke="#1d2630" stroke-width="0.7"/>`; // door
+    svg += `<circle cx="${bx+20}" cy="${baseY-6}" r="9" fill="#60B456"/>`; // bush
+    svg += `<text x="${bx-12}" y="${baseY-6}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="#a9760a">ground</text>`;
+    // window floors stacked upward
+    for(let f=1; f<nf; f++){
+      const top = baseY - fh - f*fh;
+      svg += `<rect x="${bx}" y="${top}" width="${bw}" height="${fh}" fill="#F0EBE8" stroke="#1d2630"/>`;
+      svg += `<rect x="${bx+22}" y="${top+5}" width="32" height="${fh-10}" fill="#1d2630"/>`;
+      svg += `<rect x="${bx+66}" y="${top+5}" width="32" height="${fh-10}" fill="#1d2630"/>`;
+      svg += `<text x="${bx-12}" y="${top+15}" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="10" fill="${TEAL}">f=${f}</text>`;
+    }
+    $("flSvg").innerHTML = svg;
+  }
+  $("flR").oninput = renderFloors;
+  renderFloors();
+
+  /* ---------- 06 anchor demo ---------- */
+  let growUp = true;
+  function renderAnchor(){
+    const h = +$("anH").value;
+    $("anHv").textContent = h;
+    const base = 200, x = 150, w = 90, gx = 320, gw = 90, gh = Math.round(h*0.55);
+    let svg = `<rect x="0" y="${base}" width="560" height="50" fill="#7d7d7d"/>`;
+    svg += `<line x1="0" y1="${base}" x2="560" y2="${base}" stroke="${GOLD}" stroke-width="3"/>`;
+    svg += `<text x="8" y="${base-7}" font-family="IBM Plex Mono,monospace" font-size="11" fill="#a9760a">road baseline  y = ${base}</text>`;
+    if(growUp){
+      // base stays on road; top = base - h
+      svg += `<rect x="${x}" y="${base-h}" width="${w}" height="${h}" fill="#9aa7b3" stroke="#1d2630"/>`;
+      svg += `<rect x="${gx}" y="${base-gh}" width="${gw}" height="${gh}" fill="#b8c2cc" stroke="#1d2630" stroke-dasharray="4 3"/>`;
+      $("anCalc").innerHTML = `<b style="color:${TEAL}">Growing UP from the baseline.</b> top = y − height = ${base} − ${h} = <b>${base-h}</b>. The <b>base stays glued to the road</b> no matter the height — see how both buildings’ feet line up.`;
+    } else {
+      // fixed top at 40, base = 40 + h (can cross the road)
+      const topFixed = 40;
+      svg += `<rect x="${x}" y="${topFixed}" width="${w}" height="${h}" fill="#9aa7b3" stroke="#1d2630"/>`;
+      svg += `<rect x="${gx}" y="${topFixed}" width="${gw}" height="${gh}" fill="#b8c2cc" stroke="#1d2630" stroke-dasharray="4 3"/>`;
+      $("anCalc").innerHTML = `<b style="color:${COR}">Growing DOWN from a fixed top.</b> base = top + height = ${topFixed} + ${h} = <b>${topFixed+h}</b>. Now the <b>feet float</b> — a short building hangs above the road, a tall one punches through it.`;
+    }
+    $("anSvg").innerHTML = svg;
+  }
+  $("anH").oninput = renderAnchor;
+  $("anFlip").onclick = function(){ growUp = !growUp; this.textContent = growUp ? "Flip: grow downward" : "Flip: grow upward"; renderAnchor(); };
+  renderAnchor();
+
+  /* ---------- 08 checklist ---------- */
+  document.querySelectorAll("#checkList li").forEach(li=>{
+    li.addEventListener("click", ()=> li.classList.toggle("done"));
+  });
+
+  /* ---------- 10 quiz ---------- */
+  const QUIZ = [
+    { q:"You call <code class='ic'>drawOffice(x, y, 5)</code>. How many floors of <em>windows</em> should appear above the ground floor?",
+      opts:["5","4","6","3"], correct:1,
+      fb:"The spec: a ground floor plus <b>numFloors − 1</b> window floors. 5 − 1 = 4." },
+    { q:"Your main loop counts 0, 1, 2, 3, 4, 5, …. Using <code class='ic'>x % 3</code>, which counters draw the building chosen by <b>remainder 0</b>?",
+      opts:["0, 3, 6, 9, …","1, 4, 7, …","2, 5, 8, …","every counter"], correct:0,
+      fb:"0%3, 3%3, 6%3, 9%3 all equal 0. The remainder cycles 0,1,2,0,1,2 — so every third counter hits remainder 0." },
+    { q:"Why should the sky be drawn <em>before</em> the buildings?",
+      opts:["Sky is the most important part","So the buildings, drawn later, appear on top of it","It runs faster that way","The order doesn't matter in Processing"], correct:1,
+      fb:"Processing paints like stacked stickers — whatever you draw last covers what's underneath. Sky first, buildings last." },
+    { q:"All your buildings are width 250 and the loop counter is 4. Where's that building's left edge?",
+      opts:["250","750","1000","1250"], correct:2,
+      fb:"left edge = width × counter = 250 × 4 = 1000. The counter just counts; the multiply happens inside the body." },
+    { q:"In Processing, what values can <code class='ic'>int(random(3, 7))</code> actually return?",
+      opts:["3, 4, 5, 6, 7","3, 4, 5, 6","4, 5, 6, 7","only 3 or 7"], correct:1,
+      fb:"random(3, 7) returns a decimal from 3 up to (but never reaching) 7, and int() chops off the decimal — so you get 3, 4, 5, or 6. If you need 7 included, your upper bound has to be 8." }
+  ];
+  const root = $("quizRoot");
+  QUIZ.forEach((item, qi)=>{
+    const wrap = document.createElement("div");
+    wrap.className = "quiz-q";
+    wrap.innerHTML = `<div class="stem">${qi+1}. ${item.q}</div>`;
+    const fb = document.createElement("div");
+    fb.className = "fb";
+    item.opts.forEach((o, oi)=>{
+      const b = document.createElement("button");
+      b.className = "opt";
+      b.innerHTML = o;
+      b.onclick = ()=>{
+        if(wrap.dataset.done) return;
+        wrap.dataset.done = "1";
+        const btns = wrap.querySelectorAll(".opt");
+        btns[item.correct].classList.add("correct");
+        if(oi !== item.correct) b.classList.add("wrong");
+        fb.classList.add("show");
+        fb.innerHTML = (oi===item.correct ? "✓ " : "✗ ") + item.fb;
+      };
+      wrap.appendChild(b);
+    });
+    wrap.appendChild(fb);
+    root.appendChild(wrap);
+  });
+})();
+</script>
+</body>
+</html>

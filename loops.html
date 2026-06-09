@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Loops — for, while, modulo &amp; drawing with random()</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fbfaf0;
+  --ink:#2b2a26;
+  --ink-soft:#5d5b53;
+  --line:#e4e1d2;
+  --coral:#e2614c;
+  --teal:#1f8a7e;
+  --gold:#d39b2c;
+  --red:#cf3b2e;
+  --blue:#3a6ea5;
+  --green:#2e8b57;
+  --card:#fffdf5;
+  --shadow:#26251f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  color:var(--ink);
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(rgba(31,138,126,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(31,138,126,.05) 1px,transparent 1px),
+    linear-gradient(rgba(31,138,126,.09) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(31,138,126,.09) 1px,transparent 1px);
+  background-size:25px 25px,25px 25px,125px 125px,125px 125px;
+  line-height:1.6;
+  font-size:17px;
+}
+code,pre,.mono{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;}
+
+/* ---------- layout ---------- */
+.shell{display:flex;align-items:flex-start;max-width:1320px;margin:0 auto;}
+nav.toc{
+  position:fixed;top:0;left:max(0px,calc(50% - 660px));width:248px;height:100vh;
+  padding:34px 22px 40px;overflow-y:auto;border-right:2px solid var(--line);
+  background:rgba(251,250,240,.92);backdrop-filter:blur(2px);
+}
+nav.toc .brand{font-family:'Fraunces',serif;font-weight:900;font-size:1.32rem;line-height:1.05;letter-spacing:-.01em;}
+nav.toc .brand .sub{display:block;font-family:'Caveat',cursive;font-weight:600;color:var(--coral);font-size:1.15rem;margin-top:4px;transform:rotate(-2deg);}
+nav.toc ol{list-style:none;margin-top:24px;counter-reset:toc;}
+nav.toc li{counter-increment:toc;margin:2px 0;}
+nav.toc a{
+  display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--ink-soft);
+  font-size:.86rem;font-weight:500;padding:6px 9px;border-radius:7px 2px 7px 2px;
+  border-left:3px solid transparent;transition:.15s;
+}
+nav.toc a::before{content:counter(toc,decimal-leading-zero);font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gold);font-weight:600;}
+nav.toc a:hover{background:#f2efe0;color:var(--ink);}
+nav.toc a.active{background:#fff;color:var(--ink);border-left:3px solid var(--red);box-shadow:3px 3px 0 var(--line);font-weight:700;}
+
+main{margin-left:248px;flex:1;padding:0 56px 120px;max-width:1072px;}
+
+/* ---------- hero ---------- */
+header.hero{padding:62px 0 30px;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+h1{font-family:'Fraunces',serif;font-weight:900;font-size:3.5rem;line-height:1.02;letter-spacing:-.02em;margin:14px 0 8px;}
+h1 .hl{color:var(--coral);}
+.hero .lede{font-size:1.18rem;color:var(--ink-soft);max-width:60ch;}
+.hero .tag-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:.74rem;font-weight:500;padding:5px 11px;border-radius:9px 3px 9px 3px;background:#fff;border:1.5px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);}
+.chip.c2{border-color:var(--teal);color:var(--teal);}
+.chip.c3{border-color:var(--gold);color:#a9760f;}
+.chip.c4{border-color:var(--coral);color:var(--coral);}
+
+/* ---------- sections ---------- */
+section{padding:40px 0 8px;border-top:2px dashed var(--line);margin-top:34px;scroll-margin-top:20px;}
+section:first-of-type{border-top:none;margin-top:8px;}
+.sec-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--ink);padding:4px 12px;border-radius:11px 3px 11px 3px;margin-bottom:14px;}
+.sec-tag.t-teal{background:var(--teal);} .sec-tag.t-coral{background:var(--coral);} .sec-tag.t-gold{background:var(--gold);} .sec-tag.t-blue{background:var(--blue);} .sec-tag.t-red{background:var(--red);}
+h2{font-family:'Fraunces',serif;font-weight:900;font-size:2.05rem;line-height:1.08;letter-spacing:-.015em;margin-bottom:10px;}
+h3{font-family:'Fraunces',serif;font-weight:600;font-size:1.3rem;margin:26px 0 8px;}
+p{margin:10px 0;max-width:68ch;}
+strong{font-weight:700;}
+.lead{font-size:1.08rem;color:var(--ink-soft);max-width:66ch;}
+a.inl{color:var(--teal);text-decoration:underline solid 1.5px;text-underline-offset:2px;}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:2px solid var(--ink);border-radius:14px 4px 14px 4px;box-shadow:6px 6px 0 var(--shadow);padding:22px 24px;margin:20px 0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.grid2.tight{gap:16px;}
+
+/* margin note */
+.note{font-family:'Caveat',cursive;font-size:1.32rem;line-height:1.25;color:var(--coral);transform:rotate(-1.2deg);margin:14px 0;padding-left:14px;border-left:3px solid var(--gold);}
+
+/* callouts */
+.callout{border-radius:4px 14px 4px 14px;padding:16px 20px 16px 48px;margin:18px 0;position:relative;border:2px solid;background:#fff;}
+.callout::before{position:absolute;left:16px;top:14px;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.05rem;}
+.callout.tip{border-color:var(--teal);background:#effaf7;} .callout.tip::before{content:"✓";color:var(--teal);}
+.callout.warn{border-color:var(--gold);background:#fdf6e6;} .callout.warn::before{content:"!";color:#a9760f;}
+.callout.bug{border-color:var(--red);background:#fdeeec;} .callout.bug::before{content:"✗";color:var(--red);}
+.callout.info{border-color:var(--blue);background:#eef3fa;} .callout.info::before{content:"i";color:var(--blue);}
+.callout h4{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.96rem;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em;}
+
+/* ---------- code blocks (light tokenized) ---------- */
+pre.code{background:#fff;border:2px solid var(--ink);border-radius:10px 3px 10px 3px;box-shadow:5px 5px 0 var(--shadow);padding:16px 18px;margin:16px 0;overflow-x:auto;font-size:.92rem;line-height:1.55;}
+pre.code .ln,pre.recipe .ln{display:block;}
+.tok-kw{color:var(--coral);font-weight:600;}
+.tok-type{color:var(--blue);font-weight:600;}
+.tok-num{color:#9a6b00;}
+.tok-str{color:var(--green);}
+.tok-com{color:#9b988b;font-style:italic;}
+.tok-fn{color:var(--teal);font-weight:600;}
+.tok-op{color:#b5482f;}
+code.ic{background:#f1efe2;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.88em;}
+
+/* dark recipe card */
+pre.recipe{background:#23241f;color:#e9e7da;border:2px solid var(--ink);border-radius:12px 4px 12px 4px;box-shadow:6px 6px 0 var(--shadow);padding:20px 22px;font-size:.9rem;line-height:1.6;overflow-x:auto;}
+pre.recipe .tok-kw{color:#ff8a6e;} pre.recipe .tok-type{color:#7fb3e8;} pre.recipe .tok-num{color:#e3c06a;} pre.recipe .tok-str{color:#8fd49a;} pre.recipe .tok-com{color:#7f7d70;} pre.recipe .tok-fn{color:#67c9bd;} pre.recipe .tok-op{color:#ffa98e;}
+
+/* ---------- interactive widgets ---------- */
+.widget{background:var(--card);border:2px solid var(--ink);border-radius:14px 4px 14px 4px;box-shadow:6px 6px 0 var(--shadow);padding:20px 22px;margin:22px 0;}
+.widget .wlabel{font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:600;margin-bottom:12px;}
+.btn{font-family:'DM Sans',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;padding:8px 16px;box-shadow:3px 3px 0 var(--shadow);transition:.1s;}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow);}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow);}
+.btn.ghost{background:#fff;color:var(--ink);}
+.btn.coral{background:var(--coral);border-color:var(--coral);}
+.btn.teal{background:var(--teal);border-color:var(--teal);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.slider-row{display:flex;align-items:center;gap:14px;margin:10px 0;}
+.slider-row label{font-family:'IBM Plex Mono',monospace;font-size:.82rem;min-width:120px;}
+.slider-row .val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--coral);min-width:46px;}
+input[type=range]{flex:1;accent-color:var(--teal);height:6px;}
+canvas{background:#fff;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;display:block;}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;overflow:hidden;box-shadow:3px 3px 0 var(--shadow);}
+.seg button{border:none;background:#fff;font-family:'IBM Plex Mono',monospace;font-size:.82rem;font-weight:600;padding:7px 14px;cursor:pointer;border-right:2px solid var(--ink);}
+.seg button:last-child{border-right:none;}
+.seg button.on{background:var(--ink);color:#fff;}
+
+/* trace visualizer */
+.trace-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
+.trace-readout{font-family:'IBM Plex Mono',monospace;font-size:.9rem;}
+.trace-readout .reg{display:flex;justify-content:space-between;padding:5px 10px;border:1.5px solid var(--line);border-radius:6px;margin:5px 0;background:#fff;}
+.trace-readout .reg b{color:var(--coral);}
+.trace-readout .reg.hot{border-color:var(--gold);background:#fdf6e6;}
+.out-tape{font-family:'IBM Plex Mono',monospace;font-size:.86rem;background:#23241f;color:#8fd49a;border-radius:6px;padding:10px 12px;min-height:42px;margin-top:8px;white-space:pre-wrap;word-break:break-word;}
+.count-badge{font-family:'Fraunces',serif;font-weight:900;font-size:2.4rem;color:var(--teal);}
+.count-badge.inf{color:var(--red);font-size:1.6rem;}
+
+/* quiz / self-check */
+.q{border:2px solid var(--ink);border-radius:12px 4px 12px 4px;background:#fff;box-shadow:5px 5px 0 var(--shadow);padding:18px 20px;margin:18px 0;}
+.q .qnum{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--gold);font-weight:600;letter-spacing:.1em;}
+.q .opts{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
+.q .opt{text-align:left;font-family:'DM Sans',sans-serif;font-size:.94rem;background:#fff;border:1.5px solid var(--line);border-radius:7px 2px 7px 2px;padding:9px 13px;cursor:pointer;transition:.12s;}
+.q .opt:hover{border-color:var(--ink);background:#faf8ee;}
+.q .opt.correct{border-color:var(--green);background:#eafaf0;font-weight:700;}
+.q .opt.wrong{border-color:var(--red);background:#fdeeec;}
+.q .opt.locked{cursor:default;}
+.q .explain{display:none;margin-top:10px;padding:12px 14px;border-left:3px solid var(--teal);background:#effaf7;border-radius:0 8px 8px 0;font-size:.92rem;}
+.q .explain.show{display:block;}
+.q .reveal{margin-top:10px;}
+
+/* table */
+table.cmp{width:100%;border-collapse:collapse;margin:18px 0;font-size:.92rem;background:#fff;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--shadow);}
+table.cmp th{background:var(--ink);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:10px 14px;}
+table.cmp td{padding:11px 14px;border-top:1.5px solid var(--line);vertical-align:top;}
+table.cmp tr:nth-child(even) td{background:#faf8ee;}
+table.cmp td:first-child{font-family:'IBM Plex Mono',monospace;font-weight:600;white-space:nowrap;}
+
+/* footer */
+footer{max-width:1320px;margin:0 auto;padding:50px 56px 80px 304px;}
+footer .fnote{font-family:'Caveat',cursive;font-size:1.7rem;color:var(--coral);transform:rotate(-1.5deg);display:inline-block;}
+footer .fmeta{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-soft);margin-top:8px;}
+
+.reveal-on-scroll{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.reveal-on-scroll.in{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="toc">
+  <div class="brand">Loops<span class="sub">repeat yourself, on purpose</span></div>
+  <ol>
+    <li><a href="#big-idea">The big idea</a></li>
+    <li><a href="#for-loop">The for loop</a></li>
+    <li><a href="#counting">Counting iterations</a></li>
+    <li><a href="#step">Inclusive &amp; step size</a></li>
+    <li><a href="#infinite">Infinite loops</a></li>
+    <li><a href="#while-loop">The while loop</a></li>
+    <li><a href="#for-vs-while">for vs while</a></li>
+    <li><a href="#modulo">Modulo (%)</a></li>
+    <li><a href="#random">random() + casting</a></li>
+    <li><a href="#drawing">Drawing with loops</a></li>
+    <li><a href="#bughunt">Bug hunt</a></li>
+    <li><a href="#practice">Practice it</a></li>
+    <li><a href="#cheat">Cheat sheet</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="hero">
+  <div class="eyebrow">AP CSP · Processing (Java mode)</div>
+  <h1>One block of code,<br><span class="hl">run again and again.</span></h1>
+  <p class="lede">Loops are how you stop copy-pasting and start telling the computer "do this <em>N</em> times." This page breaks down the <strong>for</strong> loop, the <strong>while</strong> loop, the <strong>%</strong> operator, and how to draw rows of random shapes — everything on tomorrow's quiz.</p>
+  <div class="tag-row">
+    <span class="chip">for ( ; ; )</span>
+    <span class="chip c2">while ( )</span>
+    <span class="chip c3">n % 2</span>
+    <span class="chip c4">int(random(10,21))</span>
+  </div>
+</header>
+
+<!-- ========== 1. BIG IDEA ========== -->
+<section id="big-idea" class="reveal-on-scroll">
+  <span class="sec-tag t-teal">01 · why loops exist</span>
+  <h2>The "don't repeat yourself" machine</h2>
+  <p class="lead">Imagine you need to print the numbers 0 through 4. You <em>could</em> write five <code class="ic">println()</code> lines. But what about 0 to 1000? A loop says the boring part once and tells the computer how many times to repeat it.</p>
+  <div class="grid2">
+    <div>
+      <h3>The long way</h3>
+      <pre class="code" data-code="println(0);
+println(1);
+println(2);
+println(3);
+println(4);"></pre>
+    </div>
+    <div>
+      <h3>The loop way</h3>
+      <pre class="code" data-code="for (int i = 0; i < 5; i = i + 1) {
+  println(i);
+}"></pre>
+    </div>
+  </div>
+  <div class="note">Same output. One of these you'd hate to write 1000 times.</div>
+  <div class="callout info">
+    <h4>Two flavors, one idea</h4>
+    A <strong>for</strong> loop is best when you know <em>how many times</em> to repeat. A <strong>while</strong> loop is best when you repeat <em>until something becomes true</em>. They can both do the same jobs — but each is cleaner for one situation. We'll meet both.
+  </div>
+</section>
+
+<!-- ========== 2. THE FOR LOOP ========== -->
+<section id="for-loop" class="reveal-on-scroll">
+  <span class="sec-tag t-coral">02 · anatomy</span>
+  <h2>The <span style="color:var(--coral)">for</span> loop, part by part</h2>
+  <p class="lead">A <code class="ic">for</code> loop packs three jobs into one line, separated by semicolons. Read it as: <em>"start here; keep going while this is true; do this between each run."</em></p>
+
+  <pre class="code" data-code="for (int i = 0; i < 5; i = i + 1) {
+  //  ^start    ^test   ^update
+  println(i);   // the body runs once per loop
+}"></pre>
+
+  <table class="cmp">
+    <tr><th>Part</th><th>Example</th><th>When it runs</th><th>Its job</th></tr>
+    <tr><td>start / init</td><td>int i = 0</td><td>once, at the very beginning</td><td>creates the counter and sets its first value</td></tr>
+    <tr><td>condition / test</td><td>i &lt; 5</td><td>before every pass</td><td>if true → run the body. if false → stop.</td></tr>
+    <tr><td>update</td><td>i = i + 1</td><td>after every pass</td><td>changes the counter so the loop eventually ends</td></tr>
+    <tr><td>body</td><td>{ println(i); }</td><td>each pass the test is true</td><td>the actual work being repeated</td></tr>
+  </table>
+
+  <div class="callout tip">
+    <h4>The order is fixed</h4>
+    init → <strong>test → body → update</strong> → test → body → update → … The test is always checked <em>first</em>, before the body. That's why a loop can run <strong>zero</strong> times if the test is false from the start.
+  </div>
+
+  <h3>Reading it out loud</h3>
+  <p>Get in the habit of narrating: <em>"i starts at 0. Is 0 less than 5? Yes — print it. Add 1. Is 1 less than 5? Yes…"</em> When you can say it, you can count it — which is exactly what tomorrow's quiz asks.</p>
+</section>
+
+<!-- ========== 3. COUNTING ITERATIONS ========== -->
+<section id="counting" class="reveal-on-scroll">
+  <span class="sec-tag t-gold">03 · the #1 quiz skill</span>
+  <h2>How many times does it run?</h2>
+  <p class="lead">The most common loop question is "how many times does this execute?" There's a reliable method: trace it. Write down the counter, check the test, tally a tick each time the body runs. Below, let the machine do the tracing so you can <em>watch</em> the pattern, then practice doing it in your head.</p>
+
+  <div class="widget" id="trace-w">
+    <div class="wlabel">Loop trace visualizer</div>
+    <p style="margin-top:0;font-size:.92rem;color:var(--ink-soft)">Build a loop, then step through it or run it. Watch the counter, the test result, and the tally.</p>
+    <pre class="code" id="trace-code" data-code="for (int x = 0; x < 5; x = x + 1) { println(x); }"></pre>
+    <div class="row" style="margin:10px 0">
+      <span class="mono" style="font-size:.82rem">presets:</span>
+      <button class="btn ghost" data-preset="0,lt,5,1">count up</button>
+      <button class="btn ghost" data-preset="10,gte,0,-2">count down by 2</button>
+      <button class="btn ghost" data-preset="5,lte,10,3">step by 3</button>
+      <button class="btn ghost" data-preset="0,lt,0,2">never runs</button>
+      <button class="btn ghost" data-preset="0,lt,10,-1">careful…</button>
+    </div>
+    <div class="trace-grid">
+      <div>
+        <div class="slider-row"><label>start x =</label><input type="range" id="t-start" min="-5" max="20" value="0"><span class="val" id="t-start-v">0</span></div>
+        <div class="slider-row"><label>test: x</label>
+          <div class="seg" id="t-cmp">
+            <button data-cmp="lt" class="on">&lt;</button>
+            <button data-cmp="lte">&lt;=</button>
+            <button data-cmp="gt">&gt;</button>
+            <button data-cmp="gte">&gt;=</button>
+          </div>
+        </div>
+        <div class="slider-row"><label>limit</label><input type="range" id="t-limit" min="-5" max="20" value="5"><span class="val" id="t-limit-v">5</span></div>
+        <div class="slider-row"><label>update: x = x +</label><input type="range" id="t-step" min="-5" max="5" value="1"><span class="val" id="t-step-v">1</span></div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn teal" id="t-step-btn">Step ▸</button>
+          <button class="btn coral" id="t-run-btn">Run ▶▶</button>
+          <button class="btn ghost" id="t-reset-btn">Reset</button>
+        </div>
+      </div>
+      <div>
+        <div class="trace-readout">
+          <div class="reg" id="t-reg-x"><span>x</span><b>0</b></div>
+          <div class="reg" id="t-reg-test"><span>test x &lt; 5</span><b>—</b></div>
+          <div class="reg"><span>body ran</span><b id="t-reg-count">0</b> times</div>
+        </div>
+        <div style="text-align:center;margin:10px 0 4px"><span class="count-badge" id="t-badge">0</span><div class="mono" style="font-size:.7rem;color:var(--ink-soft)">iterations</div></div>
+        <div class="out-tape" id="t-tape">output appears here…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <h4>Tally method on paper</h4>
+    No visualizer on the quiz! Draw a tiny table: a column for the counter's value and a tick each time the test passes. When the test fails, count your ticks. Slow and correct beats fast and wrong.
+  </div>
+</section>
+
+<!-- ========== 4. INCLUSIVE & STEP ========== -->
+<section id="step" class="reveal-on-scroll">
+  <span class="sec-tag t-blue">04 · the tricky details</span>
+  <h2>&lt; vs &lt;= and how big the step is</h2>
+  <p class="lead">Two tiny choices change the answer completely: whether the limit is included, and how much the counter jumps each pass. These are where off-by-one mistakes live.</p>
+
+  <h3>Does the limit count? (&lt; vs &lt;=)</h3>
+  <div class="grid2 tight">
+    <div>
+      <pre class="code" data-code="for (int i = 0; i < 5; i = i + 1)
+// i is 0,1,2,3,4  ->  5 runs
+// stops BEFORE 5"></pre>
+    </div>
+    <div>
+      <pre class="code" data-code="for (int i = 0; i <= 5; i = i + 1)
+// i is 0,1,2,3,4,5  ->  6 runs
+// includes 5"></pre>
+    </div>
+  </div>
+  <div class="note">&lt;= lets the limit through the door. &lt; slams it shut one early.</div>
+
+  <h3>Steps bigger than 1</h3>
+  <p>The update doesn't have to be <code class="ic">+ 1</code>. Counting by 2s, 3s, or backwards is common — and it changes the count. To count the runs, list the actual values the counter takes:</p>
+  <pre class="code" data-code="for (int x = 5; x <= 10; x = x + 3) {
+  println(x);
+}
+// x takes: 5, 8   (11 > 10, so stop)  ->  2 runs
+// NOT 5,6,7,8,9,10 -- the step is +3, not +1"></pre>
+
+  <div class="callout tip">
+    <h4>Counting-by-N shortcut</h4>
+    For a clean range, runs ≈ (end − start) ÷ step, then check the endpoint by hand. But when steps don't divide evenly, <em>always</em> list the values — the shortcut can mislead you by one.
+  </div>
+
+  <h3>Counting down</h3>
+  <pre class="code" data-code="for (int x = 10; x >= 0; x = x - 2) {
+  println(x);
+}
+// x takes: 10, 8, 6, 4, 2, 0  ->  6 runs"></pre>
+  <p>Counting down only works if the update <em>decreases</em> the counter (a negative step) and the test points the right way (<code class="ic">&gt;=</code> or <code class="ic">&gt;</code>). Mix those up and you get the trap in the next section.</p>
+</section>
+
+<!-- ========== 5. INFINITE LOOPS ========== -->
+<section id="infinite" class="reveal-on-scroll">
+  <span class="sec-tag t-red">05 · the trap</span>
+  <h2>When a loop never stops</h2>
+  <p class="lead">A loop ends only when its test eventually becomes <strong>false</strong>. If the update never moves the counter <em>toward</em> failing the test, the loop runs forever — your sketch freezes. Three classic causes:</p>
+
+  <h3>1 · The update moves the wrong direction</h3>
+  <pre class="code" data-code="for (int i = 0; i < 10; i = i - 1) {
+  println(i);
+}
+// i starts at 0, then -1, -2, -3 ...
+// i < 10 is ALWAYS true. This never ends."></pre>
+  <p>The test wants <code class="ic">i</code> to eventually reach 10, but the update keeps <em>subtracting</em>. The counter races away from the finish line. Drop the "careful…" preset into the trace visualizer above to see it flagged.</p>
+
+  <h3>2 · The counter never changes (missing update)</h3>
+  <pre class="code" data-code="int i = 0;
+while (i < 10) {
+  println(i);
+  // forgot: i = i + 1;
+}
+// i stays 0 forever -> infinite"></pre>
+
+  <h3>3 · The condition can never be false</h3>
+  <pre class="code" data-code="while (true) {        // literally always true
+  // ... runs forever unless you break out
+}"></pre>
+
+  <div class="callout bug">
+    <h4>How to spot it fast</h4>
+    Ask one question: <em>"does the update push the counter toward failing the test?"</em> Counting up should pair with <code class="ic">&lt;</code> / <code class="ic">&lt;=</code>; counting down should pair with <code class="ic">&gt;</code> / <code class="ic">&gt;=</code>. If the arrow and the test disagree — or the counter never moves — it's infinite.
+  </div>
+</section>
+
+<!-- ========== 6. THE WHILE LOOP ========== -->
+<section id="while-loop" class="reveal-on-scroll">
+  <span class="sec-tag t-teal">06 · condition-driven</span>
+  <h2>The <span style="color:var(--teal)">while</span> loop</h2>
+  <p class="lead">A <code class="ic">while</code> loop is the bare-bones loop: just a condition and a body. It keeps running <strong>as long as the condition is true</strong>. You manage the counter yourself — before the loop, and inside it.</p>
+
+  <pre class="code" data-code="int i = 0;            // 1. set up the counter BEFORE the loop
+while (i < 10) {      // 2. test: keep going while true
+  println(i);         // 3. body: the work
+  i = i + 1;          // 4. update: YOU must change it here
+}"></pre>
+
+  <div class="callout warn">
+    <h4>The for loop's three parts, scattered</h4>
+    A <code class="ic">while</code> loop has the exact same three jobs as a <code class="ic">for</code> loop — start, test, update — but they're not lined up on one line. The start sits <em>above</em> the loop and the update sits <em>inside</em> the body. Forget the update and you've built an infinite loop.
+  </div>
+
+  <h3>It can run zero times… or exactly once</h3>
+  <p>Because the test is checked first, a <code class="ic">while</code> loop can run zero times if the condition starts false. And a condition that's only briefly true runs a tiny number of times:</p>
+  <pre class="code" data-code="int i = 0;
+while (i <= 0) {      // is 0 <= 0? yes -> run once
+  println(i);         // prints 0
+  i = i + 1;          // now i = 1
+}                     // is 1 <= 0? no -> stop.  Ran 1 time."></pre>
+
+  <h3>Predict the output</h3>
+  <pre class="code" data-code="int x = 0;
+while (x <= 5) {
+  println(x);
+  x = x + 1;
+}
+// 0, then 1, 2, 3, 4, 5 -- the <= INCLUDES 5
+// output: 0 1 2 3 4 5"></pre>
+  <p>Trace it the same way you trace a <code class="ic">for</code> loop: test, body, update, repeat. The <code class="ic">&lt;=</code> is the detail to watch — it lets 5 print before the test finally fails at 6.</p>
+</section>
+
+<!-- ========== 7. FOR VS WHILE ========== -->
+<section id="for-vs-while" class="reveal-on-scroll">
+  <span class="sec-tag t-gold">07 · which one?</span>
+  <h2>Choosing <span style="color:var(--coral)">for</span> vs <span style="color:var(--teal)">while</span></h2>
+  <p class="lead">They can both do the same jobs. The question is which one makes your intent obvious to the next person reading the code (often future you).</p>
+
+  <table class="cmp">
+    <tr><th>&nbsp;</th><th>for loop</th><th>while loop</th></tr>
+    <tr><td>best for</td><td>repeating a <strong>known number of times</strong> ("do this 10 times")</td><td>repeating <strong>until a condition is met</strong> ("until the user clicks")</td></tr>
+    <tr><td>counter</td><td>built into the loop header</td><td>you manage it yourself, by hand</td></tr>
+    <tr><td>reads like</td><td>"for each value from A to B…"</td><td>"while this is still true…"</td></tr>
+    <tr><td>typical use</td><td>drawing 12 evenly-spaced shapes</td><td>looping while a value stays in range</td></tr>
+  </table>
+
+  <div class="grid2">
+    <div class="callout info" style="margin:0">
+      <h4>for = counting</h4>
+      If you can say the number out loud before the loop starts ("five times", "once per column"), reach for <code class="ic">for</code>. It keeps the counter logic in one tidy place so you can't forget the update.
+    </div>
+    <div class="callout info" style="margin:0">
+      <h4>while = condition</h4>
+      If you're waiting for something to happen and don't know the count in advance, reach for <code class="ic">while</code>. Just remember <em>you</em> own the counter — set it before, change it inside.
+    </div>
+  </div>
+
+  <div class="note">Same destination, different signpost. Pick the one that tells the truth about why you're looping.</div>
+</section>
+
+<!-- ========== 8. MODULO ========== -->
+<section id="modulo" class="reveal-on-scroll">
+  <span class="sec-tag t-coral">08 · the remainder operator</span>
+  <h2>Modulo: <span style="color:var(--coral)">%</span> gives the leftover</h2>
+  <p class="lead">The <code class="ic">%</code> operator divides and hands you the <strong>remainder</strong> — what's left over after the division. <code class="ic">17 % 5</code> is 2, because 5 goes into 17 three times with 2 left over. It looks strange at first, but it unlocks two everyday tricks.</p>
+
+  <pre class="code" data-code="println(17 % 5);   // 2   (15 fits, 2 left over)
+println(10 % 2);   // 0   (divides evenly)
+println(9 % 3);    // 0
+println(7 % 2);    // 1   (odd numbers leave 1)"></pre>
+
+  <h3>Trick 1 · even or odd</h3>
+  <p>A number is even exactly when dividing by 2 leaves nothing. So <code class="ic">n % 2</code> is your even/odd test — and notice it uses <code class="ic">==</code> (compare), never <code class="ic">=</code> (assign):</p>
+  <pre class="code" data-code="if (n % 2 == 0) {
+  println(n + ' is even');   // remainder 0 -> even
+} else {
+  println(n + ' is odd');    // remainder 1 -> odd
+}"></pre>
+  <div class="callout bug">
+    <h4>Two classic mistakes</h4>
+    <code class="ic">n % 2 = 1</code> tries to <em>assign</em> and won't compile — you need <code class="ic">==</code>. And don't flip the meaning: remainder <strong>0 is even</strong>, remainder <strong>1 is odd</strong>. Mixing those up is a favorite trick question.
+  </div>
+
+  <h3>Trick 2 · "every Nth time"</h3>
+  <p>Inside a loop, <code class="ic">i % 3 == 0</code> is true only when <code class="ic">i</code> is a multiple of 3 — so you can do something special every 3rd pass. Great for stripes, grids, and patterns.</p>
+
+  <div class="widget" id="mod-w">
+    <div class="wlabel">Modulo playground</div>
+    <div class="slider-row"><label>number n</label><input type="range" id="m-n" min="0" max="50" value="17"><span class="val" id="m-n-v">17</span></div>
+    <div class="slider-row"><label>divisor</label><input type="range" id="m-d" min="2" max="10" value="5"><span class="val" id="m-d-v">5</span></div>
+    <pre class="code" id="m-code" data-code="println(17 % 5);"></pre>
+    <div class="row" style="gap:18px;margin-top:6px">
+      <div><div class="mono" style="font-size:.72rem;color:var(--ink-soft)">remainder</div><span class="count-badge" id="m-rem" style="font-size:1.8rem">2</span></div>
+      <div><div class="mono" style="font-size:.72rem;color:var(--ink-soft)">n % 2 says</div><span class="count-badge" id="m-eo" style="font-size:1.4rem;color:var(--gold)">odd</span></div>
+    </div>
+    <p style="font-size:.88rem;color:var(--ink-soft);margin-bottom:0" id="m-explain"></p>
+  </div>
+</section>
+
+<!-- ========== 9. RANDOM + CASTING ========== -->
+<section id="random" class="reveal-on-scroll">
+  <span class="sec-tag t-teal">09 · controlled chaos</span>
+  <h2><span style="color:var(--teal)">random()</span> and casting with <span style="color:var(--blue)">int()</span></h2>
+  <p class="lead"><code class="ic">random()</code> hands back a <strong>float</strong> — a decimal. To get a whole number you can count on (a shape size, a grid position), you wrap it in <code class="ic">int()</code> to chop off the decimal. This "casting" is the part people forget.</p>
+
+  <pre class="code" data-code="random(10, 21);        // a float: maybe 14.83712, maybe 20.4
+int(random(10, 21));   // chop the decimal -> a whole int from 10 to 20"></pre>
+
+  <div class="callout warn">
+    <h4>Why 21 and not 20?</h4>
+    <code class="ic">random(low, high)</code> can return values up to — but never reaching — <code class="ic">high</code>. After <code class="ic">int()</code> chops the decimal, the biggest whole number you can get is one below the top. So <code class="ic">int(random(10, 21))</code> gives you <strong>10 through 20</strong> inclusive. Want 1–6 like a die? Use <code class="ic">int(random(1, 7))</code>.
+  </div>
+
+  <pre class="code" data-code="int diameter = int(random(10, 21));   // a random size, 10..20
+int speed = int(random(1, 6));        // speed is always an int
+fill(int(random(0, 256)), 0, 0);      // a random red 0..255"></pre>
+
+  <div class="widget" id="rand-w">
+    <div class="wlabel">Roller: int(random(10, 21))</div>
+    <p style="margin-top:0;font-size:.92rem;color:var(--ink-soft)">Roll once to see the raw float and its cast. Roll 500× to watch every result land between 10 and 20 — never 21.</p>
+    <div class="row"><button class="btn teal" id="r-one">Roll once</button><button class="btn coral" id="r-many">Roll 500×</button><button class="btn ghost" id="r-clear">Clear</button></div>
+    <div class="trace-readout" style="margin:12px 0"><div class="reg"><span>raw float</span><b id="r-float">—</b></div><div class="reg hot"><span>int( … )</span><b id="r-int">—</b></div></div>
+    <canvas id="r-canvas" width="600" height="180"></canvas>
+    <div class="mono" style="font-size:.72rem;color:var(--ink-soft);text-align:center;margin-top:6px">tally of cast results · 10 … 20</div>
+  </div>
+</section>
+
+<!-- ========== 10. DRAWING WITH LOOPS ========== -->
+<section id="drawing" class="reveal-on-scroll">
+  <span class="sec-tag t-blue">10 · the payoff</span>
+  <h2>Drawing repeated shapes with a <span style="color:var(--coral)">for</span> loop</h2>
+  <p class="lead">Here's where loops get visual. To draw a row of shapes, let the counter <code class="ic">i</code> control <strong>where</strong> each shape goes. Multiply <code class="ic">i</code> by a spacing value and you get evenly-spaced positions for free.</p>
+
+  <pre class="code" data-code="for (int i = 0; i < 8; i = i + 1) {
+  float x = 40 + i * 60;     // i moves the shape across: 40, 100, 160 ...
+  ellipse(x, 100, 30, 30);   // same y, same size, marching right
+}"></pre>
+  <div class="note">i is doing double duty: counting the loop AND placing each shape.</div>
+
+  <h3>Now make each one different with random()</h3>
+  <p>Reach for <code class="ic">int(random(10, 21))</code> inside the loop to give every shape its own random size — a fresh roll each pass. Toggle the options below and hit <strong>Re-roll</strong> to see new random values.</p>
+
+  <div class="widget" id="draw-w">
+    <div class="wlabel">Live loop · row of shapes</div>
+    <canvas id="d-canvas" width="600" height="220"></canvas>
+    <div class="slider-row"><label>shape count</label><input type="range" id="d-count" min="1" max="12" value="8"><span class="val" id="d-count-v">8</span></div>
+    <div class="slider-row"><label>spacing</label><input type="range" id="d-space" min="30" max="90" value="60"><span class="val" id="d-space-v">60</span></div>
+    <div class="row" style="margin:10px 0">
+      <span class="mono" style="font-size:.78rem">size:</span>
+      <div class="seg" id="d-size"><button data-size="fixed" class="on">fixed 30</button><button data-size="rand">int(random(10,21))</button></div>
+      <span class="mono" style="font-size:.78rem;margin-left:6px">color:</span>
+      <div class="seg" id="d-col"><button data-col="fixed" class="on">teal</button><button data-col="rand">random</button></div>
+    </div>
+    <div class="row"><button class="btn coral" id="d-reroll">Re-roll ⟳</button></div>
+    <pre class="code" id="d-code" data-code="for (int i = 0; i < 8; i = i + 1) {
+  float x = 40 + i * 60;
+  ellipse(x, 110, 30, 30);
+}"></pre>
+  </div>
+
+  <div class="callout tip">
+    <h4>Bonus: stripes with modulo</h4>
+    Combine everything — use <code class="ic">i % 2 == 0</code> inside the loop to alternate two colors, or <code class="ic">i % 3 == 0</code> to make every third shape special. That's a loop, a condition, and modulo working together.
+  </div>
+</section>
+
+<!-- ========== 11. BUG HUNT ========== -->
+<section id="bughunt" class="reveal-on-scroll">
+  <span class="sec-tag t-red">11 · debugging drill</span>
+  <h2>Bug hunt: fix the broken loop</h2>
+  <p class="lead">This loop is <em>supposed</em> to draw a row of 5 circles marching across the screen — but it's riddled with errors. Find them. Click each clue to check your thinking. This is exactly the debugging muscle the quiz tests.</p>
+
+  <pre class="code" data-code="for (x = 0; x = 5; x = x - 1) {
+  ellipse(50 + x * 40, 100, 30, 30)
+}"></pre>
+
+  <div class="q"><span class="qnum">BUG 1 · the counter has no type</span>
+    <p style="margin:8px 0 0"><strong><code class="ic">x</code> appears in the loop but was never declared.</strong></p>
+    <button class="btn ghost reveal" data-target="bh1">Reveal fix</button>
+    <div class="explain" id="bh1">A loop counter has to be created with a type the first time it's used. The start part should be <code class="ic">int x = 0</code>, not just <code class="ic">x = 0</code>. Without <code class="ic">int</code>, the program doesn't know what <code class="ic">x</code> is and won't compile.</div>
+  </div>
+
+  <div class="q"><span class="qnum">BUG 2 · the test is an assignment</span>
+    <p style="margin:8px 0 0"><strong><code class="ic">x = 5</code> in the middle slot uses a single equals sign.</strong></p>
+    <button class="btn ghost reveal" data-target="bh2">Reveal fix</button>
+    <div class="explain" id="bh2">The middle slot of a <code class="ic">for</code> loop needs a true/false <em>test</em>, but <code class="ic">x = 5</code> tries to <em>assign</em> 5 to x. To draw 5 circles (positions 0–4) you want <code class="ic">x &lt; 5</code>. Remember: <code class="ic">=</code> assigns, <code class="ic">==</code> and <code class="ic">&lt;</code> compare.</div>
+  </div>
+
+  <div class="q"><span class="qnum">BUG 3 · the update runs the wrong way</span>
+    <p style="margin:8px 0 0"><strong><code class="ic">x = x - 1</code> makes the counter shrink.</strong></p>
+    <button class="btn ghost reveal" data-target="bh3">Reveal fix</button>
+    <div class="explain" id="bh3">Starting at 0 and <em>subtracting</em>, x goes 0, −1, −2… and never reaches 5, so the loop never ends (and the circles march off the left edge). To count up toward the limit, the update must add: <code class="ic">x = x + 1</code>.</div>
+  </div>
+
+  <div class="q"><span class="qnum">BUG 4 · a missing semicolon</span>
+    <p style="margin:8px 0 0"><strong>The <code class="ic">ellipse(...)</code> line has no semicolon.</strong></p>
+    <button class="btn ghost reveal" data-target="bh4">Reveal fix</button>
+    <div class="explain" id="bh4">Every statement ends with a semicolon. The <code class="ic">ellipse(50 + x * 40, 100, 30, 30)</code> call needs a <code class="ic">;</code> at the end or the sketch won't compile.</div>
+  </div>
+
+  <div class="q"><span class="qnum">★ the corrected version</span>
+    <button class="btn coral reveal" data-target="bhfix">Show working code</button>
+    <div class="explain" id="bhfix">
+      <pre class="code" data-code="for (int x = 0; x < 5; x = x + 1) {
+  ellipse(50 + x * 40, 100, 30, 30);
+}"></pre>
+      Declared counter (<code class="ic">int x</code>), a real test (<code class="ic">x &lt; 5</code>), an update that counts up (<code class="ic">x = x + 1</code>), and a semicolon on the statement. The result: 5 circles at x = 50, 90, 130, 170, 210.
+    </div>
+  </div>
+</section>
+
+<!-- ========== 12. PRACTICE ========== -->
+<section id="practice" class="reveal-on-scroll">
+  <span class="sec-tag t-gold">12 · check yourself</span>
+  <h2>Practice it (same formats as the quiz)</h2>
+  <p class="lead">Different numbers, same skills. Click an answer to check it, then read why. No peeking until you've traced it on paper.</p>
+
+  <div class="q" data-correct="1"><span class="qnum">Q1 · how many times?</span>
+    <pre class="code" data-code="for (int x = 0; x < 6; x = x + 2) {
+  println(x);
+}"></pre>
+    <div class="opts"><button class="opt">6</button><button class="opt">3</button><button class="opt">4</button><button class="opt">infinite</button></div>
+    <div class="explain">x takes 0, 2, 4 — then 6 is not &lt; 6, so it stops. <strong>3 times.</strong> Listing the values beats guessing.</div>
+  </div>
+
+  <div class="q" data-correct="2"><span class="qnum">Q2 · how many times?</span>
+    <pre class="code" data-code="for (int i = 3; i <= 9; i = i + 3) {
+  println(i);
+}"></pre>
+    <div class="opts"><button class="opt">2</button><button class="opt">9</button><button class="opt">3</button><button class="opt">0</button></div>
+    <div class="explain">i takes 3, 6, 9 — and <code class="ic">&lt;=</code> lets 9 through. <strong>3 times.</strong></div>
+  </div>
+
+  <div class="q" data-correct="3"><span class="qnum">Q3 · how many times?</span>
+    <pre class="code" data-code="for (int i = 5; i > 0; i = i + 1) {
+  println(i);
+}"></pre>
+    <div class="opts"><button class="opt">5</button><button class="opt">0</button><button class="opt">infinite</button><button class="opt">1</button></div>
+    <div class="explain">i starts at 5 and keeps <em>growing</em> (6, 7, 8…), so <code class="ic">i &gt; 0</code> is always true. The update pushes away from failing the test → <strong>infinite.</strong></div>
+  </div>
+
+  <div class="q" data-correct="0"><span class="qnum">Q4 · how many times?</span>
+    <pre class="code" data-code="int i = 2;
+while (i <= 2) {
+  println(i);
+  i = i + 1;
+}"></pre>
+    <div class="opts"><button class="opt">1</button><button class="opt">2</button><button class="opt">0</button><button class="opt">infinite</button></div>
+    <div class="explain">Is 2 &lt;= 2? Yes → run once, print 2, i becomes 3. Is 3 &lt;= 2? No → stop. <strong>1 time.</strong></div>
+  </div>
+
+  <div class="q" data-correct="1"><span class="qnum">Q5 · what is the output?</span>
+    <pre class="code" data-code="int x = 1;
+while (x <= 4) {
+  println(x);
+  x = x + 1;
+}"></pre>
+    <div class="opts"><button class="opt">1 2 3</button><button class="opt">1 2 3 4</button><button class="opt">0 1 2 3 4</button><button class="opt">an infinite loop</button></div>
+    <div class="explain">Starts at 1, the <code class="ic">&lt;=</code> includes 4, stops when x reaches 5. Output: <strong>1 2 3 4.</strong></div>
+  </div>
+
+  <div class="q" data-correct="0"><span class="qnum">Q6 · never possible?</span>
+    <pre class="code" data-code="if (x < 0) {
+  if (x > 50) { print('Apple'); }
+  else        { print('Banana'); }
+} else {
+  if (x > 50) { print('Cherry'); }
+  else        { print('Date'); }
+}"></pre>
+    <p style="margin:6px 0;font-size:.92rem">Which can <strong>never</strong> be printed?</p>
+    <div class="opts"><button class="opt">Apple</button><button class="opt">Banana</button><button class="opt">Cherry</button><button class="opt">Date</button></div>
+    <div class="explain">"Apple" needs <code class="ic">x &lt; 0</code> AND <code class="ic">x &gt; 50</code> at the same time — impossible. So <strong>Apple</strong> can never appear. Trace each path: a value can't be both negative and above 50.</div>
+  </div>
+
+  <div class="q" data-correct="2"><span class="qnum">Q7 · modulo</span>
+    <p style="margin:8px 0">What does <code class="ic">15 % 2</code> evaluate to, and is 15 even or odd?</p>
+    <div class="opts"><button class="opt">0, even</button><button class="opt">2, even</button><button class="opt">1, odd</button><button class="opt">7, odd</button></div>
+    <div class="explain">2 goes into 15 seven times (14) with <strong>1</strong> left over. Remainder 1 → <strong>odd.</strong></div>
+  </div>
+
+  <div class="q"><span class="qnum">Q8 · write a FOR loop</span>
+    <p style="margin:8px 0">Print 0, 1, 2, 3 — each on its own line. Try it on paper first, then check one valid answer.</p>
+    <button class="btn ghost reveal" data-target="p8">Reveal a model answer</button>
+    <div class="explain" id="p8">
+      <pre class="code" data-code="for (int i = 0; i < 4; i = i + 1) {
+  println(i);
+}"></pre>
+      Start at 0, stop before 4 (so 0–3), step by 1. <code class="ic">println</code> already starts a new line each call. Using <code class="ic">i &lt;= 3</code> works too.
+    </div>
+  </div>
+
+  <div class="q"><span class="qnum">Q9 · write a WHILE loop</span>
+    <p style="margin:8px 0">Count from 100 to 115 by 5s, <em>including</em> 115, one per line. Try it, then check.</p>
+    <button class="btn ghost reveal" data-target="p9">Reveal a model answer</button>
+    <div class="explain" id="p9">
+      <pre class="code" data-code="int n = 100;
+while (n <= 115) {
+  println(n);
+  n = n + 5;
+}"></pre>
+      Set the counter <em>before</em> the loop, use <code class="ic">&lt;=</code> so 115 prints, step by 5, and update <em>inside</em> the body. Values: 100, 105, 110, 115.
+    </div>
+  </div>
+</section>
+
+<!-- ========== 13. CHEAT SHEET ========== -->
+<section id="cheat" class="reveal-on-scroll">
+  <span class="sec-tag">13 · the one-pager</span>
+  <h2>Cheat sheet</h2>
+  <p class="lead">Six quick cards — the whole unit at a glance. If you can reproduce these from memory, you're ready.</p>
+  <div class="grid2">
+    <div>
+      <h3 style="margin:0 0 6px">for loop · count a known number of times</h3>
+      <pre class="recipe" data-code="for (int i = 0; i < 5; i = i + 1) {
+  println(i);   // body runs each pass
+}               // test -> body -> update"></pre>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px">while loop · repeat until test fails</h3>
+      <pre class="recipe" data-code="int i = 0;        // start BEFORE loop
+while (i < 5) {   // test first
+  println(i);     // body
+  i = i + 1;      // update (or infinite!)
+}"></pre>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px">counting the runs</h3>
+      <pre class="recipe" data-code="// list the counter's values,
+// stop when the test fails.
+//  <   excludes the limit
+//  <=  includes the limit
+// up   -> < or <=  + positive step
+// down -> > or >=  + negative step"></pre>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px">modulo · the remainder</h3>
+      <pre class="recipe" data-code="17 % 5      // 2  (what's left over)
+n % 2 == 0  // even
+n % 2 == 1  // odd   (use ==, not =)
+i % 3 == 0  // true every 3rd pass"></pre>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px">random + cast to int</h3>
+      <pre class="recipe" data-code="random(10, 21)        // float, 10 up to <21
+int(random(10, 21))   // whole int, 10 ... 20
+int(random(1, 7))     // a die, 1 ... 6"></pre>
+    </div>
+    <div>
+      <h3 style="margin:0 0 6px">draw a row of shapes</h3>
+      <pre class="recipe" data-code="for (int i = 0; i < 8; i = i + 1) {
+  float x = 40 + i * 60;   // i places each shape
+  ellipse(x, 100, 30, 30);
+}"></pre>
+    </div>
+  </div>
+  <div class="note">Print it, fold it, recycle it after the quiz. The understanding stays.</div>
+</section>
+
+
+
+</main>
+</div>
+
+<footer>
+  <span class="fnote">"A loop is just patience, automated."</span>
+  <div class="fmeta">AP Computer Science Principles · Loops reference · built for the screen, best on a desktop</div>
+</footer>
+
+<script>
+/* ===== shared: Processing/Java tokenizer ===== */
+(function(){
+  var KW=["for","while","if","else","void","return","int","float","boolean","char","String","color","true","false","new","do"];
+  var TYPES=["int","float","boolean","char","String","color","void"];
+  var FNS=["println","print","random","int","float","ellipse","rect","line","fill","stroke","noStroke","background","size","text","point","triangle","constrain","abs","map","setup","draw"];
+  function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+  function tokline(line){
+    // comments first
+    var ci=line.indexOf("//");
+    var tail="";
+    if(ci>=0){tail='<span class="tok-com">'+esc(line.slice(ci))+'</span>';line=line.slice(0,ci);}
+    var out="",i=0,n=line.length;
+    while(i<n){
+      var c=line[i];
+      if(c==='"'||c==="'"){var q=c;var j=i+1;while(j<n&&line[j]!==q)j++;out+='<span class="tok-str">'+esc(line.slice(i,Math.min(j+1,n)))+'</span>';i=j+1;continue;}
+      if(/[A-Za-z_]/.test(c)){var j=i+1;while(j<n&&/[A-Za-z0-9_]/.test(line[j]))j++;var w=line.slice(i,j);
+        var after=line.slice(j).match(/^\s*\(/);
+        if(TYPES.indexOf(w)>=0&&!after)out+='<span class="tok-type">'+w+'</span>';
+        else if(KW.indexOf(w)>=0&&FNS.indexOf(w)<0)out+='<span class="tok-kw">'+w+'</span>';
+        else if(after&&FNS.indexOf(w)>=0)out+='<span class="tok-fn">'+w+'</span>';
+        else if(after)out+='<span class="tok-fn">'+w+'</span>';
+        else out+=esc(w);
+        i=j;continue;}
+      if(/[0-9]/.test(c)){var j=i+1;while(j<n&&/[0-9.]/.test(line[j]))j++;out+='<span class="tok-num">'+line.slice(i,j)+'</span>';i=j;continue;}
+      if(/[+\-*/%<>=!&|]/.test(c)){var j=i+1;while(j<n&&/[+\-*/%<>=!&|]/.test(line[j]))j++;out+='<span class="tok-op">'+esc(line.slice(i,j))+'</span>';i=j;continue;}
+      out+=esc(c);i++;
+    }
+    return out+tail;
+  }
+  window.highlight=function(code){
+    return code.split("\n").map(function(l){return '<span class="ln">'+(l.length?tokline(l):"&nbsp;")+'</span>';}).join("");
+  };
+  window.renderCode=function(){
+    document.querySelectorAll("pre[data-code]").forEach(function(pre){
+      pre.innerHTML=window.highlight(pre.getAttribute("data-code"));
+    });
+  };
+})();
+
+/* ===== shared: scrollspy + reveal ===== */
+(function(){
+  function init(){
+    window.renderCode();
+    var links=[].slice.call(document.querySelectorAll("nav.toc a"));
+    var secs=links.map(function(a){return document.querySelector(a.getAttribute("href"));});
+    function spy(){
+      var y=window.scrollY+120,idx=0;
+      secs.forEach(function(s,i){if(s&&s.offsetTop<=y)idx=i;});
+      links.forEach(function(a,i){a.classList.toggle("active",i===idx);});
+    }
+    window.addEventListener("scroll",spy,{passive:true});spy();
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add("in");});},{threshold:.08});
+    document.querySelectorAll(".reveal-on-scroll").forEach(function(el){io.observe(el);});
+    if(window.initWidgets)window.initWidgets();
+  }
+  if(document.readyState!=="loading")init();else document.addEventListener("DOMContentLoaded",init);
+})();
+
+window.initWidgets=function(){
+  function setCode(el,txt){if(!el)return;el.setAttribute("data-code",txt);el.innerHTML=window.highlight(txt);}
+  var $=function(id){return document.getElementById(id);};
+
+  /* ---------- generic: reveal buttons ---------- */
+  document.querySelectorAll(".reveal[data-target]").forEach(function(b){
+    var orig=b.textContent;
+    b.addEventListener("click",function(){
+      var t=$(b.getAttribute("data-target"));if(!t)return;
+      var open=t.classList.toggle("show");
+      b.textContent=open?"Hide":orig;
+    });
+  });
+
+  /* ---------- generic: multiple-choice self-check ---------- */
+  document.querySelectorAll(".q[data-correct]").forEach(function(q){
+    var correct=parseInt(q.getAttribute("data-correct"),10);
+    var opts=[].slice.call(q.querySelectorAll(".opt"));
+    var exp=q.querySelector(".explain");
+    opts.forEach(function(o,idx){
+      o.addEventListener("click",function(){
+        if(q.dataset.locked)return;q.dataset.locked="1";
+        opts.forEach(function(x){x.classList.add("locked");});
+        opts[correct].classList.add("correct");
+        if(idx!==correct)o.classList.add("wrong");
+        if(exp)exp.classList.add("show");
+      });
+    });
+  });
+
+  /* ---------- 1. TRACE VISUALIZER ---------- */
+  (function(){
+    var w=$("trace-w");if(!w)return;
+    var startEl=$("t-start"),limitEl=$("t-limit"),stepEl=$("t-step");
+    var cmpSeg=$("t-cmp"),cmp="lt";
+    var st={x:0,count:0,done:false,inf:false};
+    function cmpSym(){return {lt:"< ",lte:"<=",gt:"> ",gte:">="}[cmp].trim();}
+    function test(v){var L=+limitEl.value;return cmp==="lt"?v<L:cmp==="lte"?v<=L:cmp==="gt"?v>L:v>=L;}
+    function stepStr(){var s=+stepEl.value;return s<0?("x = x - "+(-s)):("x = x + "+s);}
+    function codeStr(){return "for (int x = "+(+startEl.value)+"; x "+cmpSym()+" "+(+limitEl.value)+"; "+stepStr()+") { println(x); }";}
+    function reset(){
+      st={x:+startEl.value,count:0,done:false,inf:false};
+      $("t-start-v").textContent=+startEl.value;
+      $("t-limit-v").textContent=+limitEl.value;
+      $("t-step-v").textContent=(+stepEl.value);
+      setCode($("trace-code"),codeStr());
+      $("t-tape").textContent="output appears here…";
+      render();
+    }
+    function render(){
+      $("t-reg-x").querySelector("b").textContent=st.x;
+      var tr=$("t-reg-test"),pass=test(st.x);
+      tr.querySelector("span").textContent="test x "+cmpSym()+" "+(+limitEl.value);
+      tr.querySelector("b").textContent=st.done?"stop":(pass?"true ✓":"false ✗");
+      tr.classList.toggle("hot",!st.done);
+      $("t-reg-count").textContent=st.count;
+      var badge=$("t-badge");
+      if(st.inf){badge.textContent="∞";badge.classList.add("inf");}
+      else{badge.textContent=st.count;badge.classList.remove("inf");}
+    }
+    function doStep(){
+      if(st.done||st.inf)return;
+      if(test(st.x)){
+        var tape=$("t-tape");
+        tape.textContent=(tape.textContent==="output appears here…"?"":tape.textContent+" ")+st.x;
+        st.count++;
+        st.x+=(+stepEl.value);
+        if(+stepEl.value===0||st.count>999){st.inf=true;}
+      } else { st.done=true; }
+      render();
+    }
+    function runAll(){
+      if(st.done)return;
+      var guard=0;
+      while(!st.done&&!st.inf&&guard<2000){doStep();guard++;}
+    }
+    $("t-step-btn").addEventListener("click",doStep);
+    $("t-run-btn").addEventListener("click",runAll);
+    $("t-reset-btn").addEventListener("click",reset);
+    [startEl,limitEl,stepEl].forEach(function(el){el.addEventListener("input",reset);});
+    cmpSeg.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click",function(){
+        cmpSeg.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});
+        b.classList.add("on");cmp=b.getAttribute("data-cmp");reset();
+      });
+    });
+    w.querySelectorAll("[data-preset]").forEach(function(b){
+      b.addEventListener("click",function(){
+        var p=b.getAttribute("data-preset").split(",");
+        startEl.value=p[0];limitEl.value=p[2];stepEl.value=p[3];
+        cmpSeg.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x.getAttribute("data-cmp")===p[1]);});
+        cmp=p[1];reset();
+      });
+    });
+    reset();
+  })();
+
+  /* ---------- 2. MODULO PLAYGROUND ---------- */
+  (function(){
+    var w=$("mod-w");if(!w)return;
+    var nEl=$("m-n"),dEl=$("m-d");
+    function upd(){
+      var n=+nEl.value,d=+dEl.value,r=n%d;
+      $("m-n-v").textContent=n;$("m-d-v").textContent=d;
+      setCode($("m-code"),"println("+n+" % "+d+");   // "+r);
+      $("m-rem").textContent=r;
+      var eo=(n%2===0)?"even":"odd";
+      var eoEl=$("m-eo");eoEl.textContent=eo;eoEl.style.color=(eo==="even")?"var(--teal)":"var(--gold)";
+      $("m-explain").textContent=d+" goes into "+n+" "+Math.floor(n/d)+" time"+(Math.floor(n/d)===1?"":"s")+" with "+r+" left over. Since "+n+" % 2 = "+(n%2)+", "+n+" is "+eo+".";
+    }
+    nEl.addEventListener("input",upd);dEl.addEventListener("input",upd);upd();
+  })();
+
+  /* ---------- 3. RANDOM ROLLER ---------- */
+  (function(){
+    var w=$("rand-w");if(!w)return;
+    var cv=$("r-canvas"),ctx=cv.getContext("2d");
+    var counts={};for(var k=10;k<=20;k++)counts[k]=0;
+    function rollInt(){return Math.floor(10+Math.random()*11);} // int(random(10,21)) -> 10..20
+    function draw(){
+      ctx.clearRect(0,0,cv.width,cv.height);
+      var max=1;for(var k=10;k<=20;k++)max=Math.max(max,counts[k]);
+      var n=11,gap=10,bw=(cv.width-gap*(n+1))/n,base=cv.height-26;
+      for(var v=10;v<=20;v++){
+        var i=v-10,x=gap+i*(bw+gap),h=(counts[v]/max)*(base-14);
+        ctx.fillStyle="#1f8a7e";ctx.fillRect(x,base-h,bw,h);
+        ctx.fillStyle="#5d5b53";ctx.font="11px 'IBM Plex Mono',monospace";ctx.textAlign="center";
+        ctx.fillText(v,x+bw/2,cv.height-10);
+        if(counts[v]>0)ctx.fillText(counts[v],x+bw/2,base-h-6);
+      }
+    }
+    $("r-one").addEventListener("click",function(){
+      var f=10+Math.random()*11,iv=Math.floor(f);counts[iv]++;
+      $("r-float").textContent=f.toFixed(4);$("r-int").textContent=iv;draw();
+    });
+    $("r-many").addEventListener("click",function(){
+      for(var i=0;i<500;i++)counts[rollInt()]++;
+      $("r-float").textContent="(500 rolls)";$("r-int").textContent="10 … 20 only";draw();
+    });
+    $("r-clear").addEventListener("click",function(){
+      for(var k=10;k<=20;k++)counts[k]=0;$("r-float").textContent="—";$("r-int").textContent="—";draw();
+    });
+    draw();
+  })();
+
+  /* ---------- 4. DRAWING CANVAS ---------- */
+  (function(){
+    var w=$("draw-w");if(!w)return;
+    var cv=$("d-canvas"),ctx=cv.getContext("2d");
+    var countEl=$("d-count"),spaceEl=$("d-space");
+    var sizeMode="fixed",colMode="fixed";
+    var MAX=12,sizes=[],cols=[];
+    function roll(){sizes=[];cols=[];for(var i=0;i<MAX;i++){sizes.push(Math.floor(10+Math.random()*11));cols.push([Math.floor(40+Math.random()*180),Math.floor(40+Math.random()*180),Math.floor(40+Math.random()*180)]);}}
+    function draw(){
+      ctx.clearRect(0,0,cv.width,cv.height);
+      var count=+countEl.value,space=+spaceEl.value,cy=cv.height/2;
+      var drawSpace=Math.min(space,(cv.width-80)/Math.max(count,1));
+      for(var i=0;i<count;i++){
+        var x=40+i*drawSpace;
+        var d=(sizeMode==="rand")?sizes[i]*2.2:30; // scale up rand sizes a touch for visibility
+        if(colMode==="rand"){var c=cols[i];ctx.fillStyle="rgb("+c[0]+","+c[1]+","+c[2]+")";}
+        else ctx.fillStyle="#1f8a7e";
+        ctx.strokeStyle="#2b2a26";ctx.lineWidth=2;
+        ctx.beginPath();ctx.ellipse(x,cy,d/2,d/2,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      }
+      updCode(count,space);
+    }
+    function updCode(count,space){
+      var sizeTxt=(sizeMode==="rand")?"int(random(10,21))":"30";
+      var lines="for (int i = 0; i < "+count+"; i = i + 1) {\n  float x = 40 + i * "+space+";\n";
+      if(colMode==="rand")lines+="  fill(int(random(0,256)), int(random(0,256)), int(random(0,256)));\n";
+      else lines+="  fill(31, 138, 126);\n";
+      lines+="  ellipse(x, 110, "+sizeTxt+", "+sizeTxt+");\n}";
+      setCode($("d-code"),lines);
+    }
+    function refreshVals(){$("d-count-v").textContent=+countEl.value;$("d-space-v").textContent=+spaceEl.value;}
+    countEl.addEventListener("input",function(){refreshVals();draw();});
+    spaceEl.addEventListener("input",function(){refreshVals();draw();});
+    $("d-size").querySelectorAll("button").forEach(function(b){b.addEventListener("click",function(){$("d-size").querySelectorAll("button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");sizeMode=b.getAttribute("data-size");draw();});});
+    $("d-col").querySelectorAll("button").forEach(function(b){b.addEventListener("click",function(){$("d-col").querySelectorAll("button").forEach(function(x){x.classList.remove("on");});b.classList.add("on");colMode=b.getAttribute("data-col");draw();});});
+    $("d-reroll").addEventListener("click",function(){roll();draw();});
+    roll();refreshVals();draw();
+  })();
+};
+
+</script>
+</body>
+</html>
