@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Midterm Study Guide — CS Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   DESIGN TOKENS
+   ===================================================== */
+:root {
+  --cream:   #fbfaf0;
+  --ink:     #1a1a2e;
+  --coral:   #e8725a;
+  --coral-lt:#fdf2ef;
+  --teal:    #4a9b8e;
+  --teal-lt: #eef7f5;
+  --gold:    #d4a83a;
+  --gold-lt: #fdf8ec;
+  --blue:    #4a7fc1;
+  --blue-lt: #eef2fb;
+  --grid:    rgba(100,149,237,0.10);
+  --grid2:   rgba(100,149,237,0.16);
+  --sw:      248px;
+  --shadow:  4px 4px 0 var(--ink);
+  --shsm:    2px 2px 0 var(--ink);
+  --r:       8px;
+}
+
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  color:var(--ink);
+  background-color:var(--cream);
+  background-image:
+    linear-gradient(var(--grid2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid2) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  line-height:1.62;
+  font-size:1rem;
+}
+h1,h2,h3{font-family:'Fraunces',serif;line-height:1.18;}
+h2{font-size:2.05rem;font-weight:700;margin-bottom:14px;}
+h3{font-size:1.28rem;font-weight:600;margin:26px 0 10px;}
+p{margin-bottom:14px;}
+strong{font-weight:700;}
+code.ic{
+  font-family:'IBM Plex Mono',monospace;font-size:.86em;
+  background:#f1efe2;border:1px solid #d8d5c2;border-radius:4px;
+  padding:1px 5px;white-space:nowrap;
+}
+.shell{max-width:1320px;margin:0 auto;position:relative;}
+main{padding:0 40px 0 304px;}
+
+/* =====================================================
+   SIDEBAR TOC
+   ===================================================== */
+nav.toc{
+  position:fixed;top:0;left:max(0px, calc(50% - 660px));
+  width:var(--sw);height:100vh;z-index:60;
+  padding:30px 16px 22px 24px;
+  background:rgba(251,250,240,0.94);
+  border-right:2px solid var(--ink);
+  overflow-y:auto;
+}
+.brand{font-family:'Fraunces',serif;font-weight:700;font-size:1.32rem;line-height:1.2;}
+.brand em{font-style:normal;color:var(--coral);}
+.brand-sub{
+  font-family:'IBM Plex Mono',monospace;font-size:.66rem;
+  letter-spacing:.1em;text-transform:uppercase;color:#8a8878;
+  margin:4px 0 20px;
+}
+.toc-link{
+  display:flex;gap:9px;align-items:flex-start;
+  padding:5px 8px 5px 10px;margin-bottom:1px;
+  border-left:3px solid transparent;border-radius:0 6px 6px 0;
+  color:var(--ink);text-decoration:none;
+  font-size:.815rem;font-weight:500;line-height:1.35;
+}
+.toc-link:hover{background:rgba(232,114,90,0.07);}
+.toc-link .tnum{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  color:#a8a594;flex:none;width:20px;padding-top:2px;
+}
+.toc-link.on{
+  border-left-color:var(--coral);
+  background:rgba(232,114,90,0.09);
+  font-weight:700;
+}
+.toc-link.on .tnum{color:var(--coral);}
+.toc-note{
+  font-family:'Caveat',cursive;font-size:1.12rem;color:#908d7c;
+  margin-top:24px;transform:rotate(-2deg);line-height:1.3;
+}
+
+/* =====================================================
+   HERO
+   ===================================================== */
+.hero{padding:70px 0 14px;}
+.hero h1{font-size:3.1rem;font-weight:700;margin:10px 0 6px;}
+.hero h1 em{font-style:italic;color:var(--coral);}
+.lede{font-size:1.13rem;max-width:62ch;color:#3c3c50;}
+.chip{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;
+  background:var(--gold-lt);border:2px solid var(--ink);
+  border-radius:10px 3px 10px 3px;box-shadow:var(--shsm);
+  padding:5px 12px;margin-top:10px;
+}
+.hero-note{
+  font-family:'Caveat',cursive;font-size:1.5rem;color:var(--teal);
+  transform:rotate(-1.6deg);display:inline-block;margin-top:14px;
+}
+
+/* =====================================================
+   SECTIONS, TAGS, CARDS, CALLOUTS
+   ===================================================== */
+.sec{padding:46px 0 38px;max-width:880px;}
+.tag{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:.7rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:#fff;background:var(--coral);
+  border:2px solid var(--ink);border-radius:14px 3px 14px 3px;
+  box-shadow:var(--shsm);padding:5px 14px 5px 9px;margin-bottom:16px;
+}
+.tag .n{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  background:rgba(255,255,255,0.25);border-radius:7px 2px 7px 2px;
+  padding:1px 6px;
+}
+.t-teal{background:var(--teal);}
+.t-gold{background:var(--gold);}
+.t-blue{background:var(--blue);}
+
+.card{
+  background:#fff;border:2px solid var(--ink);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:18px 20px;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:18px 0;}
+.card .hd{
+  display:block;font-family:'Fraunces',serif;font-weight:700;
+  font-size:1.06rem;margin-bottom:8px;
+}
+.c-coral{color:var(--coral);} .c-teal{color:var(--teal);}
+.c-gold{color:#b8902c;} .c-blue{color:var(--blue);}
+
+.co{
+  border:2px solid var(--ink);border-left:10px solid var(--coral);
+  background:var(--coral-lt);border-radius:var(--r);
+  box-shadow:var(--shsm);padding:14px 20px 12px;margin:22px 0;
+}
+.co-t{
+  display:block;font-family:'Caveat',cursive;font-weight:700;
+  font-size:1.3rem;color:var(--coral);margin-bottom:2px;
+}
+.co p:last-child{margin-bottom:2px;}
+.co-teal{border-left-color:var(--teal);background:var(--teal-lt);}
+.co-teal .co-t{color:var(--teal);}
+.co-gold{border-left-color:var(--gold);background:var(--gold-lt);}
+.co-gold .co-t{color:#b8902c;}
+.co-blue{border-left-color:var(--blue);background:var(--blue-lt);}
+.co-blue .co-t{color:var(--blue);}
+
+/* =====================================================
+   CODE BLOCKS (light tokenized + dark recipe card)
+   ===================================================== */
+pre.code, pre.recipe{
+  font-family:'IBM Plex Mono',monospace;font-size:.875rem;line-height:1.7;
+  border:2px solid var(--ink);border-radius:var(--r);
+  padding:15px 18px;margin:16px 0;overflow-x:auto;
+}
+pre.code{background:#fdfcf4;box-shadow:var(--shsm);}
+pre.recipe{background:#232336;color:#e9e7f2;box-shadow:var(--shadow);}
+pre.code .ln, pre.recipe .ln{display:block;}
+pre.code .k{color:#c2563f;font-weight:600;}
+pre.code .fn{color:#3a6ea8;}
+pre.code .num{color:#2f8577;}
+pre.code .str{color:#a07b1c;}
+pre.code .com{color:#9a9786;font-style:italic;}
+pre.recipe .k{color:#ff9d85;font-weight:600;}
+pre.recipe .fn{color:#8ab8f0;}
+pre.recipe .num{color:#7fd6c5;}
+pre.recipe .str{color:#ecd089;}
+pre.recipe .com{color:#8f8da6;font-style:italic;}
+.recipe-title{
+  font-family:'Caveat',cursive;font-size:1.45rem;color:var(--gold);
+  margin-bottom:2px;display:block;
+}
+
+/* =====================================================
+   TABLES
+   ===================================================== */
+table.tbl{
+  width:100%;border-collapse:collapse;background:#fff;
+  border:2px solid var(--ink);box-shadow:var(--shadow);
+  font-size:.92rem;margin:18px 0;
+}
+table.tbl th{
+  background:var(--blue-lt);font-family:'Fraunces',serif;font-weight:700;
+  text-align:left;padding:9px 12px;border-bottom:2px solid var(--ink);
+  border-right:1px solid #d8d5c2;
+}
+table.tbl td{
+  padding:8px 12px;border-bottom:1px solid #e4e1d0;border-right:1px solid #eeebda;
+  vertical-align:top;
+}
+table.tbl tr:last-child td{border-bottom:none;}
+table.tbl code{font-family:'IBM Plex Mono',monospace;font-size:.84rem;}
+
+/* =====================================================
+   BUTTONS, INPUTS, WIDGET CHROME
+   ===================================================== */
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:.84rem;
+  color:var(--ink);background:#fff;
+  border:2px solid var(--ink);border-radius:8px 3px 8px 3px;
+  box-shadow:var(--shsm);padding:8px 14px;cursor:pointer;
+  transition:transform .08s ease, box-shadow .08s ease;
+}
+.btn:hover{background:#f6f4e8;}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
+.btn-coral{background:var(--coral);color:#fff;}
+.btn-coral:hover{background:#dd6650;}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:#418d80;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-blue:hover{background:#4173b1;}
+.btn.sel{outline:3px solid var(--gold);outline-offset:1px;}
+.ctl-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0;}
+input.tin{
+  font-family:'IBM Plex Mono',monospace;font-size:.95rem;
+  border:2px solid var(--ink);border-radius:7px 3px 7px 3px;
+  padding:7px 10px;background:#fff;width:170px;
+}
+input.tin:focus{outline:3px solid var(--gold);outline-offset:1px;}
+input[type=range]{accent-color:var(--coral);cursor:pointer;}
+.widget{
+  background:#fff;border:2px solid var(--ink);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:18px 20px;margin:20px 0;
+}
+.wt{
+  font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+}
+.status{
+  font-family:'IBM Plex Mono',monospace;font-size:.84rem;
+  background:#f6f4e8;border:1.5px dashed #b9b6a2;border-radius:6px;
+  padding:8px 12px;margin-top:12px;min-height:36px;
+}
+.status.good{background:var(--teal-lt);border-color:var(--teal);color:#2c6b60;}
+.status.bad{background:var(--coral-lt);border-color:var(--coral);color:#b2422c;}
+.bigmono{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:1.7rem;
+  letter-spacing:.04em;
+}
+canvas.cv{
+  border:2px solid var(--ink);border-radius:var(--r);box-shadow:var(--shsm);
+  background:#fff;display:block;
+}
+
+/* bit toggles */
+.bitrow{display:flex;gap:8px;margin:12px 0;}
+.bit{
+  width:58px;text-align:center;cursor:pointer;user-select:none;
+  border:2px solid var(--ink);border-radius:8px 3px 8px 3px;
+  box-shadow:var(--shsm);background:#fff;padding:6px 0 8px;
+  transition:transform .08s ease;
+}
+.bit:active{transform:translate(1px,1px);}
+.bit .pv{font-size:.66rem;font-family:'IBM Plex Mono',monospace;color:#8a8878;display:block;}
+.bit .bv{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:1.35rem;display:block;}
+.bit.onbit{background:var(--teal);color:#fff;}
+.bit.onbit .pv{color:rgba(255,255,255,.8);}
+
+/* steps table (decimal→binary walkthrough) */
+.steps{font-family:'IBM Plex Mono',monospace;font-size:.88rem;}
+.steps .srow{
+  display:grid;grid-template-columns:90px 1fr 70px;gap:10px;
+  padding:6px 10px;border-bottom:1px dashed #d8d5c2;
+}
+.steps .srow.hot{background:var(--gold-lt);}
+.steps .srow .b1{color:var(--teal);font-weight:600;}
+.steps .srow .b0{color:#a8a594;}
+
+/* hex nibbles */
+.nibrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;}
+.nib{
+  border:2px solid var(--ink);border-radius:8px 3px 8px 3px;
+  box-shadow:var(--shsm);background:#fff;padding:8px 14px;text-align:center;
+  font-family:'IBM Plex Mono',monospace;
+}
+.nib .hx{font-size:1.4rem;font-weight:600;color:var(--coral);display:block;}
+.nib .bn{font-size:.95rem;letter-spacing:.08em;display:block;}
+
+/* checklist */
+.ck-h{
+  font-family:'Caveat',cursive;font-size:1.35rem;color:var(--blue);
+  margin:18px 0 8px;font-weight:700;
+}
+.ck{
+  display:flex;gap:11px;align-items:flex-start;cursor:pointer;user-select:none;
+  background:#fff;border:2px solid var(--ink);border-radius:8px 3px 8px 3px;
+  box-shadow:var(--shsm);padding:9px 13px;margin-bottom:8px;
+  transition:transform .08s ease;
+}
+.ck:active{transform:translate(1px,1px);}
+.ck .box{
+  flex:none;width:21px;height:21px;margin-top:2px;
+  border:2px solid var(--ink);border-radius:6px 2px 6px 2px;
+  display:grid;place-items:center;font-size:.8rem;font-weight:800;color:#fff;
+  background:#fff;
+}
+.ck.done .box{background:var(--teal);}
+.ck.done .txt{text-decoration:line-through;opacity:.5;}
+.ck .txt{font-size:.93rem;}
+
+/* swatches */
+.swrow{display:flex;gap:10px;align-items:center;}
+.sw{
+  width:34px;height:34px;border:2px solid var(--ink);
+  border-radius:9px 3px 9px 3px;box-shadow:var(--shsm);cursor:pointer;
+  transition:transform .08s ease;
+}
+.sw:active{transform:translate(1px,1px);}
+.sw.sel{outline:3px solid var(--gold);outline-offset:1px;}
+
+/* slider rows */
+.slrow{display:grid;grid-template-columns:64px 1fr 86px;gap:12px;align-items:center;margin:8px 0;}
+.slrow .lab{font-family:'IBM Plex Mono',monospace;font-size:.84rem;font-weight:600;}
+.slrow .val{font-family:'IBM Plex Mono',monospace;font-size:.84rem;text-align:right;}
+
+/* odometer */
+.odo{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:2.2rem;
+  letter-spacing:.06em;background:#232336;color:#7fd6c5;
+  border:2px solid var(--ink);border-radius:var(--r);box-shadow:var(--shsm);
+  padding:10px 22px;display:inline-block;min-width:260px;text-align:right;
+}
+.odo.blown{color:#ff9d85;animation:shake .35s ease;}
+@keyframes shake{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-4px);}75%{transform:translateX(4px);}
+}
+.meter{
+  height:16px;border:2px solid var(--ink);border-radius:8px;
+  background:#fff;overflow:hidden;margin:12px 0;max-width:520px;
+}
+.meter .fillbar{height:100%;width:0%;background:var(--teal);transition:width .25s ease;}
+.meter .fillbar.hotbar{background:var(--coral);}
+
+/* quiz + sorters */
+.qz-q{
+  background:#fff;border:2px solid var(--ink);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:17px 19px;margin-bottom:18px;
+}
+.q-txt{font-weight:600;margin-bottom:11px;}
+.opt{
+  display:block;width:100%;text-align:left;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:.93rem;
+  background:#fbfaf0;border:2px solid var(--ink);border-radius:7px 3px 7px 3px;
+  padding:8px 12px;margin-bottom:8px;box-shadow:var(--shsm);
+  transition:transform .08s ease;
+}
+.opt:hover{background:#f3f1e3;}
+.opt:active{transform:translate(1px,1px);}
+.opt.right{background:var(--teal-lt);border-color:var(--teal);box-shadow:2px 2px 0 var(--teal);}
+.opt.wrong{background:var(--coral-lt);border-color:var(--coral);box-shadow:2px 2px 0 var(--coral);}
+.opt:disabled{cursor:default;}
+.fb{
+  display:none;font-size:.9rem;border-top:1.5px dashed #d8d5c2;
+  padding-top:9px;margin-top:5px;
+}
+.scorebar{
+  font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:600;
+  background:var(--gold-lt);border:2px solid var(--ink);
+  border-radius:10px 3px 10px 3px;box-shadow:var(--shsm);
+  padding:9px 14px;margin:16px 0;display:inline-block;
+}
+
+/* reveal answers */
+.rev{margin:14px 0;}
+.rev .ans{display:none;margin-top:12px;}
+.rev.open .ans{display:block;}
+
+/* ladder widget */
+.lad{
+  font-family:'IBM Plex Mono',monospace;font-size:.86rem;line-height:1.8;
+  background:#fdfcf4;border:2px solid var(--ink);border-radius:var(--r);
+  box-shadow:var(--shsm);padding:14px 16px;
+}
+.lad .lr{display:block;padding:1px 8px;border-radius:5px;}
+.lad .lr.fire{background:var(--teal-lt);outline:2px solid var(--teal);}
+.lad .lr.dead{opacity:.45;}
+
+/* footer */
+footer.foot{padding:30px 40px 70px 304px;}
+.foot-note{
+  font-family:'Caveat',cursive;font-size:1.6rem;color:#8d8a78;
+  transform:rotate(-1.6deg);display:inline-block;
+}
+
+/* reveal-on-scroll */
+.rv{opacity:0;transform:translateY(16px);transition:opacity .5s ease, transform .5s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav class="toc" id="toc">
+  <div class="brand">CS <em>Study</em> Guide</div>
+  <div class="brand-sub">Processing &middot; Java Mode</div>
+  <a class="toc-link" href="#plan"><span class="tnum">01</span><span>The Game Plan</span></a>
+  <a class="toc-link" href="#b2d"><span class="tnum">02</span><span>Binary &rarr; Decimal</span></a>
+  <a class="toc-link" href="#d2b"><span class="tnum">03</span><span>Decimal &rarr; Binary</span></a>
+  <a class="toc-link" href="#hex"><span class="tnum">04</span><span>Hexadecimal</span></a>
+  <a class="toc-link" href="#tricks"><span class="tnum">05</span><span>Number Tricks &amp; Powers of 2</span></a>
+  <a class="toc-link" href="#rgb"><span class="tnum">06</span><span>RGB Color Math</span></a>
+  <a class="toc-link" href="#types"><span class="tnum">07</span><span>Data Types &amp; Naming</span></a>
+  <a class="toc-link" href="#overflow"><span class="tnum">08</span><span>When Numbers Overflow</span></a>
+  <a class="toc-link" href="#functions"><span class="tnum">09</span><span>Functions</span></a>
+  <a class="toc-link" href="#conditionals"><span class="tnum">10</span><span>Conditionals</span></a>
+  <a class="toc-link" href="#drawing"><span class="tnum">11</span><span>Drawing in Processing</span></a>
+  <a class="toc-link" href="#compress"><span class="tnum">12</span><span>Compression &amp; Metadata</span></a>
+  <a class="toc-link" href="#quiz"><span class="tnum">13</span><span>Practice Quiz</span></a>
+  <a class="toc-link" href="#frq"><span class="tnum">14</span><span>Free-Response Practice</span></a>
+  <a class="toc-link" href="#cheat"><span class="tnum">15</span><span>Cheat Sheet</span></a>
+  <div class="toc-note">check off the game plan as you go &mdash; you've got this!</div>
+</nav>
+
+<main>
+
+<header class="hero">
+  <span class="tag t-gold"><span class="n">&#9733;</span>Exam Prep</span>
+  <h1>The Midterm <em>Study Guide</em></h1>
+  <p class="lede">Every topic from the first half of the semester, in one place: number systems, data types, functions, conditionals, drawing, and the big ideas about data. Work the widgets, take the practice quiz, and check skills off the game plan as you master them.</p>
+  <span class="chip">&#128197; MIDTERM: THIS FRIDAY</span><br>
+  <span class="hero-note">practice beats re-reading. touch every widget on this page at least once.</span>
+</header>
+
+<section class="sec rv" id="plan">
+  <span class="tag"><span class="n">01</span>Know the target</span>
+  <h2>The Game Plan</h2>
+  <p>This is the complete list of skills the midterm can ask about. Click each one as you feel solid on it &mdash; if a box stays empty the night before the test, that's the section to revisit. Every skill below has a matching section on this page.</p>
+
+  <div class="widget">
+    <div class="wt">&#127919; Skill checklist <span class="scorebar" id="ckCount" style="margin:0 0 0 auto;">0 / 21 checked</span></div>
+    <div id="ckList">
+      <div class="ck-h">Number systems</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Convert a binary number to decimal</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Convert a decimal number to binary</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Convert hexadecimal to binary (one digit = 4 bits)</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Explain why hex exists: a compact, human-friendly way to write binary</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Predict what adding a 0 to the rightmost place does in binary &mdash; and what a leftmost 0 does in decimal</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Compute how many values <em>n</em> bits or bytes can store (2&#8319;), including the 2-byte facts</span></div>
+      <div class="ck-h">Data &amp; data types</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Explain how RGB gives a computer ~16.7 million possible colors</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Pick the most memory-efficient data type for a given value</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Apply the variable-naming rules &mdash; and tell required rules apart from style conventions</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Explain integer overflow and recognize its symptoms (a counter suddenly showing a negative number)</span></div>
+      <div class="ck-h">Functions</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Explain the difference between defining and calling a function</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Explain why functions make code better, even though they take work to write</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Read function-definition syntax: a type for every parameter, commas between them</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Write a function with parameters and a return value, then call it from another function</span></div>
+      <div class="ck-h">Conditionals</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Trace an if / else if / else chain top-to-bottom and predict the output</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Spot a ladder whose conditions are in the wrong order</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Decide when two decisions need separate ifs vs. a nested if</span></div>
+      <div class="ck-h">Drawing in Processing</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Predict a sketch from <code class="ic">size()</code>, <code class="ic">background()</code>, <code class="ic">fill()</code>, and shape commands</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Remember order matters: fill before the shape, background paints over everything before it</span></div>
+      <div class="ck-h">Big ideas about data</div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Compare lossy vs. lossless compression and when each makes sense</span></div>
+      <div class="ck" data-ck><span class="box">&#10003;</span><span class="txt">Tell data apart from metadata, and which one answers which kind of question</span></div>
+    </div>
+  </div>
+
+  <div class="co co-gold">
+    <span class="co-t">how to use this page</span>
+    <p>Don't just read &mdash; <strong>do</strong>. Every section has something to click, drag, or type. Generating your own practice problems and checking them beats re-reading notes every single time.</p>
+  </div>
+</section>
+<section class="sec rv" id="b2d">
+  <span class="tag t-teal"><span class="n">02</span>Base 2 &rarr; Base 10</span>
+  <h2>Binary &rarr; Decimal</h2>
+  <p>Every binary digit is a <strong>place value</strong> that's a power of 2. Reading right to left: 1, 2, 4, 8, 16, 32, 64, 128&hellip; To convert, just <strong>add up the place values where there's a 1</strong>.</p>
+
+  <div class="widget">
+    <div class="wt">&#128161; The bit flipper</div>
+    <p style="font-size:.93rem;">Click bits to flip them on and off. Watch the decimal total update &mdash; each lit bit contributes its place value.</p>
+    <div class="bitrow" id="bitRow"></div>
+    <div class="bigmono" id="bitVal">= 0</div>
+    <div class="ctl-row">
+      <button class="btn" id="bitZero">all 0s</button>
+      <button class="btn" id="bitRand">random byte</button>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#9999;&#65039; Practice: binary &rarr; decimal</div>
+    <p style="font-size:.93rem;">Convert the binary number to decimal. New numbers forever &mdash; this never runs out.</p>
+    <div class="bigmono" id="b2dProb">101010</div>
+    <div class="ctl-row">
+      <input class="tin" id="b2dIn" type="text" inputmode="numeric" placeholder="decimal value">
+      <button class="btn btn-teal" id="b2dChk">check</button>
+      <button class="btn" id="b2dNew">new problem</button>
+    </div>
+    <div class="status" id="b2dFb">Type your answer and hit check.</div>
+  </div>
+
+  <div class="co co-teal">
+    <span class="co-t">show-your-work move</span>
+    <p>On paper, write the place values <strong>over</strong> the bits first (&hellip;32&nbsp;16&nbsp;8&nbsp;4&nbsp;2&nbsp;1), then circle the columns with a 1 and add them. That's the &ldquo;work&rdquo; the short-answer questions want to see.</p>
+  </div>
+</section>
+<section class="sec rv" id="d2b">
+  <span class="tag t-teal"><span class="n">03</span>Base 10 &rarr; Base 2</span>
+  <h2>Decimal &rarr; Binary</h2>
+  <p>Going the other way, use the <strong>greedy subtraction</strong> method: start at the biggest power of 2 that fits, subtract it, write a 1 &mdash; if a power doesn't fit, write a 0 and move on. Keep going until you reach 0.</p>
+
+  <div class="widget">
+    <div class="wt">&#127922; Watch it happen, step by step</div>
+    <div class="ctl-row">
+      <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;">converting:</span>
+      <span class="bigmono" id="d2bNum">181</span>
+      <button class="btn btn-coral" id="d2bNext">next step &rarr;</button>
+      <button class="btn" id="d2bNew">new number</button>
+    </div>
+    <div class="steps" id="d2bSteps"></div>
+    <div class="status" id="d2bOut">Hit &ldquo;next step&rdquo; to walk through each place value, biggest to smallest.</div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#9999;&#65039; Practice: decimal &rarr; binary</div>
+    <div class="bigmono" id="d2bpProb">77</div>
+    <div class="ctl-row">
+      <input class="tin" id="d2bpIn" type="text" placeholder="binary (1s and 0s)">
+      <button class="btn btn-teal" id="d2bpChk">check</button>
+      <button class="btn" id="d2bpNew">new problem</button>
+    </div>
+    <div class="status" id="d2bpFb">Type the binary version and hit check.</div>
+  </div>
+</section>
+<section class="sec rv" id="hex">
+  <span class="tag t-blue"><span class="n">04</span>Base 16</span>
+  <h2>Hexadecimal</h2>
+  <p>Hex is <strong>base 16</strong>: digits run 0&ndash;9, then A&ndash;F (A=10, B=11, C=12, D=13, E=14, F=15). The killer feature: <strong>one hex digit is exactly four binary bits</strong> (a &ldquo;nibble&rdquo;). So converting hex&nbsp;&harr;&nbsp;binary is just swapping each digit for its 4-bit pattern &mdash; no math required.</p>
+
+  <table class="tbl">
+    <tr><th>Hex</th><th>Binary</th><th>Hex</th><th>Binary</th><th>Hex</th><th>Binary</th><th>Hex</th><th>Binary</th></tr>
+    <tr><td><code>0</code></td><td><code>0000</code></td><td><code>4</code></td><td><code>0100</code></td><td><code>8</code></td><td><code>1000</code></td><td><code>C</code></td><td><code>1100</code></td></tr>
+    <tr><td><code>1</code></td><td><code>0001</code></td><td><code>5</code></td><td><code>0101</code></td><td><code>9</code></td><td><code>1001</code></td><td><code>D</code></td><td><code>1101</code></td></tr>
+    <tr><td><code>2</code></td><td><code>0010</code></td><td><code>6</code></td><td><code>0110</code></td><td><code>A</code></td><td><code>1010</code></td><td><code>E</code></td><td><code>1110</code></td></tr>
+    <tr><td><code>3</code></td><td><code>0011</code></td><td><code>7</code></td><td><code>0111</code></td><td><code>B</code></td><td><code>1011</code></td><td><code>F</code></td><td><code>1111</code></td></tr>
+  </table>
+
+  <div class="widget">
+    <div class="wt">&#128300; The nibble translator</div>
+    <p style="font-size:.93rem;">Type any hex number (up to 4 digits) and watch each digit expand into its own 4-bit group.</p>
+    <div class="ctl-row">
+      <input class="tin" id="hexIn" type="text" maxlength="4" placeholder="e.g. 2E7C" style="text-transform:uppercase;">
+    </div>
+    <div class="nibrow" id="hexOut"></div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#9999;&#65039; Practice: hex &rarr; binary</div>
+    <div class="bigmono" id="hxpProb">5D</div>
+    <div class="ctl-row">
+      <input class="tin" id="hxpIn" type="text" placeholder="8-bit binary" style="width:220px;">
+      <button class="btn btn-teal" id="hxpChk">check</button>
+      <button class="btn" id="hxpNew">new problem</button>
+    </div>
+    <div class="status" id="hxpFb">Translate each hex digit to 4 bits, then glue them together.</div>
+  </div>
+
+  <div class="co co-blue">
+    <span class="co-t">why hex exists (exam answer!)</span>
+    <p>Binary is base&nbsp;2 &mdash; what computers actually use to store and process data. Hex is base&nbsp;16 &mdash; a <strong>compact way for humans to read and write binary</strong>, common for things like memory addresses and web color codes (<code class="ic">#FF6B35</code>). Hex is <em>not</em> a separate language computers &ldquo;speak&rdquo; &mdash; it's shorthand for binary.</p>
+  </div>
+</section>
+<section class="sec rv" id="tricks">
+  <span class="tag t-gold"><span class="n">05</span>Patterns worth knowing</span>
+  <h2>Number Tricks &amp; Powers of 2</h2>
+  <p>Two classic short-answer questions hide in here, plus the &ldquo;how many values fit in <em>n</em> bits&rdquo; math you need everywhere else.</p>
+
+  <div class="widget">
+    <div class="wt">&#10145;&#65039; The append-a-zero trick</div>
+    <p style="font-size:.93rem;">Adding a 0 to the <strong>rightmost</strong> place shifts every digit into a place worth one base more. In binary that <strong>doubles</strong> the value (&times;2); in decimal it multiplies by 10. A 0 on the <strong>leftmost</strong> end? Changes nothing &mdash; leading zeros have no value.</p>
+    <div class="grid2">
+      <div class="card">
+        <span class="hd c-teal">Binary</span>
+        <div class="bigmono"><span id="shBin">1011</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.9rem;margin:4px 0 12px;">= <span id="shBinV">11</span> in decimal</div>
+        <div class="ctl-row">
+          <button class="btn btn-teal" id="shBinR">add 0 right</button>
+          <button class="btn" id="shBinL">add 0 left</button>
+          <button class="btn" id="shBinReset">reset</button>
+        </div>
+        <div class="status" id="shBinFb">Watch what each button does to the value.</div>
+      </div>
+      <div class="card">
+        <span class="hd c-gold">Decimal</span>
+        <div class="bigmono"><span id="shDec">47</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.9rem;margin:4px 0 12px;">= <span id="shDecV">47</span>, obviously</div>
+        <div class="ctl-row">
+          <button class="btn btn-teal" id="shDecR">add 0 right</button>
+          <button class="btn" id="shDecL">add 0 left</button>
+          <button class="btn" id="shDecReset">reset</button>
+        </div>
+        <div class="status" id="shDecFb">Same trick, different base.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#128202; How much fits in <em>n</em> bits?</div>
+    <p style="font-size:.93rem;">Each extra bit <strong>doubles</strong> the number of patterns. With <em>n</em> bits you get <strong>2&#8319; values</strong>, and since counting starts at 0, the biggest value is <strong>2&#8319;&nbsp;&minus;&nbsp;1</strong>. Drag the slider:</p>
+    <div class="slrow">
+      <span class="lab">bits</span>
+      <input type="range" id="bitSl" min="1" max="24" value="8">
+      <span class="val" id="bitSlV">8</span>
+    </div>
+    <div class="status" id="bitSlOut"></div>
+  </div>
+
+  <div class="co co-gold">
+    <span class="co-t">memorize this row</span>
+    <p><strong>2 bytes = 16 bits</strong> &rarr; 2&sup1;&#8310; = <strong>65,536 different values</strong> &rarr; biggest value <strong>65,535</strong> (because 0 counts!) &rarr; written as exactly <strong>4 hex digits</strong>. The off-by-one between 65,536 <em>values</em> and a max of 65,535 is a favorite trap.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="rgb">
+  <span class="tag t-gold"><span class="n">06</span>Bits meet pixels</span>
+  <h2>RGB Color Math</h2>
+  <p>A computer mixes every color from <strong>red, green, and blue light</strong>. Each channel gets <strong>1 byte (8 bits)</strong>, so each runs 0&ndash;255. That's 256 choices, three times:</p>
+  <p class="bigmono" style="text-align:center;">256 &times; 256 &times; 256 = 2&sup2;&#8308; = 16,777,216 colors</p>
+
+  <div class="widget">
+    <div class="wt">&#127912; The channel mixer</div>
+    <div class="grid2" style="align-items:center;">
+      <div>
+        <div class="slrow"><span class="lab" style="color:#c2563f;">R</span><input type="range" id="rSl" min="0" max="255" value="232"><span class="val" id="rV">232</span></div>
+        <div class="slrow"><span class="lab" style="color:#2f8577;">G</span><input type="range" id="gSl" min="0" max="255" value="114"><span class="val" id="gV">114</span></div>
+        <div class="slrow"><span class="lab" style="color:#3a6ea8;">B</span><input type="range" id="bSl" min="0" max="255" value="90"><span class="val" id="bV">90</span></div>
+        <div class="status" id="rgbOut"></div>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <div id="rgbSw" style="width:170px;height:170px;border:2px solid var(--ink);border-radius:12px 4px 12px 4px;box-shadow:var(--shadow);"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="co">
+    <span class="co-t">writing the exam answer</span>
+    <p>The full-credit explanation hits three beats: <strong>(1)</strong> each of R, G, B is stored in 8 bits, so each has 256 possible levels; <strong>(2)</strong> the channels combine, so multiply: 256&nbsp;&times;&nbsp;256&nbsp;&times;&nbsp;256; <strong>(3)</strong> that's 2&sup2;&#8308; &asymp; <strong>16.7 million colors</strong>. Notice it's the same &ldquo;2&#8319; values&rdquo; rule from the last section &mdash; with n&nbsp;=&nbsp;24.</p>
+  </div>
+</section>
+<section class="sec rv" id="types">
+  <span class="tag"><span class="n">07</span>Store it right</span>
+  <h2>Data Types &amp; Naming</h2>
+  <p>The exam loves two skills here: choosing the <strong>most efficient type</strong> (fewest bits that still fit the value), and knowing which naming rules are <strong>actual rules</strong> versus just good style.</p>
+
+  <h3>The type lineup</h3>
+  <table class="tbl">
+    <tr><th>Type</th><th>Size</th><th>Holds</th><th>Example</th></tr>
+    <tr><td><code>byte</code></td><td>1 byte</td><td>whole numbers 0 &ndash; 255</td><td><code>int-style values that stay small</code></td></tr>
+    <tr><td><code>short</code></td><td>2 bytes</td><td>whole numbers 0 &ndash; 65,535</td><td><code>daysInYear = 365;</code></td></tr>
+    <tr><td><code>int</code></td><td>4 bytes</td><td>whole numbers 0 &ndash; ~4.29 billion</td><td><code>speed = 12;</code> <em>(speed is always an int!)</em></td></tr>
+    <tr><td><code>long</code></td><td>8 bytes</td><td>enormous whole numbers (~18 quintillion)</td><td><code>worldPopulation</code></td></tr>
+    <tr><td><code>float</code></td><td>4 bytes</td><td>decimal numbers</td><td><code>balance = 24.99;</code></td></tr>
+    <tr><td><code>double</code></td><td>8 bytes</td><td>decimal numbers, double the precision</td><td>scientific calculations</td></tr>
+    <tr><td><code>char</code></td><td>1 byte <em>(in our class)</em></td><td>a single character in 'single quotes'</td><td><code>middleInitial = 'K';</code></td></tr>
+    <tr><td><code>String</code></td><td>varies</td><td>text in "double quotes"</td><td><code>teamName = "Wildcats";</code></td></tr>
+    <tr><td><code>boolean</code></td><td>1 bit of info, stored as 1 byte</td><td>only <code>true</code> or <code>false</code></td><td><code>isRaining = false;</code></td></tr>
+  </table>
+
+  <div class="co co-teal">
+    <span class="co-t">"most efficient" decoded</span>
+    <p>Efficient = the <strong>smallest type that can still hold the value</strong>. 117 fits in a <code class="ic">byte</code> &mdash; using an <code class="ic">int</code> works, but wastes 3 bytes. A decimal like 513.17? Smallest decimal type: <code class="ic">float</code>. Text like "B+" has more than one character, so it's a <code class="ic">String</code>, but a lone <code class="ic">'K'</code> is a <code class="ic">char</code>. A number in the billions blows past int's range &rarr; <code class="ic">long</code>.</p>
+  </div>
+
+  <h3>Naming rules: required vs. style</h3>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-coral">Hard rules (code breaks)</span>
+      <p style="font-size:.92rem;">&bull; One word &mdash; no spaces<br>
+      &bull; Letters, digits, and <code class="ic">_underscore</code> only &mdash; no other punctuation<br>
+      &bull; Must <strong>begin</strong> with a letter (or underscore) &mdash; digits allowed after that<br>
+      &bull; Can't be a reserved word &mdash; including Processing's own names like <code class="ic">width</code>, <code class="ic">height</code>, <code class="ic">mouseX</code>, <code class="ic">mouseY</code>, <code class="ic">color</code>, <code class="ic">size</code></p>
+    </div>
+    <div class="card">
+      <span class="hd c-blue">Style conventions (code still runs)</span>
+      <p style="font-size:.92rem;">&bull; <code class="ic">camelCaseCapitalization</code> &mdash; strongly encouraged, <strong>not required</strong><br>
+      &bull; Descriptive names like <code class="ic">playerScore</code> instead of <code class="ic">ps</code><br><br>
+      <em>Watch for the trap: &ldquo;may not contain any numbers at all&rdquo; is FALSE &mdash; numbers just can't come first.</em></p>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#9878;&#65039; Valid or invalid? <span class="scorebar" id="nmScore" style="margin:0 0 0 auto;">0 / 0</span></div>
+    <p style="font-size:.93rem;">Would Processing accept this variable name?</p>
+    <div class="bigmono" id="nmName">playerScore</div>
+    <div class="ctl-row">
+      <button class="btn btn-teal" id="nmValid">&#10003; valid</button>
+      <button class="btn btn-coral" id="nmInvalid">&#10007; invalid</button>
+      <button class="btn" id="nmNext" style="display:none;">next name &rarr;</button>
+    </div>
+    <div class="status" id="nmFb">Click your verdict.</div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#127919; Pick the most efficient type <span class="scorebar" id="tpScore" style="margin:0 0 0 auto;">0 / 0</span></div>
+    <div class="bigmono" id="tpScn" style="font-size:1.25rem;">quizScore = 88;</div>
+    <div class="ctl-row" id="tpBtns"></div>
+    <div class="status" id="tpFb">Which type stores this with the fewest bits?</div>
+  </div>
+</section>
+<section class="sec rv" id="overflow">
+  <span class="tag t-blue"><span class="n">08</span>When types run out</span>
+  <h2>When Numbers Overflow</h2>
+  <p>Every numeric type has a <strong>maximum value</strong> baked in by its number of bits. Push a value past that ceiling and it <strong>wraps around</strong> like a car odometer rolling past 999,999 &mdash; the stored number suddenly looks tiny or, in Java's signed integers, <strong>negative</strong>.</p>
+
+  <div class="widget">
+    <div class="wt">&#128694; The step-counter experiment</div>
+    <p style="font-size:.93rem;">A fitness tracker stores steps in 2 bytes (max 65,535). Keep walking and see what happens at the ceiling.</p>
+    <div class="ctl-row">
+      <div class="odo" id="odoVal">0</div>
+      <button class="btn btn-coral" id="odoAdd">+ 7,500 steps</button>
+      <button class="btn" id="odoAuto">auto-walk</button>
+      <button class="btn" id="odoReset">reset</button>
+    </div>
+    <div class="meter"><div class="fillbar" id="odoBar"></div></div>
+    <div class="status" id="odoFb">The counter has 65,536 possible values: 0 through 65,535.</div>
+  </div>
+
+  <div class="co">
+    <span class="co-t">spot it on the exam</span>
+    <p>Story problems love this bug: a counter (views, scores, steps, likes) climbs for a while, then suddenly displays a <strong>negative or nonsense number</strong> while everything else works fine. The answer is almost always: <strong>the value exceeded the maximum its data type can store</strong>. It's not a rounding error, not server overload, not a sampling problem &mdash; the type simply ran out of bits.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="functions">
+  <span class="tag t-teal"><span class="n">09</span>Write once, use forever</span>
+  <h2>Functions</h2>
+  <p>A function is a <strong>named, reusable block of code</strong>. Two completely different moments in its life:</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">Defining = writing the recipe</span>
+      <p style="font-size:.92rem;">You describe <em>what the function does</em> &mdash; its name, its parameters, and the code inside. Nothing runs yet. A definition sitting in your sketch does nothing on its own.</p>
+      <pre class="code">void drawBalloon(int x, int y, int d, color c) {
+  fill(c);
+  ellipse(x, y, d, d);          // the balloon
+  line(x, y + d/2, x, y + d);   // the string
+}</pre>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">Calling = cooking from it</span>
+      <p style="font-size:.92rem;">You use the function's name with real values (arguments). <em>This</em> is when the code inside actually runs &mdash; once per call, with the values you passed in.</p>
+      <pre class="code">drawBalloon(120, 80, 60, red);
+drawBalloon(300, 140, 90, teal);
+drawBalloon(420, 60, 40, gold);</pre>
+    </div>
+  </div>
+
+  <div class="co co-gold">
+    <span class="co-t">syntax check: parameters</span>
+    <p>In a definition, <strong>every parameter needs its own type</strong>, and parameters are <strong>separated by commas</strong>: <code class="ic">void mix(int a, int b, int c)</code>. Missing commas or missing types = broken definition. The exam will show you near-miss versions &mdash; look for both.</p>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#127880; The function machine</div>
+    <p style="font-size:.93rem;"><code class="ic">drawBalloon()</code> is defined <strong>once</strong> above. Change the arguments and call it as many times as you want &mdash; that's the whole point of parameters.</p>
+    <div class="ctl-row">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.84rem;">x</span>
+      <input class="tin" id="fnX" type="number" min="20" max="460" value="120" style="width:84px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.84rem;">y</span>
+      <input class="tin" id="fnY" type="number" min="20" max="180" value="80" style="width:84px;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.84rem;">d</span>
+      <input class="tin" id="fnD" type="number" min="20" max="120" value="60" style="width:84px;">
+      <div class="swrow" id="fnSwRow"></div>
+    </div>
+    <div class="ctl-row">
+      <button class="btn btn-coral" id="fnCall">call drawBalloon( )</button>
+      <button class="btn" id="fnClear">clear canvas</button>
+    </div>
+    <canvas class="cv" id="fnCanvas" width="960" height="520" style="width:480px;height:260px;"></canvas>
+    <div class="status" id="fnLog">Your calls will appear here, exactly as code.</div>
+  </div>
+
+  <div class="co co-teal">
+    <span class="co-t">"why bother?" &mdash; the exam answer</span>
+    <p>Functions cost time up front but pay it back fast: <strong>write once, call many times</strong> (no copy-paste); <strong>one place to fix bugs</strong> (change the definition, every call updates); <strong>readable code</strong> (a clear name like <code class="ic">drawBalloon</code> says what it does); and <strong>easier teamwork</strong> &mdash; someone can use your function without reading its insides.</p>
+  </div>
+</section>
+<section class="sec rv" id="conditionals">
+  <span class="tag t-blue"><span class="n">10</span>First true wins</span>
+  <h2>Conditionals</h2>
+  <p>An <code class="ic">if / else if / else</code> chain checks conditions <strong>top to bottom</strong> and runs <strong>only the first one that's true</strong> &mdash; then skips the rest. That single fact explains the most common exam bug: a ladder with conditions in the wrong order.</p>
+
+  <div class="widget">
+    <div class="wt">&#129691; The ladder, ordered vs. scrambled</div>
+    <p style="font-size:.93rem;">A theme park prices tickets by age. Drag the age slider and watch which branch fires in each version.</p>
+    <div class="slrow">
+      <span class="lab">age</span>
+      <input type="range" id="ageSl" min="0" max="80" value="15">
+      <span class="val" id="ageV">15</span>
+    </div>
+    <div class="grid2">
+      <div>
+        <span class="hd c-teal" style="font-family:'Fraunces',serif;font-weight:700;display:block;margin-bottom:6px;">&#10003; Correct: biggest threshold first</span>
+        <div class="lad" id="ladGood"></div>
+      </div>
+      <div>
+        <span class="hd c-coral" style="font-family:'Fraunces',serif;font-weight:700;display:block;margin-bottom:6px;">&#10007; Broken: smallest threshold first</span>
+        <div class="lad" id="ladBad"></div>
+      </div>
+    </div>
+    <div class="status" id="ladOut"></div>
+  </div>
+
+  <div class="co">
+    <span class="co-t">the fix, in one sentence</span>
+    <p>With <code class="ic">&gt;=</code> ladders, check <strong>from the highest threshold down</strong> (or use ranges). If a small threshold like <code class="ic">age &gt;= 13</code> sits on top, it &ldquo;catches&rdquo; every adult and senior before their branches ever get checked. Also: <strong>all <code class="ic">else if</code> branches must come before the final <code class="ic">else</code></strong> &mdash; an <code class="ic">else if</code> after <code class="ic">else</code> is a syntax error.</p>
+  </div>
+
+  <h3>Two decisions? Two separate ifs.</h3>
+  <p>When choices are independent &mdash; like a base price <em>plus</em> an optional add-on &mdash; nesting one inside the other accidentally locks the add-on to one group. Compare:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">&#10003; Separate ifs: everyone can add the meal plan</span>
+      <pre class="code">int cost = 30;            // child base price
+if (age &gt;= 16) {
+  cost = cost + 15;       // adult upgrade
+}
+if (wantsMeal == true) {
+  cost = cost + 12;       // ANYONE can add this
+}
+println(cost);</pre>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">&#10007; Nested: kids can never buy the meal plan</span>
+      <pre class="code">int cost = 30;
+if (age &gt;= 16) {
+  cost = cost + 15;
+  if (wantsMeal == true) {
+    cost = cost + 12;     // only runs for 16+ !
+  }
+}
+println(cost);</pre>
+    </div>
+  </div>
+
+  <h3>Predict the output</h3>
+  <p>Cover the answer, trace it on paper, then reveal. The skill: substitute the values, evaluate the condition, follow exactly one branch.</p>
+
+  <div class="rev card" id="rev1">
+    <pre class="code">int x = 7;
+int y = 12;
+if (x &gt; y) {
+  println(x * y);
+} else {
+  println(y - x);
+}</pre>
+    <button class="btn btn-blue rvbtn">reveal answer</button>
+    <div class="ans"><p style="margin:0;"><strong>5.</strong> <code class="ic">7 &gt; 12</code> is false, so the <code class="ic">else</code> branch runs: <code class="ic">12 - 7 = 5</code>. The multiply never happens.</p></div>
+  </div>
+
+  <div class="rev card" id="rev2">
+    <pre class="code">int a = 4;
+int b = 9;
+if (a &gt; 2 &amp;&amp; b &lt; 9) {
+  println("alpha");
+} else if (a &gt; 2 || b &lt; 9) {
+  println("beta");
+} else {
+  println("gamma");
+}</pre>
+    <button class="btn btn-blue rvbtn">reveal answer</button>
+    <div class="ans"><p style="margin:0;"><strong>beta.</strong> First condition: <code class="ic">a &gt; 2</code> is true but <code class="ic">b &lt; 9</code> is false &mdash; <code class="ic">&amp;&amp;</code> needs <em>both</em>, so it fails. Second condition: <code class="ic">||</code> needs just one, and <code class="ic">a &gt; 2</code> is true &rarr; &ldquo;beta&rdquo; prints and the chain stops.</p></div>
+  </div>
+
+  <div class="rev card" id="rev3">
+    <pre class="code">int temp = 65;
+if (temp &gt;= 90) {
+  println("hot");
+} else if (temp &gt;= 60) {
+  println("mild");
+} else if (temp &gt;= 32) {
+  println("chilly");
+} else {
+  println("freezing");
+}</pre>
+    <button class="btn btn-blue rvbtn">reveal answer</button>
+    <div class="ans"><p style="margin:0;"><strong>mild.</strong> 65 fails the first check, passes <code class="ic">temp &gt;= 60</code> &mdash; and even though <code class="ic">65 &gt;= 32</code> is <em>also</em> true, that branch never runs. First true wins; the rest are skipped.</p></div>
+  </div>
+</section>
+<section class="sec rv" id="drawing">
+  <span class="tag"><span class="n">11</span>Predict the canvas</span>
+  <h2>Drawing in Processing</h2>
+  <p>The exam shows code and a picture and asks you to match them. Four things to verify, in order:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-coral">1 &middot; <code>size(width, height)</code></span>
+      <p style="font-size:.9rem;margin:0;"><strong>Width first, height second.</strong> <code class="ic">size(150, 300)</code> is a <em>tall</em> window; <code class="ic">size(300, 150)</code> is a <em>wide</em> one. This alone eliminates half the answer choices.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-blue">2 &middot; <code>background(...)</code></span>
+      <p style="font-size:.9rem;margin:0;">One number = grayscale: <code class="ic">background(0)</code> is black, <code class="ic">background(255)</code> is white. It repaints the <strong>entire canvas</strong>, covering anything drawn before it.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-teal">3 &middot; <code>fill(r, g, b)</code> comes BEFORE the shape</span>
+      <p style="font-size:.9rem;margin:0;">Fill is like dipping the brush: it colors shapes drawn <strong>after</strong> it. <code class="ic">fill(255,0,0)</code> = red, <code class="ic">fill(0,0,255)</code> = blue. A fill <em>after</em> the shape arrives too late.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-gold">4 &middot; Coordinates from the top-left</span>
+      <p style="font-size:.9rem;margin:0;">(0,0) is the <strong>top-left corner</strong>; y grows <strong>downward</strong>. <code class="ic">circle(x, y, d)</code> centers at (x, y) with diameter d &mdash; so <code class="ic">circle(50, 50, 100)</code> hugs the top-left.</p>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="wt">&#128444;&#65039; The sketch predictor</div>
+    <p style="font-size:.93rem;">Build a four-line sketch and see exactly what it produces. Then flip the <strong>order</strong> switch to watch the classic &ldquo;fill after the shape&rdquo; bug happen live.</p>
+    <div class="ctl-row">
+      <button class="btn sel" id="szWide">size(300, 150)</button>
+      <button class="btn" id="szTall">size(150, 300)</button>
+      <span style="width:14px;"></span>
+      <button class="btn" id="bgWhite">background(255)</button>
+      <button class="btn sel" id="bgBlack">background(0)</button>
+    </div>
+    <div class="ctl-row">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.84rem;">fill:</span>
+      <button class="btn sel" data-fc="255,0,0" id="fcR">red</button>
+      <button class="btn" data-fc="0,255,0" id="fcG">green</button>
+      <button class="btn" data-fc="0,0,255" id="fcB">blue</button>
+      <span style="width:14px;"></span>
+      <button class="btn" id="ordToggle">order: fill BEFORE circle &#10003;</button>
+    </div>
+    <div class="grid2" style="align-items:start;">
+      <pre class="code" id="dwCode"></pre>
+      <canvas class="cv" id="dwCanvas"></canvas>
+    </div>
+    <div class="status" id="dwFb"></div>
+  </div>
+</section>
+
+<section class="sec rv" id="compress">
+  <span class="tag t-teal"><span class="n">12</span>Big ideas about data</span>
+  <h2>Compression &amp; Metadata</h2>
+  <p>Two vocabulary-driven topics that show up as story problems. Nail the definitions and the questions answer themselves. (For the interactive deep dive, revisit the <strong>Internet page's</strong> compression squeezer.)</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">Lossless compression</span>
+      <p style="font-size:.92rem;margin-bottom:6px;">Stores the <em>same information</em> more cleverly. Decompressing rebuilds the original <strong>bit-for-bit, exactly</strong>.</p>
+      <p style="font-size:.92rem;margin:0;"><strong>Trade-off:</strong> smaller space savings. <strong>Use when</strong> every detail matters: code, documents, spreadsheets.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">Lossy compression</span>
+      <p style="font-size:.92rem;margin-bottom:6px;">Permanently <strong>throws away</strong> detail humans barely notice. The original can <strong>never</strong> be fully restored.</p>
+      <p style="font-size:.92rem;margin:0;"><strong>Trade-off:</strong> much smaller files &rarr; <strong>faster transmission</strong>. <strong>Use when</strong> &ldquo;close enough&rdquo; is fine: streaming video, photos, music.</p>
+    </div>
+  </div>
+
+  <div class="co co-teal">
+    <span class="co-t">two facts the exam tests directly</span>
+    <p><strong>(1)</strong> Lossy generally shrinks files <em>more</em> than lossless &mdash; so it cuts transmission time more. <strong>(2)</strong> &ldquo;Lossless&rdquo; describes round-trip behavior: compress &rarr; send &rarr; <strong>restore to the exact original</strong> &rarr; use. If a scenario never compresses anything, it isn't demonstrating compression at all!</p>
+  </div>
+
+  <h3>Data vs. metadata</h3>
+  <p><strong>Data</strong> is the content itself &mdash; the message, the photo, the video. <strong>Metadata</strong> is <em>data about the data</em> &mdash; when it was posted, who posted it, how many comments it got. Rule of thumb: questions about <strong>what the content says</strong> need the data; questions about <strong>who / when / how often</strong> need only the metadata.</p>
+
+  <div class="widget">
+    <div class="wt">&#128230; Data or metadata? <span class="scorebar" id="mdScore" style="margin:0 0 0 auto;">0 / 0</span></div>
+    <div class="bigmono" id="mdItem" style="font-size:1.18rem;font-family:'DM Sans',sans-serif;font-weight:600;">The text of the message itself</div>
+    <div class="ctl-row">
+      <button class="btn btn-teal" id="mdData">data</button>
+      <button class="btn btn-blue" id="mdMeta">metadata</button>
+      <button class="btn" id="mdNext" style="display:none;">next &rarr;</button>
+    </div>
+    <div class="status" id="mdFb">Content itself, or information about the content?</div>
+  </div>
+</section>
+<section class="sec rv" id="quiz">
+  <span class="tag t-gold"><span class="n">13</span>Test yourself</span>
+  <h2>Practice Quiz</h2>
+  <p>Twelve questions in midterm style &mdash; same skills, <strong>different numbers and scenarios</strong> than anything you'll see Friday. Instant feedback on every answer.</p>
+  <div class="scorebar" id="qzBanner">Score: 0 / 0 answered</div>
+  <div id="quizWrap"></div>
+</section>
+
+<section class="sec rv" id="frq">
+  <span class="tag t-blue"><span class="n">14</span>Write real code</span>
+  <h2>Free-Response Practice</h2>
+  <p>The midterm ends with writing functions from scratch. Practice on paper first &mdash; no autocomplete on test day &mdash; then reveal a full solution to compare against.</p>
+
+  <div class="rev card" id="frq1">
+    <span class="hd c-blue">Challenge A: a boolean function</span>
+    <p style="font-size:.95rem;">In a game, a player levels up when they have enough experience <em>and</em> enough coins &mdash; <strong>or</strong> if they're holding a golden key, which skips the requirements entirely. Write a function called <code class="ic">canLevelUp</code> that takes two integers, <code class="ic">xp</code> and <code class="ic">coins</code>, and a boolean <code class="ic">hasKey</code>. Return <code class="ic">true</code> if <code class="ic">xp</code> is at least 100 <strong>and</strong> <code class="ic">coins</code> is at least 50, <strong>or</strong> if <code class="ic">hasKey</code> is true. Return <code class="ic">false</code> otherwise.</p>
+    <pre class="code">canLevelUp(120, 60, false)  -&gt; true   // met both requirements
+canLevelUp(120, 10, false)  -&gt; false  // not enough coins
+canLevelUp(0,   0,  true)   -&gt; true   // the key overrides everything</pre>
+    <button class="btn btn-blue rvbtn">reveal solution</button>
+    <div class="ans">
+      <pre class="code">boolean canLevelUp(int xp, int coins, boolean hasKey) {
+  if ((xp &gt;= 100 &amp;&amp; coins &gt;= 50) || hasKey == true) {
+    return true;
+  } else {
+    return false;
+  }
+}</pre>
+      <p style="font-size:.92rem;margin:0;">Graders look for: return type <code class="ic">boolean</code> (not void!), three typed parameters &mdash; including a <code class="ic">boolean</code> one &mdash; with commas, the two requirements joined by <code class="ic">&amp;&amp;</code> and then OR&rsquo;d with the key using <code class="ic">||</code>, and a <code class="ic">return</code> on every path. Once you&rsquo;re comfortable, the whole body can shrink to one line: <code class="ic">return (xp &gt;= 100 &amp;&amp; coins &gt;= 50) || hasKey;</code></p>
+    </div>
+  </div>
+
+  <div class="rev card" id="frq2">
+    <span class="hd c-blue">Challenge B: two functions working together</span>
+    <p style="font-size:.95rem;">You're building one bar of a bar chart.<br>
+    <strong>1.</strong> Write <code class="ic">calculateBarHeight</code>: it takes a data value and how many pixels tall each unit should be, multiplies them, stores the result in a variable, and <strong>returns</strong> it.<br>
+    <strong>2.</strong> Write <code class="ic">drawDataBar</code> with <strong>five parameters</strong> for the bar's position, width, its data value, and whether to label it. It calls <code class="ic">calculateBarHeight</code> to get the height, draws the bar growing <em>upward</em> from a baseline, and displays the data value just above the bar <em>when appropriate</em>.</p>
+    <div class="co co-gold" style="margin:10px 0;">
+      <span class="co-t">the twist</span>
+      <p style="margin:0;">Bars grow <strong>up</strong>, but y increases <strong>down</strong> the screen. So a bar sitting on baseline <code class="ic">baseY</code> has its <em>top-left corner</em> at <code class="ic">baseY - barHeight</code> &mdash; that's the value you pass to <code class="ic">rect()</code>.</p>
+    </div>
+    <button class="btn btn-blue rvbtn">reveal solution</button>
+    <div class="ans">
+      <pre class="code">int calculateBarHeight(int dataValue, int pixelsPerUnit) {
+  int barHeight = dataValue * pixelsPerUnit;
+  return barHeight;
+}
+
+void drawDataBar(int x, int baseY, int barWidth, int dataValue, boolean showValue) {
+  int barHeight = calculateBarHeight(dataValue, 4);
+  rect(x, baseY - barHeight, barWidth, barHeight);
+  if (showValue == true) {
+    text(dataValue, x, baseY - barHeight - 5);
+  }
+}</pre>
+      <p style="font-size:.92rem;margin:0;">Key moves: the calculator <strong>returns</strong> a value instead of printing it; the drawer's fifth parameter is a <code class="ic">boolean</code>; the call's result is <strong>caught in a variable</strong>; the upward growth comes from subtracting the height from the baseline (<code class="ic">baseY - barHeight</code>); and the <code class="ic">if</code> gates only the label &mdash; not the bar. Notice the call passes a literal <code class="ic">4</code> as an argument &mdash; arguments can be plain values, not just variables.</p>
+    </div>
+  </div>
+
+  <div class="co co-blue">
+    <span class="co-t">free-response checklist</span>
+    <p>Before you move on, scan your function for the big five: <strong>return type</strong> correct? <strong>Every parameter typed</strong>, with commas? <strong>Curly braces</strong> paired? <strong>Semicolons</strong> on statements? If it returns something &mdash; is there a <strong><code class="ic">return</code> on every path</strong> through the code?</p>
+  </div>
+</section>
+
+<section class="sec rv" id="cheat">
+  <span class="tag"><span class="n">15</span>The night before</span>
+  <h2>Cheat Sheet</h2>
+  <p>Everything on one card. If you can explain each line out loud, you're ready.</p>
+
+  <pre class="recipe"><span class="recipe-title">midterm survival card &#9998;</span>
+// NUMBER SYSTEMS
+binary place values (right to left): 1 2 4 8 16 32 64 128 ...
+binary -&gt; decimal: add place values where bits are 1
+decimal -&gt; binary: subtract biggest powers of 2 that fit
+hex digit = exactly 4 bits        A=10 B=11 C=12 D=13 E=14 F=15
+hex exists because: compact, human-readable shorthand for binary
+add 0 to RIGHT of binary  -&gt; value doubles (x2)
+add 0 to LEFT of decimal  -&gt; value unchanged
+n bits -&gt; 2^n values, max value = 2^n - 1
+1 byte = 8 bits = 256 values (0-255)
+2 bytes = 16 bits = 65,536 values (max 65,535) = 4 hex digits
+RGB: 3 channels x 8 bits = 24 bits -&gt; 16,777,216 colors
+
+// DATA TYPES (smallest that fits = most efficient)
+byte(1B) short(2B) int(4B) long(8B) | float(4B) double(8B)
+char 'A' = 1 byte | String "text" | boolean: 1 bit, stored as 1 byte
+overflow: value &gt; type max -&gt; wraps around (huge counter goes negative)
+
+// NAMING: rules vs style
+RULES: one word, letters/digits/_ only, starts with letter, not reserved
+STYLE: camelCase (encouraged, never required) | digits OK after 1st char
+
+// FUNCTIONS
+define = write the recipe (nothing runs)   call = actually run it
+void name(int a, int b) { }   // type EVERY parameter, commas between
+return sends a value back -&gt; catch it:  int p = calcPerim(w, h);
+
+// CONDITIONALS
+checks top-down, FIRST true branch wins, rest skipped
+&gt;= ladders: biggest threshold first | else goes LAST
+&amp;&amp; needs both true | || needs at least one
+independent decisions -&gt; separate ifs (not nested)
+
+// DRAWING
+size(width, height)  // width FIRST
+background(0)=black  background(255)=white  paints over everything
+fill() BEFORE the shape it colors    fill(255,0,0)=red fill(0,0,255)=blue
+(0,0) = TOP-LEFT corner, y grows DOWN    circle(x, y, diameter)
+
+// BIG IDEAS
+lossless = exact restore, smaller savings (docs, code)
+lossy    = detail gone forever, big savings, faster send (video, photos)
+data = the content | metadata = data ABOUT data (who, when, how many)</pre>
+</section>
+
+</main>
+
+<footer class="foot">
+  <span class="foot-note">cramming is lossy compression for your brain &mdash; study a little tonight, and a little tomorrow. &#9998;</span>
+</footer>
+
+</div>
+<script>
+/* ============ CORE: reveal, scrollspy, checklist, answer toggles ============ */
+(function(){
+  // fade-in sections
+  var ro = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('vis'); ro.unobserve(e.target); } });
+  }, {threshold: 0.06});
+  document.querySelectorAll('.rv').forEach(function(el){ ro.observe(el); });
+
+  // scrollspy
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc-link'));
+  var secs = links.map(function(l){ return document.querySelector(l.getAttribute('href')); });
+  function spy(){
+    var y = window.scrollY + 140, cur = 0;
+    secs.forEach(function(s, i){ if(s && s.offsetTop <= y) cur = i; });
+    links.forEach(function(l, i){ l.classList.toggle('on', i === cur); });
+  }
+  window.addEventListener('scroll', spy, {passive:true});
+  spy();
+
+  // skill checklist
+  var cks = document.querySelectorAll('#ckList .ck'), ckCount = document.getElementById('ckCount');
+  function ckUp(){
+    var n = document.querySelectorAll('#ckList .ck.done').length;
+    ckCount.textContent = n + ' / ' + cks.length + ' checked' + (n === cks.length ? ' — ready! \uD83C\uDF89' : '');
+  }
+  cks.forEach(function(c){ c.addEventListener('click', function(){ c.classList.toggle('done'); ckUp(); }); });
+  ckUp();
+
+  // reveal-answer cards
+  document.querySelectorAll('.rev').forEach(function(card){
+    var btn = card.querySelector('.rvbtn');
+    if(!btn) return;
+    var orig = btn.textContent;
+    btn.addEventListener('click', function(){
+      card.classList.toggle('open');
+      btn.textContent = card.classList.contains('open') ? 'hide answer' : orig;
+    });
+  });
+})();
+/* ============ NUMBER SYSTEMS ============ */
+(function(){
+  // ---- bit flipper ----
+  var bits = [0,0,0,0,0,0,0,0], pvs = [128,64,32,16,8,4,2,1];
+  var row = document.getElementById('bitRow'), out = document.getElementById('bitVal');
+  function bitsDraw(){
+    row.innerHTML = '';
+    bits.forEach(function(b, i){
+      var d = document.createElement('div');
+      d.className = 'bit' + (b ? ' onbit' : '');
+      d.innerHTML = '<span class="pv">' + pvs[i] + '</span><span class="bv">' + b + '</span>';
+      d.addEventListener('click', function(){ bits[i] = 1 - bits[i]; bitsDraw(); });
+      row.appendChild(d);
+    });
+    var v = bits.reduce(function(s, b, i){ return s + b * pvs[i]; }, 0);
+    out.textContent = bits.join('') + ' = ' + v;
+  }
+  document.getElementById('bitZero').addEventListener('click', function(){ bits = [0,0,0,0,0,0,0,0]; bitsDraw(); });
+  document.getElementById('bitRand').addEventListener('click', function(){ bits = bits.map(function(){ return Math.random() < 0.5 ? 0 : 1; }); bitsDraw(); });
+  bitsDraw();
+
+  function fb(el, ok, msg){ el.textContent = msg; el.className = 'status ' + (ok ? 'good' : 'bad'); }
+
+  // ---- binary -> decimal practice ----
+  var b2dAns = 42;
+  var b2dProb = document.getElementById('b2dProb'), b2dIn = document.getElementById('b2dIn'), b2dFb = document.getElementById('b2dFb');
+  function b2dGen(){
+    b2dAns = 33 + Math.floor(Math.random() * 222); // 6-8 digit binary
+    b2dProb.textContent = b2dAns.toString(2);
+    b2dIn.value = ''; b2dFb.textContent = 'Type your answer and hit check.'; b2dFb.className = 'status';
+  }
+  document.getElementById('b2dChk').addEventListener('click', function(){
+    var g = parseInt(b2dIn.value, 10);
+    if(isNaN(g)){ fb(b2dFb, false, 'Enter a decimal number first.'); return; }
+    if(g === b2dAns){ fb(b2dFb, true, '\u2713 Correct! ' + b2dProb.textContent + ' = ' + b2dAns + '.'); }
+    else { fb(b2dFb, false, 'Not yet \u2014 add up the place values of each 1. (You said ' + g + '.)'); }
+  });
+  document.getElementById('b2dNew').addEventListener('click', b2dGen);
+  b2dGen();
+
+  // ---- decimal -> binary walkthrough ----
+  var d2bN = 181, d2bStep = 0, d2bRem = 181, d2bBits = '';
+  var d2bNum = document.getElementById('d2bNum'), d2bSteps = document.getElementById('d2bSteps'), d2bOut = document.getElementById('d2bOut');
+  function d2bReset(n){
+    d2bN = n; d2bRem = n; d2bStep = 0; d2bBits = '';
+    d2bNum.textContent = n; d2bSteps.innerHTML = '';
+    d2bOut.textContent = 'Hit \u201cnext step\u201d to walk through each place value, biggest to smallest.';
+    d2bOut.className = 'status';
+  }
+  document.getElementById('d2bNext').addEventListener('click', function(){
+    if(d2bStep >= 8){ return; }
+    var pv = pvs[d2bStep], fits = pv <= d2bRem;
+    var r = document.createElement('div'); r.className = 'srow hot';
+    if(fits){
+      r.innerHTML = 'does <b>' + pv + '</b> fit into ' + d2bRem + '?&nbsp; yes \u2192 write <span class="b1">1</span>, ' + d2bRem + ' \u2212 ' + pv + ' = ' + (d2bRem - pv) + ' left';
+      d2bRem -= pv; d2bBits += '1';
+    } else {
+      r.innerHTML = 'does <b>' + pv + '</b> fit into ' + d2bRem + '?&nbsp; no \u2192 write <span class="b0">0</span>';
+      d2bBits += '0';
+    }
+    Array.prototype.forEach.call(d2bSteps.children, function(c){ c.classList.remove('hot'); });
+    d2bSteps.appendChild(r);
+    d2bStep++;
+    if(d2bStep === 8){
+      var trimmed = d2bBits.replace(/^0+/, '') || '0';
+      fb(d2bOut, true, '\u2713 Done: ' + d2bN + ' = ' + d2bBits + ' (or ' + trimmed + ' without the leading zeros).');
+    }
+  });
+  document.getElementById('d2bNew').addEventListener('click', function(){ d2bReset(70 + Math.floor(Math.random() * 180)); });
+  d2bReset(181);
+
+  // ---- decimal -> binary practice ----
+  var d2bpAns = 77;
+  var d2bpProb = document.getElementById('d2bpProb'), d2bpIn = document.getElementById('d2bpIn'), d2bpFb = document.getElementById('d2bpFb');
+  function d2bpGen(){
+    d2bpAns = 25 + Math.floor(Math.random() * 200);
+    d2bpProb.textContent = d2bpAns;
+    d2bpIn.value = ''; d2bpFb.textContent = 'Type the binary version and hit check.'; d2bpFb.className = 'status';
+  }
+  document.getElementById('d2bpChk').addEventListener('click', function(){
+    var g = d2bpIn.value.trim();
+    if(!/^[01]+$/.test(g)){ fb(d2bpFb, false, 'Binary uses only 1s and 0s.'); return; }
+    if(parseInt(g, 2) === d2bpAns){ fb(d2bpFb, true, '\u2713 Correct! ' + d2bpAns + ' = ' + d2bpAns.toString(2) + '.'); }
+    else { fb(d2bpFb, false, 'Not yet \u2014 your binary equals ' + parseInt(g, 2) + '. Try the subtract-the-place-values walkthrough above.'); }
+  });
+  document.getElementById('d2bpNew').addEventListener('click', d2bpGen);
+  d2bpGen();
+
+  // ---- hex explorer ----
+  var hexIn = document.getElementById('hexIn'), hexOut = document.getElementById('hexOut');
+  function hexDraw(){
+    var v = hexIn.value.toUpperCase().replace(/[^0-9A-F]/g, '');
+    hexIn.value = v; hexOut.innerHTML = '';
+    if(!v){ hexOut.innerHTML = '<span style="font-family:\'Caveat\',cursive;font-size:1.2rem;color:#908d7c;">type a hex number above\u2026</span>'; return; }
+    var full = '';
+    v.split('').forEach(function(ch){
+      var bin = parseInt(ch, 16).toString(2).padStart(4, '0');
+      full += bin;
+      var d = document.createElement('div'); d.className = 'nib';
+      d.innerHTML = '<span class="hx">' + ch + '</span><span class="bn">' + bin + '</span>';
+      hexOut.appendChild(d);
+    });
+    var t = document.createElement('div');
+    t.style.cssText = 'flex-basis:100%;font-family:\'IBM Plex Mono\',monospace;font-size:.92rem;margin-top:4px;';
+    t.innerHTML = 'glued together: <b>' + full + '</b> &nbsp;(= ' + parseInt(v, 16).toLocaleString() + ' in decimal)';
+    hexOut.appendChild(t);
+  }
+  hexIn.addEventListener('input', hexDraw);
+  hexIn.value = '2E7C'; hexDraw();
+
+  // ---- hex -> binary practice ----
+  var hxpAns = 0x5D;
+  var hxpProb = document.getElementById('hxpProb'), hxpIn = document.getElementById('hxpIn'), hxpFb = document.getElementById('hxpFb');
+  function hxpGen(){
+    hxpAns = 16 + Math.floor(Math.random() * 240);
+    hxpProb.textContent = hxpAns.toString(16).toUpperCase();
+    hxpIn.value = ''; hxpFb.textContent = 'Translate each hex digit to 4 bits, then glue them together.'; hxpFb.className = 'status';
+  }
+  document.getElementById('hxpChk').addEventListener('click', function(){
+    var g = hxpIn.value.trim();
+    if(!/^[01]+$/.test(g)){ fb(hxpFb, false, 'Binary uses only 1s and 0s.'); return; }
+    if(parseInt(g, 2) === hxpAns){ fb(hxpFb, true, '\u2713 Correct! ' + hxpProb.textContent + ' = ' + hxpAns.toString(2).padStart(8, '0') + '.'); }
+    else { fb(hxpFb, false, 'Not yet \u2014 take it one hex digit at a time: each becomes exactly 4 bits.'); }
+  });
+  document.getElementById('hxpNew').addEventListener('click', hxpGen);
+  hxpGen();
+})();
+/* ============ NUMBER TRICKS, RGB, TYPES, OVERFLOW ============ */
+(function(){
+  function fb(el, ok, msg){ el.textContent = msg; el.className = 'status ' + (ok ? 'good' : 'bad'); }
+
+  // ---- shift game: binary ----
+  var sb = '1011';
+  var shBin = document.getElementById('shBin'), shBinV = document.getElementById('shBinV'), shBinFb = document.getElementById('shBinFb');
+  function sbDraw(){ shBin.textContent = sb; shBinV.textContent = parseInt(sb, 2); }
+  document.getElementById('shBinR').addEventListener('click', function(){
+    if(sb.length >= 12) return;
+    var before = parseInt(sb, 2); sb += '0'; sbDraw();
+    fb(shBinFb, true, 'Rightmost 0 \u2192 value DOUBLED: ' + before + ' \u2192 ' + parseInt(sb, 2) + '. Every digit slid into a place worth 2\u00d7 more.');
+  });
+  document.getElementById('shBinL').addEventListener('click', function(){
+    if(sb.length >= 12) return;
+    sb = '0' + sb; sbDraw();
+    fb(shBinFb, false, 'Leftmost 0 \u2192 NO change. Leading zeros never add value, in any base.');
+  });
+  document.getElementById('shBinReset').addEventListener('click', function(){ sb = '1011'; sbDraw(); shBinFb.textContent = 'Watch what each button does to the value.'; shBinFb.className = 'status'; });
+  sbDraw();
+
+  // ---- shift game: decimal ----
+  var sd = '47';
+  var shDec = document.getElementById('shDec'), shDecV = document.getElementById('shDecV'), shDecFb = document.getElementById('shDecFb');
+  function sdDraw(){ shDec.textContent = sd; shDecV.textContent = parseInt(sd, 10).toLocaleString(); }
+  document.getElementById('shDecR').addEventListener('click', function(){
+    if(sd.length >= 9) return;
+    var before = parseInt(sd, 10); sd += '0'; sdDraw();
+    fb(shDecFb, true, 'Rightmost 0 \u2192 value \u00d7 10: ' + before.toLocaleString() + ' \u2192 ' + parseInt(sd, 10).toLocaleString() + '. Same trick \u2014 multiply by the BASE.');
+  });
+  document.getElementById('shDecL').addEventListener('click', function(){
+    if(sd.length >= 9) return;
+    sd = '0' + sd; sdDraw();
+    fb(shDecFb, false, 'Leading zero \u2192 no change. 047 is still 47.');
+  });
+  document.getElementById('shDecReset').addEventListener('click', function(){ sd = '47'; sdDraw(); shDecFb.textContent = 'Same trick, different base.'; shDecFb.className = 'status'; });
+  sdDraw();
+
+  // ---- how-many-values slider ----
+  var bitSl = document.getElementById('bitSl'), bitSlV = document.getElementById('bitSlV'), bitSlOut = document.getElementById('bitSlOut');
+  function bitsCalc(){
+    var n = parseInt(bitSl.value, 10), total = Math.pow(2, n);
+    bitSlV.textContent = n;
+    var msg = n + (n === 1 ? ' bit' : ' bits') + ' \u2192 2' + sup(n) + ' = ' + total.toLocaleString() + ' possible values, from 0 through ' + (total - 1).toLocaleString() + '.';
+    if(n === 8) msg += ' That\u2019s exactly 1 byte \u2014 or 2 hex digits.';
+    if(n === 16) msg += ' That\u2019s 2 bytes = 4 hex digits \u2014 memorize 65,536 values / max 65,535.';
+    if(n === 24) msg += ' That\u2019s 3 bytes \u2014 the size of one RGB color. Look familiar?';
+    bitSlOut.textContent = msg; bitSlOut.className = 'status good';
+  }
+  function sup(n){
+    var m = {'0':'\u2070','1':'\u00b9','2':'\u00b2','3':'\u00b3','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079'};
+    return String(n).split('').map(function(c){ return m[c]; }).join('');
+  }
+  bitSl.addEventListener('input', bitsCalc);
+  bitsCalc();
+
+  // ---- RGB mixer ----
+  var rSl = document.getElementById('rSl'), gSl = document.getElementById('gSl'), bSl = document.getElementById('bSl');
+  var rV = document.getElementById('rV'), gV = document.getElementById('gV'), bV = document.getElementById('bV');
+  var rgbSw = document.getElementById('rgbSw'), rgbOut = document.getElementById('rgbOut');
+  function rgb(){
+    var r = +rSl.value, g = +gSl.value, b = +bSl.value;
+    rV.textContent = r; gV.textContent = g; bV.textContent = b;
+    rgbSw.style.background = 'rgb(' + r + ',' + g + ',' + b + ')';
+    var hx = function(n){ return n.toString(16).toUpperCase().padStart(2, '0'); };
+    rgbOut.innerHTML = '<code style="font-family:\'IBM Plex Mono\',monospace;">fill(' + r + ', ' + g + ', ' + b + ');</code> &nbsp;\u2192 hex <b>#' + hx(r) + hx(g) + hx(b) + '</b> \u2014 one byte per channel, 256 \u00d7 256 \u00d7 256 = 16,777,216 colors total.';
+    rgbOut.className = 'status';
+  }
+  [rSl, gSl, bSl].forEach(function(s){ s.addEventListener('input', rgb); });
+  rgb();
+
+  // ---- naming game ----
+  var names = [
+    {n:'playerScore', ok:true,  why:'One word, starts with a letter, no special characters. The lowercase-first camelCase is style, not law \u2014 but this follows it too.'},
+    {n:'2ndPlace',    ok:false, why:'Names may CONTAIN numbers, but may not BEGIN with one.'},
+    {n:'total points',ok:false, why:'No spaces allowed \u2014 a name must be one word. totalPoints would be perfect.'},
+    {n:'_backup',     ok:true,  why:'Starting with an underscore is legal (letter or underscore both work).'},
+    {n:'high-score',  ok:false, why:'A hyphen is punctuation \u2014 only the underscore is allowed. Java would read this as high minus score!'},
+    {n:'year2026',    ok:true,  why:'Numbers are fine anywhere except the first character.'},
+    {n:'my$money',    ok:false, why:'$ is a special character. Underscore is the only symbol allowed.'},
+    {n:'FinalGrade',  ok:true,  why:'Legal! Starting uppercase breaks the camelCase CONVENTION, but conventions are style choices \u2014 not required rules.'},
+    {n:'width',       ok:false, why:'Reserved! Processing already uses width (along with height, mouseX, mouseY, color, size\u2026). Picking it causes conflicts.'},
+    {n:'numIPs_v2',   ok:true,  why:'Letters, numbers, and underscores, starting with a letter \u2014 all legal.'}
+  ];
+  var nmI = 0, nmRight = 0, nmDone = 0, nmAnswered = false;
+  var nmName = document.getElementById('nmName'), nmFb = document.getElementById('nmFb'), nmScore = document.getElementById('nmScore');
+  var nmValid = document.getElementById('nmValid'), nmInvalid = document.getElementById('nmInvalid'), nmNext = document.getElementById('nmNext');
+  function nmShow(){
+    nmAnswered = false;
+    nmName.textContent = names[nmI].n;
+    nmFb.textContent = 'Click your verdict.'; nmFb.className = 'status';
+    nmNext.style.display = 'none'; nmValid.style.display = ''; nmInvalid.style.display = '';
+  }
+  function nmGuess(saidValid){
+    if(nmAnswered) return;
+    nmAnswered = true; nmDone++;
+    var item = names[nmI], right = (saidValid === item.ok);
+    if(right) nmRight++;
+    fb(nmFb, right, (right ? '\u2713 Correct \u2014 ' : '\u2717 Actually ' + (item.ok ? 'VALID' : 'INVALID') + ' \u2014 ') + item.why);
+    nmScore.textContent = nmRight + ' / ' + nmDone;
+    nmValid.style.display = 'none'; nmInvalid.style.display = 'none'; nmNext.style.display = '';
+  }
+  nmValid.addEventListener('click', function(){ nmGuess(true); });
+  nmInvalid.addEventListener('click', function(){ nmGuess(false); });
+  nmNext.addEventListener('click', function(){ nmI = (nmI + 1) % names.length; nmShow(); });
+  nmShow();
+
+  // ---- type picker ----
+  var bank = ['byte','short','int','long','float','double','char','boolean','String'];
+  var scenarios = [
+    {c:'daysInMonth = 30;',                a:'byte',    why:'30 fits easily in one byte (0\u2013255). Smallest container wins.'},
+    {c:'schoolPopulation = 1850;',          a:'short',   why:'Too big for a byte (max 255), fits in a short (0\u201365,535) \u2014 no need for a full int.'},
+    {c:'cityPopulation = 8400000;',         a:'int',     why:'8.4 million blows past a short\u2019s 65,535 but fits in an int (up to ~4.29 billion).'},
+    {c:'worldVideoViews = 9500000000;',     a:'long',    why:'9.5 billion exceeds even an int\u2019s ~4.29 billion ceiling \u2014 this needs a long.'},
+    {c:'gasPrice = 3.49;',                  a:'float',   why:'A decimal point means a floating-point type; float covers everyday money values.'},
+    {c:'middleInitial = \u0027K\u0027;',    a:'char',    why:'Exactly ONE character in single quotes \u2192 char (1 byte). A String would waste space.'},
+    {c:'hasSubmitted = false;',             a:'boolean', why:'true/false values are exactly what boolean exists for.'},
+    {c:'teamName = \u201cWildcats\u201d;',   a:'String',  why:'Multiple characters in double quotes \u2192 String. char only holds ONE character.'}
+  ];
+  var tpI = 0, tpRight = 0, tpDone = 0, tpAnswered = false;
+  var tpScn = document.getElementById('tpScn'), tpBtns = document.getElementById('tpBtns'), tpFb = document.getElementById('tpFb'), tpScore = document.getElementById('tpScore');
+  function tpShow(){
+    tpAnswered = false;
+    tpScn.textContent = scenarios[tpI].c;
+    tpFb.textContent = 'Which type stores this with the fewest bits?'; tpFb.className = 'status';
+    tpBtns.innerHTML = '';
+    bank.forEach(function(t){
+      var b = document.createElement('button'); b.className = 'btn'; b.textContent = t;
+      b.addEventListener('click', function(){ tpGuess(t, b); });
+      tpBtns.appendChild(b);
+    });
+  }
+  function tpGuess(t, btn){
+    if(tpAnswered) return;
+    tpAnswered = true; tpDone++;
+    var s = scenarios[tpI], right = (t === s.a);
+    if(right) tpRight++;
+    fb(tpFb, right, (right ? '\u2713 ' + s.a + ' it is. ' : '\u2717 Best answer: ' + s.a + '. ') + s.why);
+    tpScore.textContent = tpRight + ' / ' + tpDone;
+    var nx = document.createElement('button'); nx.className = 'btn btn-gold'; nx.textContent = 'next \u2192';
+    nx.style.cssText = 'background:var(--gold-lt);';
+    nx.addEventListener('click', function(){ tpI = (tpI + 1) % scenarios.length; tpShow(); });
+    tpBtns.innerHTML = ''; tpBtns.appendChild(nx);
+  }
+  tpShow();
+
+  // ---- overflow odometer ----
+  var steps = 0, MAX = 65535, autoTimer = null;
+  var odoVal = document.getElementById('odoVal'), odoBar = document.getElementById('odoBar'), odoFb = document.getElementById('odoFb');
+  var odoAuto = document.getElementById('odoAuto');
+  function odoDraw(blown){
+    odoVal.textContent = steps.toLocaleString();
+    odoVal.classList.toggle('blown', !!blown);
+    var pct = steps / MAX * 100;
+    odoBar.style.width = pct + '%';
+    odoBar.classList.toggle('hotbar', pct > 85);
+    if(blown){
+      fb(odoFb, false, '\uD83D\uDCA5 OVERFLOW! The counter passed 65,535 and wrapped back around \u2014 your steps look erased. In Java\u2019s signed ints, the same wrap shows up as a sudden NEGATIVE number.');
+    } else if(pct > 85){
+      odoFb.textContent = steps.toLocaleString() + ' steps \u2014 getting close to the 65,535 ceiling\u2026'; odoFb.className = 'status';
+    } else {
+      odoFb.textContent = steps.toLocaleString() + ' of 65,535 max. Keep walking.'; odoFb.className = 'status';
+    }
+  }
+  function walk(){
+    var before = steps;
+    steps += 7500;
+    var blown = steps > MAX;
+    if(blown){ steps = steps % (MAX + 1); if(autoTimer){ clearInterval(autoTimer); autoTimer = null; odoAuto.textContent = 'auto-walk'; } }
+    odoDraw(blown);
+  }
+  document.getElementById('odoAdd').addEventListener('click', walk);
+  odoAuto.addEventListener('click', function(){
+    if(autoTimer){ clearInterval(autoTimer); autoTimer = null; odoAuto.textContent = 'auto-walk'; }
+    else { odoAuto.textContent = 'stop'; autoTimer = setInterval(walk, 380); }
+  });
+  document.getElementById('odoReset').addEventListener('click', function(){
+    if(autoTimer){ clearInterval(autoTimer); autoTimer = null; odoAuto.textContent = 'auto-walk'; }
+    steps = 0; odoDraw(false);
+    odoFb.textContent = 'The counter has 65,536 possible values: 0 through 65,535.'; odoFb.className = 'status';
+  });
+  odoDraw(false);
+})();
+/* ============ FUNCTIONS + CONDITIONALS ============ */
+(function(){
+  // ---- function machine ----
+  var cvs = document.getElementById('fnCanvas'), ctx = cvs.getContext('2d');
+  var fnX = document.getElementById('fnX'), fnY = document.getElementById('fnY'), fnD = document.getElementById('fnD');
+  var fnLog = document.getElementById('fnLog'), swRow = document.getElementById('fnSwRow');
+  var palette = [
+    {name:'coral', hex:'#e8725a'},
+    {name:'teal',  hex:'#4a9b8e'},
+    {name:'gold',  hex:'#d4a83a'},
+    {name:'blue',  hex:'#4a7fc1'}
+  ];
+  var curColor = palette[0], calls = 0;
+  palette.forEach(function(p, i){
+    var s = document.createElement('button');
+    s.className = 'sw' + (i === 0 ? ' sel' : '');
+    s.style.background = p.hex; s.title = p.name; s.setAttribute('aria-label', p.name);
+    s.addEventListener('click', function(){
+      curColor = p;
+      Array.prototype.forEach.call(swRow.children, function(c){ c.classList.remove('sel'); });
+      s.classList.add('sel');
+    });
+    swRow.appendChild(s);
+  });
+  function clearCv(){
+    ctx.setTransform(2, 0, 0, 2, 0, 0); // 2x scale for crispness
+    ctx.clearRect(0, 0, 480, 260);
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 480, 260);
+  }
+  function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, isNaN(v) ? lo : v)); }
+  // drawBalloon: defined ONCE, called many times — that's the lesson
+  function drawBalloon(x, y, d, hex){
+    ctx.strokeStyle = '#1a1a2e'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(x, y + d/2); ctx.lineTo(x, y + d/2 + d*0.6); ctx.stroke(); // string
+    ctx.fillStyle = hex;
+    ctx.beginPath(); ctx.ellipse(x, y, d/2, d/2 * 1.12, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,.45)';
+    ctx.beginPath(); ctx.ellipse(x - d*0.16, y - d*0.18, d*0.11, d*0.16, -0.5, 0, Math.PI * 2); ctx.fill();
+  }
+  document.getElementById('fnCall').addEventListener('click', function(){
+    var x = clamp(parseInt(fnX.value, 10), 20, 460);
+    var y = clamp(parseInt(fnY.value, 10), 20, 180);
+    var d = clamp(parseInt(fnD.value, 10), 20, 120);
+    fnX.value = x; fnY.value = y; fnD.value = d;
+    drawBalloon(x, y, d, curColor.hex);
+    calls++;
+    var line = 'drawBalloon(' + x + ', ' + y + ', ' + d + ', ' + curColor.name + ');';
+    fnLog.innerHTML = (calls === 1 ? '' : fnLog.innerHTML + '<br>') + '<code style="font-family:\'IBM Plex Mono\',monospace;">' + line + '</code>' +
+      (calls === 1 ? ' &nbsp;\u2190 one definition, first call' : '');
+    fnLog.className = 'status good';
+  });
+  document.getElementById('fnClear').addEventListener('click', function(){
+    clearCv(); calls = 0;
+    fnLog.textContent = 'Your calls will appear here, exactly as code.'; fnLog.className = 'status';
+  });
+  clearCv();
+
+  // ---- conditional ladder ----
+  var ageSl = document.getElementById('ageSl'), ageV = document.getElementById('ageV');
+  var ladGood = document.getElementById('ladGood'), ladBad = document.getElementById('ladBad'), ladOut = document.getElementById('ladOut');
+  var goodRows = [
+    {txt:'if (age >= 65) {  price = 12;  }        // senior',  test:function(a){ return a >= 65; }, price:12, label:'senior'},
+    {txt:'} else if (age >= 13) {  price = 20;  } // adult',   test:function(a){ return a >= 13; }, price:20, label:'adult'},
+    {txt:'} else {  price = 8;  }                 // child',   test:function(){ return true; },     price:8,  label:'child'}
+  ];
+  var badRows = [
+    {txt:'if (age >= 13) {  price = 20;  }        // adult',   test:function(a){ return a >= 13; }, price:20, label:'adult'},
+    {txt:'} else if (age >= 65) {  price = 12;  } // senior',  test:function(a){ return a >= 65; }, price:12, label:'senior'},
+    {txt:'} else {  price = 8;  }                 // child',   test:function(){ return true; },     price:8,  label:'child'}
+  ];
+  function runLadder(rows, el, age){
+    el.innerHTML = '';
+    var fired = -1, result = null;
+    rows.forEach(function(r, i){
+      if(fired === -1 && r.test(age)){ fired = i; result = r; }
+      var d = document.createElement('span');
+      d.className = 'lr' + (i === fired ? ' fire' : (fired !== -1 && i > fired ? ' dead' : ''));
+      d.textContent = r.txt;
+      el.appendChild(d);
+    });
+    return result;
+  }
+  function ladder(){
+    var age = parseInt(ageSl.value, 10);
+    ageV.textContent = age;
+    var g = runLadder(goodRows, ladGood, age);
+    var b = runLadder(badRows, ladBad, age);
+    if(g.price === b.price){
+      ladOut.textContent = 'Age ' + age + ': both ladders agree \u2014 $' + g.price + ' (' + g.label + '). Slide past 65 to watch them split.';
+      ladOut.className = 'status good';
+    } else {
+      ladOut.innerHTML = 'Age ' + age + ': correct ladder says <b>$' + g.price + ' (' + g.label + ')</b>, but the broken one charges <b>$' + b.price + ' (' + b.label + ')</b> \u2014 because <code class="ic">age >= 13</code> is true for a ' + age + '-year-old, fires FIRST, and the senior branch never gets checked.';
+      ladOut.className = 'status bad';
+    }
+  }
+  ageSl.addEventListener('input', ladder);
+  ladder();
+})();
+/* ============ DRAWING PREDICTOR + DATA/METADATA ============ */
+(function(){
+  function fb(el, ok, msg){ el.innerHTML = msg; el.className = 'status ' + (ok ? 'good' : 'bad'); }
+
+  // ---- sketch predictor ----
+  var st = { wide:true, bg:0, fc:'255,0,0', fillFirst:true };
+  var fcHex = { '255,0,0':'#ff0000', '0,255,0':'#00ff00', '0,0,255':'#0000ff' };
+  var szWide = document.getElementById('szWide'), szTall = document.getElementById('szTall');
+  var bgWhite = document.getElementById('bgWhite'), bgBlack = document.getElementById('bgBlack');
+  var ordToggle = document.getElementById('ordToggle');
+  var dwCode = document.getElementById('dwCode'), dwCanvas = document.getElementById('dwCanvas'), dwFb = document.getElementById('dwFb');
+  var dctx = dwCanvas.getContext('2d');
+
+  function render(){
+    szWide.classList.toggle('sel', st.wide);  szTall.classList.toggle('sel', !st.wide);
+    bgWhite.classList.toggle('sel', st.bg === 255);  bgBlack.classList.toggle('sel', st.bg === 0);
+    document.querySelectorAll('[data-fc]').forEach(function(b){ b.classList.toggle('sel', b.getAttribute('data-fc') === st.fc); });
+    ordToggle.innerHTML = st.fillFirst ? 'order: fill BEFORE circle \u2713' : 'order: fill AFTER circle \u26a0\ufe0f';
+
+    var w = st.wide ? 300 : 150, h = st.wide ? 150 : 300;
+    var lines = ['size(' + w + ', ' + h + ');', 'background(' + st.bg + ');'];
+    if(st.fillFirst){ lines.push('fill(' + st.fc + ');', 'circle(50, 50, 100);'); }
+    else { lines.push('circle(50, 50, 100);', 'fill(' + st.fc + ');  // too late!'); }
+    dwCode.textContent = lines.join('\n');
+
+    dwCanvas.width = w * 2; dwCanvas.height = h * 2;
+    dwCanvas.style.width = w + 'px'; dwCanvas.style.height = h + 'px';
+    dctx.setTransform(2, 0, 0, 2, 0, 0);
+    dctx.fillStyle = st.bg === 0 ? '#000000' : '#ffffff';
+    dctx.fillRect(0, 0, w, h);
+    // Processing default fill is white; a fill() AFTER the shape doesn't repaint it
+    dctx.fillStyle = st.fillFirst ? fcHex[st.fc] : '#ffffff';
+    dctx.beginPath(); dctx.arc(50, 50, 50, 0, Math.PI * 2); dctx.fill();
+    dctx.strokeStyle = '#1a1a2e'; dctx.lineWidth = 1; dctx.stroke();
+
+    var shape = st.wide ? 'a WIDE ' + w + '\u00d7' + h + ' window' : 'a TALL ' + w + '\u00d7' + h + ' window';
+    if(st.fillFirst){
+      fb(dwFb, true, shape + ', circle centered at (50, 50) \u2014 hugging the top-left because y grows downward \u2014 painted with the fill set BEFORE it.');
+    } else {
+      fb(dwFb, false, 'The classic bug: <code class="ic">fill()</code> ran AFTER the circle, so the circle kept the default fill (white). Order matters \u2014 dip the brush first, then draw.');
+    }
+  }
+  szWide.addEventListener('click', function(){ st.wide = true; render(); });
+  szTall.addEventListener('click', function(){ st.wide = false; render(); });
+  bgWhite.addEventListener('click', function(){ st.bg = 255; render(); });
+  bgBlack.addEventListener('click', function(){ st.bg = 0; render(); });
+  document.querySelectorAll('[data-fc]').forEach(function(b){
+    b.addEventListener('click', function(){ st.fc = b.getAttribute('data-fc'); render(); });
+  });
+  ordToggle.addEventListener('click', function(){ st.fillFirst = !st.fillFirst; render(); });
+  render();
+
+  // ---- data vs metadata ----
+  var items = [
+    {t:'The text of the message itself',                meta:false, why:'The message IS the content \u2014 that\u2019s the data.'},
+    {t:'The time a photo was uploaded',                 meta:true,  why:'A timestamp describes the photo; it isn\u2019t the photo. Data ABOUT data = metadata.'},
+    {t:'The video file a user posted',                  meta:false, why:'The video is the content itself \u2014 pure data.'},
+    {t:'The username of whoever posted it',             meta:true,  why:'Who posted it is information about the post, not the post.'},
+    {t:'How many comments a post received',             meta:true,  why:'A count describing the post \u2192 metadata. Great for \u201cwhich post is most popular?\u201d questions.'},
+    {t:'The caption a user typed under their photo',    meta:false, why:'The caption is content the user created \u2014 to know what they SAID, you need the data.'},
+    {t:'The GPS location stored inside an image file',  meta:true,  why:'Embedded location info describes where the photo was taken \u2014 classic metadata.'},
+    {t:'The audio of a podcast episode',                meta:false, why:'The recording is the thing itself: data.'},
+    {t:'The number of times a song has been streamed',  meta:true,  why:'A play count describes the song\u2019s use. To find \u201cmost streamed,\u201d metadata is all you need.'},
+    {t:'What topics users are posting about',           meta:false, why:'Topics live INSIDE the messages \u2014 you must read the data itself to find them. (Exam favorite!)'}
+  ];
+  var mdI = 0, mdRight = 0, mdDone = 0, mdAnswered = false;
+  var mdItem = document.getElementById('mdItem'), mdFb = document.getElementById('mdFb'), mdScore = document.getElementById('mdScore');
+  var mdData = document.getElementById('mdData'), mdMeta = document.getElementById('mdMeta'), mdNext = document.getElementById('mdNext');
+  function mdShow(){
+    mdAnswered = false;
+    mdItem.textContent = items[mdI].t;
+    mdFb.textContent = 'Content itself, or information about the content?'; mdFb.className = 'status';
+    mdNext.style.display = 'none'; mdData.style.display = ''; mdMeta.style.display = '';
+  }
+  function mdGuess(saidMeta){
+    if(mdAnswered) return;
+    mdAnswered = true; mdDone++;
+    var it = items[mdI], right = (saidMeta === it.meta);
+    if(right) mdRight++;
+    fb(mdFb, right, (right ? '\u2713 Correct \u2014 ' : '\u2717 It\u2019s ' + (it.meta ? 'METADATA' : 'DATA') + ' \u2014 ') + it.why);
+    mdScore.textContent = mdRight + ' / ' + mdDone;
+    mdData.style.display = 'none'; mdMeta.style.display = 'none'; mdNext.style.display = '';
+  }
+  mdData.addEventListener('click', function(){ mdGuess(false); });
+  mdMeta.addEventListener('click', function(){ mdGuess(true); });
+  mdNext.addEventListener('click', function(){ mdI = (mdI + 1) % items.length; mdShow(); });
+  mdShow();
+})();
+/* ============ PRACTICE QUIZ ============ */
+(function(){
+  var Q = [
+    {q:'Convert <code class="ic">101101</code> from binary to decimal.',
+     o:['45','43','53','90'], a:0,
+     why:'Place values with a 1: 32 + 8 + 4 + 1 = 45.'},
+    {q:'Convert <code class="ic">217</code> from decimal to binary.',
+     o:['11011001','11101001','10111001','11011010'], a:0,
+     why:'217 = 128 + 64 + 16 + 8 + 1 \u2192 11011001. Subtract the biggest fitting place value each time.'},
+    {q:'Convert <code class="ic">A7</code> from hexadecimal to binary.',
+     o:['10100111','10101110','11100111','10010111'], a:0,
+     why:'One hex digit \u2192 exactly 4 bits: A = 1010, 7 = 0111. Glue them: 10100111.'},
+    {q:'What happens to a binary number\u2019s value when you add a 0 to the RIGHTMOST place?',
+     o:['It doubles','It is multiplied by 10','It stays the same','It is cut in half'], a:0,
+     why:'Every digit shifts into a place worth twice as much. (In decimal the same move multiplies by 10 \u2014 by the base.)'},
+    {q:'How many distinct values can 12 bits represent?',
+     o:['4,096','4,095','2,048','144'], a:0,
+     why:'2\u00b9\u00b2 = 4,096 values \u2014 the numbers 0 through 4,095. \u201cValues\u201d counts the zero; \u201cmax value\u201d is one less.'},
+    {q:'A computer stores each RGB channel in one byte. Why can it show about 16.7 million colors?',
+     o:['256 \u00d7 256 \u00d7 256 combinations of red, green, and blue','Because 3 bytes = 16.7 million bits','Each pixel stores 16.7 million bytes','Monitors mix 16.7 million primary colors'], a:0,
+     why:'Each channel has 2\u2078 = 256 levels; three independent channels give 256\u00b3 = 16,777,216 combinations.'},
+    {q:'Which of these is a VALID variable name?',
+     o:['score_2','3rdBase','final score','high-five'], a:0,
+     why:'Letters, digits, and underscores only, and it can\u2019t start with a digit. The others break the no-leading-digit, no-space, and no-punctuation rules.'},
+    {q:'Which data type most efficiently stores <code class="ic">attendance = 40000;</code>?',
+     o:['short','byte','int','long'], a:0,
+     why:'40,000 is past a byte\u2019s 255 but inside a short\u2019s 0\u201365,535 range \u2014 the smallest container that fits wins.'},
+    {q:'A game\u2019s lifetime coin counter climbed for months, then suddenly displayed a large NEGATIVE number. Most likely cause?',
+     o:['The count exceeded the maximum value of its data type','A rounding error in the math','Too many players were online at once','A sampling error converting analog to digital'], a:0,
+     why:'Integer overflow: the value passed the type\u2019s ceiling and wrapped around to the negative range. Counters never \u201cround\u201d into negatives.'},
+    {q:'Which line correctly DEFINES a function with two int parameters?',
+     o:['void greet(int a, int b) { ... }','void greet(int a int b) { ... }','void(int a, int b) greet { ... }','greet void(int a, int b) { ... }'], a:0,
+     why:'Return type, then name, then a parenthesized list where EACH parameter has a type and commas separate them.'},
+    {q:'Given <code class="ic">int x = 10;</code> and <code class="ic">int y = 4;</code> what does this print?<br><code class="ic">if (x &lt; y) { println(x + y); } else { println(x - y); }</code>',
+     o:['6','14','-6','Nothing is displayed'], a:0,
+     why:'10 &lt; 4 is false, so the else branch runs: 10 \u2212 4 = 6.'},
+    {q:'A messaging app compresses photo attachments before sending. Which statement is TRUE?',
+     o:['Lossy compression generally cuts transmission time more than lossless','Lossless compression makes files equal in size to the original','Lossy-compressed files can be restored to the exact original','Lossless compression saves more space than lossy'], a:0,
+     why:'Lossy throws detail away, so files get much smaller \u2192 faster to send. Lossless shrinks less but restores perfectly.'}
+  ];
+  var wrap = document.getElementById('quizWrap'), banner = document.getElementById('qzBanner');
+  var done = 0, right = 0;
+  function bannerUp(){
+    banner.textContent = 'Score: ' + right + ' / ' + done + ' answered' +
+      (done === Q.length ? (right === Q.length ? ' \u2014 perfect! \uD83C\uDFC6' : ' \u2014 revisit the sections for any misses.') : '');
+  }
+  Q.forEach(function(item, qi){
+    var card = document.createElement('div');
+    card.className = 'card'; card.style.margin = '14px 0';
+    var head = document.createElement('p');
+    head.style.cssText = 'font-weight:600;margin-bottom:10px;';
+    head.innerHTML = '<span style="font-family:\'IBM Plex Mono\',monospace;color:var(--coral);font-size:.85rem;">Q' + (qi + 1) + '</span> &nbsp;' + item.q;
+    card.appendChild(head);
+    // shuffle options, remember where the right one lands
+    var order = item.o.map(function(_, i){ return i; }).sort(function(){ return Math.random() - 0.5; });
+    var answered = false, status = document.createElement('div');
+    status.className = 'status'; status.textContent = 'Pick an answer.';
+    var btns = [];
+    order.forEach(function(oi){
+      var b = document.createElement('button');
+      b.className = 'opt'; b.innerHTML = item.o[oi];
+      b.addEventListener('click', function(){
+        if(answered) return;
+        answered = true; done++;
+        var ok = (oi === item.a);
+        if(ok) right++;
+        b.classList.add(ok ? 'right' : 'wrong');
+        btns.forEach(function(x){
+          x.disabled = true;
+          if(x !== b && x.dataset.oi == item.a) x.classList.add('right');
+        });
+        status.innerHTML = (ok ? '\u2713 Correct! ' : '\u2717 Not quite. ') + item.why;
+        status.className = 'status ' + (ok ? 'good' : 'bad');
+        bannerUp();
+      });
+      b.dataset.oi = oi;
+      btns.push(b);
+      card.appendChild(b);
+    });
+    card.appendChild(status);
+    wrap.appendChild(card);
+  });
+  bannerUp();
+})();
+</script>
+</body>
+</html>
