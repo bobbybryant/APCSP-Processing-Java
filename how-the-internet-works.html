@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Internet &amp; How It Works — CS Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================
+   DESIGN TOKENS
+   ===================================================== */
+:root {
+  --cream:   #fbfaf0;
+  --ink:     #1a1a2e;
+  --coral:   #e8725a;
+  --coral-lt:#fdf2ef;
+  --teal:    #4a9b8e;
+  --teal-lt: #eef7f5;
+  --gold:    #d4a83a;
+  --gold-lt: #fdf8ec;
+  --blue:    #4a7fc1;
+  --blue-lt: #eef2fb;
+  --grid:    rgba(100,149,237,0.10);
+  --sw:      248px;
+  --shadow:  4px 4px 0 var(--ink);
+  --shsm:    2px 2px 0 var(--ink);
+  --r:       8px;
+}
+
+/* =====================================================
+   RESET & BASE
+   ===================================================== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  color:var(--ink);
+  background-color:var(--cream);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:32px 32px;
+  min-height:100vh;
+}
+::selection{background:var(--coral);color:var(--cream);}
+.mono{font-family:'IBM Plex Mono',monospace;}
+strong{font-weight:700;}
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+.sidebar{
+  position:fixed;top:0;left:0;
+  width:var(--sw);
+  height:100vh;
+  background:rgba(251,250,240,0.97);
+  border-right:2px solid var(--ink);
+  overflow:hidden;
+  z-index:200;
+  display:flex;
+  flex-direction:column;
+}
+.sb-brand{
+  padding:22px 20px 16px;
+  border-bottom:1.5px solid rgba(26,26,46,0.15);
+}
+.sb-label{
+  font-family:'Caveat',cursive;
+  font-size:0.95rem;font-weight:700;
+  color:var(--coral);letter-spacing:0.06em;
+  text-transform:uppercase;display:block;margin-bottom:3px;
+}
+.sb-title{
+  font-family:'Fraunces',serif;
+  font-size:0.92rem;font-weight:600;
+  color:var(--ink);line-height:1.3;display:block;
+}
+.sb-nav{padding:12px 0 18px;flex:1;overflow-y:auto;}
+.sb-nav a{
+  display:flex;align-items:baseline;gap:8px;
+  padding:7px 18px 7px 17px;
+  border-left:3px solid transparent;
+  color:rgba(26,26,46,0.72);
+  text-decoration:none;
+  font-size:0.84rem;font-weight:500;
+  line-height:1.35;
+  transition:background .15s,border-color .15s,color .15s;
+}
+.sb-nav a .n{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem;color:rgba(26,26,46,0.42);
+  min-width:18px;
+}
+.sb-nav a:hover{background:rgba(232,114,90,0.07);color:var(--ink);}
+.sb-nav a.active{
+  border-left-color:var(--coral);
+  background:var(--coral-lt);
+  color:var(--ink);font-weight:700;
+}
+.sb-nav a.active .n{color:var(--coral);}
+.sb-foot{
+  padding:14px 20px 18px;
+  border-top:1.5px solid rgba(26,26,46,0.15);
+  font-family:'Caveat',cursive;
+  font-size:1.02rem;font-weight:600;
+  color:rgba(26,26,46,0.6);
+  transform:rotate(-1.5deg);
+}
+
+/* =====================================================
+   MAIN SHELL
+   ===================================================== */
+main{margin-left:var(--sw);}
+.shell{max-width:1060px;margin:0 auto;padding:54px 64px 36px;}
+
+/* =====================================================
+   HERO
+   ===================================================== */
+.hero{display:flex;align-items:center;gap:36px;margin-bottom:64px;}
+.hero-txt{flex:1;}
+.eyebrow{
+  font-family:'Caveat',cursive;
+  font-size:1.45rem;font-weight:700;
+  color:var(--coral);display:block;margin-bottom:2px;
+  transform:rotate(-1deg);transform-origin:left;
+}
+.hero h1{
+  font-family:'Fraunces',serif;
+  font-size:3.1rem;font-weight:700;
+  line-height:1.08;margin-bottom:16px;
+}
+.hero h1 em{font-style:italic;color:var(--teal);}
+.lede{font-size:1.06rem;color:rgba(26,26,46,0.8);max-width:62ch;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72rem;font-weight:600;
+  border:2px solid var(--ink);border-radius:999px;
+  padding:3px 12px;background:#fff;
+  box-shadow:var(--shsm);
+}
+.chip.c1{background:var(--coral-lt);}
+.chip.c2{background:var(--teal-lt);}
+.chip.c3{background:var(--gold-lt);}
+.chip.c4{background:var(--blue-lt);}
+.hero-art{flex:0 0 280px;}
+.hero-art svg{display:block;width:100%;height:auto;}
+@keyframes dashTravel{to{stroke-dashoffset:-60;}}
+.hero-art .wire{stroke-dasharray:5 7;animation:dashTravel 2.2s linear infinite;}
+
+/* =====================================================
+   SECTIONS
+   ===================================================== */
+.sec{margin-bottom:80px;}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.rv.on{opacity:1;transform:none;}
+.tag{
+  display:inline-flex;align-items:baseline;gap:8px;
+  font-size:0.74rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  border:2px solid var(--ink);
+  border-radius:14px 4px 16px 4px;
+  padding:4px 14px;
+  background:var(--coral-lt);
+  box-shadow:var(--shsm);
+  margin-bottom:14px;
+}
+.tag .n{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--coral);}
+.tag.t-teal{background:var(--teal-lt);}  .tag.t-teal .n{color:var(--teal);}
+.tag.t-gold{background:var(--gold-lt);}  .tag.t-gold .n{color:#a87f1c;}
+.tag.t-blue{background:var(--blue-lt);}  .tag.t-blue .n{color:var(--blue);}
+.sec h2{
+  font-family:'Fraunces',serif;
+  font-size:2rem;font-weight:600;
+  line-height:1.15;margin-bottom:14px;
+}
+.sec h3{
+  font-family:'Fraunces',serif;
+  font-size:1.28rem;font-weight:600;
+  margin:26px 0 10px;
+}
+.sec p{margin-bottom:14px;max-width:74ch;}
+.sec p:last-child{margin-bottom:0;}
+
+/* =====================================================
+   CARDS, GRIDS, CALLOUTS
+   ===================================================== */
+.card{
+  background:#fffdf8;
+  border:2px solid var(--ink);
+  border-radius:var(--r);
+  box-shadow:var(--shadow);
+  padding:22px 26px;
+  margin:18px 0;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:18px 0;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin:18px 0;}
+.grid2 .card,.grid3 .card{margin:0;}
+.card h4{
+  font-family:'Fraunces',serif;
+  font-size:1.12rem;font-weight:600;margin-bottom:8px;
+}
+.card .hd{
+  font-family:'Caveat',cursive;font-size:1.25rem;font-weight:700;
+  display:block;margin-bottom:4px;
+}
+.hd.c-coral{color:var(--coral);} .hd.c-teal{color:var(--teal);}
+.hd.c-gold{color:#a87f1c;} .hd.c-blue{color:var(--blue);}
+.co{
+  border:2px solid var(--ink);
+  border-left:10px solid var(--coral);
+  border-radius:var(--r);
+  background:var(--coral-lt);
+  box-shadow:var(--shsm);
+  padding:14px 18px;
+  margin:18px 0;
+}
+.co .co-t{
+  font-family:'Caveat',cursive;
+  font-size:1.3rem;font-weight:700;
+  color:var(--coral);display:block;margin-bottom:2px;
+}
+.co p{margin-bottom:8px;}
+.co-teal{border-left-color:var(--teal);background:var(--teal-lt);}
+.co-teal .co-t{color:var(--teal);}
+.co-gold{border-left-color:var(--gold);background:var(--gold-lt);}
+.co-gold .co-t{color:#a87f1c;}
+.co-blue{border-left-color:var(--blue);background:var(--blue-lt);}
+.co-blue .co-t{color:var(--blue);}
+table.cmp{
+  width:100%;border-collapse:collapse;margin:18px 0;
+  background:#fffdf8;border:2px solid var(--ink);
+  box-shadow:var(--shadow);font-size:0.92rem;
+}
+table.cmp th{
+  font-family:'Fraunces',serif;font-size:0.98rem;
+  background:var(--teal-lt);border-bottom:2px solid var(--ink);
+  padding:10px 14px;text-align:left;
+}
+table.cmp td{padding:9px 14px;border-bottom:1px solid rgba(26,26,46,0.14);vertical-align:top;}
+table.cmp tr:last-child td{border-bottom:none;}
+table.cmp td:first-child{font-weight:700;white-space:nowrap;}
+
+/* =====================================================
+   BUTTONS & CONTROLS
+   ===================================================== */
+.btn{
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;font-weight:700;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fff;color:var(--ink);
+  padding:8px 18px;cursor:pointer;
+  box-shadow:var(--shsm);
+  transition:transform .08s,box-shadow .08s,background .15s;
+}
+.btn:hover{background:var(--gold-lt);}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
+.btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px;}
+.btn-coral{background:var(--coral);color:#fff;}
+.btn-coral:hover{background:#d9603f;}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:#3d8a7d;}
+.btn-ghost{background:transparent;box-shadow:none;border-style:dashed;}
+.btn-ghost:hover{background:var(--blue-lt);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+input[type=range]{accent-color:var(--coral);cursor:pointer;}
+.ctl-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:12px 0;}
+.pill{
+  display:inline-block;font-family:'IBM Plex Mono',monospace;
+  font-size:0.74rem;font-weight:600;
+  border:1.5px solid var(--ink);border-radius:999px;
+  padding:1px 10px;background:#fff;
+}
+.status{
+  font-family:'IBM Plex Mono',monospace;font-size:0.85rem;
+  border:2px dashed rgba(26,26,46,0.35);border-radius:var(--r);
+  padding:10px 14px;background:rgba(255,255,255,0.7);margin-top:12px;
+}
+
+/* =====================================================
+   WIDGET: SORT GAME (sec 01)
+   ===================================================== */
+.sort-item{
+  font-family:'Fraunces',serif;font-size:1.3rem;font-weight:600;
+  text-align:center;padding:26px 20px;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:var(--gold-lt);box-shadow:var(--shadow);
+  margin-bottom:16px;min-height:96px;
+  display:flex;align-items:center;justify-content:center;
+}
+.sort-btns{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.sort-fb{margin-top:14px;font-size:0.93rem;}
+.sort-fb.ok{color:var(--teal);font-weight:700;}
+.sort-fb.no{color:var(--coral);font-weight:700;}
+
+/* =====================================================
+   WIDGET: IP BUILDER (sec 02)
+   ===================================================== */
+.ip-display{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:2.2rem;font-weight:600;text-align:center;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:var(--ink);color:var(--cream);
+  box-shadow:var(--shadow);
+  padding:14px 10px;margin-bottom:20px;letter-spacing:0.02em;
+}
+.ip-display .dot{color:var(--coral);}
+.oct-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.oct{
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fffdf8;padding:12px 14px;box-shadow:var(--shsm);
+  text-align:center;
+}
+.oct .oct-val{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:600;display:block;}
+.oct input[type=range]{width:100%;}
+.oct .oct-bin{
+  font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
+  letter-spacing:0.14em;color:var(--blue);display:block;margin-top:6px;
+}
+.oct .byte-lab{
+  font-family:'Caveat',cursive;font-size:1rem;font-weight:600;
+  color:rgba(26,26,46,0.55);display:block;
+}
+
+/* =====================================================
+   WIDGET: NETWORK MAP (sec 03)
+   ===================================================== */
+.net-wrap{
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fffdf8;box-shadow:var(--shadow);
+  padding:14px;margin:18px 0;
+}
+#netSvg{display:block;width:100%;height:auto;}
+#netSvg .edge{stroke:rgba(26,26,46,0.4);stroke-width:2.5;transition:stroke .2s,opacity .2s;}
+#netSvg .edge.dead{stroke:rgba(232,114,90,0.3);stroke-dasharray:4 6;}
+#netSvg .router{cursor:pointer;}
+#netSvg .router circle{fill:var(--teal-lt);stroke:var(--ink);stroke-width:2.5;transition:fill .2s,stroke .2s;}
+#netSvg .router:hover circle{fill:#dff0ec;}
+#netSvg .router text{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;fill:var(--ink);text-anchor:middle;pointer-events:none;}
+#netSvg .router.broken circle{fill:var(--coral-lt);stroke:var(--coral);}
+#netSvg .router .xmark{stroke:var(--coral);stroke-width:3.5;stroke-linecap:round;opacity:0;pointer-events:none;}
+#netSvg .router.broken .xmark{opacity:1;}
+
+/* two-column layout for the packets section */
+.net-split{
+  display:grid;
+  grid-template-columns:1fr 440px;
+  gap:28px;
+  align-items:start;
+}
+.net-split .net-col-widget{display:flex;flex-direction:column;gap:14px;}
+#netSvg .endpoint circle{fill:var(--gold-lt);stroke:var(--ink);stroke-width:3;}
+#netSvg .endpoint text{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;fill:var(--ink);text-anchor:middle;}
+#netSvg .pk{stroke:var(--ink);stroke-width:1.5;}
+
+/* =====================================================
+   WIDGET: SCALE / WIRES (sec 04)
+   ===================================================== */
+.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:14px;}
+.scale-box{
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fffdf8;box-shadow:var(--shsm);padding:14px;text-align:center;
+}
+.scale-box svg{display:block;width:100%;height:auto;margin-bottom:8px;}
+.scale-num{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:600;}
+.scale-num.bad{color:var(--coral);}
+.scale-num.good{color:var(--teal);}
+
+/* =====================================================
+   WIDGET: SPEED RACE (sec 05)
+   ===================================================== */
+.race-tasks{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.race-task.sel{background:var(--coral);color:#fff;}
+.race-lane{margin-bottom:14px;}
+.race-lab{display:flex;justify-content:space-between;font-size:0.88rem;font-weight:700;margin-bottom:4px;}
+.race-lab .t{font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.race-bar{
+  height:26px;border:2px solid var(--ink);border-radius:var(--r);
+  background:#fff;overflow:hidden;
+}
+.race-fill{height:100%;width:0%;transition:width 1.1s cubic-bezier(.2,.7,.3,1);}
+.race-fill.f1{background:var(--teal);}
+.race-fill.f2{background:var(--coral);}
+.race-verdict{margin-top:14px;}
+
+/* =====================================================
+   WIDGET: DIGITAL DIVIDE (sec 06)
+   ===================================================== */
+.dd-card{cursor:pointer;transition:transform .12s;}
+.dd-card:hover{transform:translate(-2px,-2px);}
+.dd-card .dd-open{font-family:'Caveat',cursive;font-size:1.05rem;font-weight:700;color:var(--blue);}
+.dd-detail{display:none;margin-top:12px;border-top:2px dashed rgba(26,26,46,0.25);padding-top:12px;font-size:0.92rem;}
+.dd-card.open .dd-detail{display:block;}
+.dd-card.open .dd-open{display:none;}
+.dd-detail li{margin:0 0 8px 18px;}
+.reveal-wrap{margin:14px 0;}
+.reveal-a{
+  display:none;margin-top:10px;padding:12px 16px;
+  border:2px solid var(--ink);border-left:10px solid var(--teal);
+  border-radius:var(--r);background:var(--teal-lt);font-size:0.93rem;
+}
+.reveal-wrap.open .reveal-a{display:block;}
+
+/* =====================================================
+   WIDGET: COMPRESSION LAB (sec 07)
+   ===================================================== */
+.px-grids{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;}
+.px-block{text-align:center;}
+.px-block .px-cap{font-family:'Caveat',cursive;font-size:1.15rem;font-weight:700;margin-top:6px;}
+.px-grid{
+  display:grid;grid-template-columns:repeat(16,24px);
+  border:2px solid var(--ink);box-shadow:var(--shsm);
+  width:fit-content;background:#fff;
+}
+.px-grid .px{
+  width:24px;height:24px;
+  border-right:1px solid rgba(26,26,46,0.08);
+  border-bottom:1px solid rgba(26,26,46,0.08);
+}
+.px-grid.editable .px{cursor:pointer;}
+.px-grid.editable .px:hover{outline:2px solid var(--coral);outline-offset:-2px;}
+.px.on{background:var(--ink);}
+.rle-out{
+  font-family:'IBM Plex Mono',monospace;font-size:0.82rem;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:var(--blue-lt);padding:12px 14px;margin-top:16px;
+  word-break:break-all;line-height:1.9;
+}
+.rle-out b{color:var(--blue);}
+.size-meter{display:flex;gap:18px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.size-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:0.95rem;font-weight:600;
+  border:2px solid var(--ink);border-radius:var(--r);
+  padding:6px 14px;box-shadow:var(--shsm);background:#fff;
+}
+.size-tag.before{background:var(--coral-lt);}
+.size-tag.after{background:var(--teal-lt);}
+.cmp-canvases{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:14px;}
+.cmp-canvases canvas{
+  border:2px solid var(--ink);box-shadow:var(--shsm);
+  width:300px;height:188px;image-rendering:pixelated;background:#fff;
+}
+.pick-row{
+  display:flex;align-items:center;gap:14px;
+  border-bottom:1.5px dashed rgba(26,26,46,0.2);
+  padding:11px 2px;flex-wrap:wrap;
+}
+.pick-row:last-child{border-bottom:none;}
+.pick-q{flex:1;min-width:260px;font-size:0.95rem;}
+.pick-row .btn{font-size:0.8rem;padding:5px 14px;}
+.pick-row .btn.ok{background:var(--teal);color:#fff;}
+.pick-row .btn.no{background:var(--coral-lt);text-decoration:line-through;}
+.pick-fb{flex-basis:100%;font-size:0.85rem;display:none;color:rgba(26,26,46,0.85);}
+.pick-row.done .pick-fb{display:block;}
+
+/* =====================================================
+   WIDGET: KEY EXCHANGE (sec 08)
+   ===================================================== */
+.ks-scene{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;
+  margin:16px 0;
+}
+.ks-person{
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fffdf8;box-shadow:var(--shsm);
+  padding:14px;text-align:center;min-height:178px;
+  transition:background .25s,border-color .25s;
+}
+.ks-person .ks-face{font-size:2.1rem;line-height:1;}
+.ks-person .ks-name{font-family:'Fraunces',serif;font-weight:600;margin:4px 0 8px;}
+.ks-person.lit{background:var(--gold-lt);}
+.ks-keys{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.ks-key{
+  font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:600;
+  border:2px solid var(--ink);border-radius:999px;
+  padding:2px 10px;opacity:0.25;transition:opacity .25s,background .25s;
+}
+.ks-key.pub{background:var(--teal-lt);}
+.ks-key.priv{background:var(--coral-lt);}
+.ks-key.show{opacity:1;}
+.ks-msg{
+  font-family:'IBM Plex Mono',monospace;font-size:0.85rem;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fff;padding:8px 10px;margin-top:10px;
+  word-break:break-all;display:none;box-shadow:var(--shsm);
+}
+.ks-msg.show{display:block;}
+.ks-msg.cipher{background:var(--ink);color:#7fe3d2;}
+.ks-msg.fail{background:var(--coral-lt);color:var(--coral);font-weight:600;}
+.ks-cap{
+  border:2px solid var(--ink);border-left:10px solid var(--gold);
+  border-radius:var(--r);background:var(--gold-lt);
+  box-shadow:var(--shsm);padding:13px 18px;min-height:84px;
+}
+.ks-cap .ks-cap-t{font-family:'Caveat',cursive;font-size:1.25rem;font-weight:700;color:#a87f1c;display:block;}
+.ks-dots{display:flex;gap:7px;align-items:center;}
+.ks-dot{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink);background:#fff;transition:background .2s;}
+.ks-dot.on{background:var(--coral);}
+
+/* =====================================================
+   WIDGET: HTTP vs HTTPS WIRE (sec 09)
+   ===================================================== */
+.wire-grid{display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start;}
+.fake-form{
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fff;box-shadow:var(--shsm);padding:16px;
+}
+.fake-form label{font-size:0.78rem;font-weight:700;display:block;margin:8px 0 3px;}
+.fake-form input[type=text],.fake-form input[type=password]{
+  font-family:'IBM Plex Mono',monospace;font-size:0.9rem;
+  width:100%;padding:7px 10px;border:2px solid var(--ink);border-radius:6px;
+  background:var(--cream);
+}
+.switch-row{display:flex;align-items:center;gap:10px;margin:14px 0 6px;}
+.proto-lab{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:0.95rem;}
+.proto-lab.https-on{color:var(--teal);}
+.proto-lab.https-off{color:var(--coral);}
+.tswitch{position:relative;width:58px;height:30px;display:inline-block;}
+.tswitch input{opacity:0;width:0;height:0;}
+.tswitch .track{
+  position:absolute;inset:0;border:2px solid var(--ink);
+  border-radius:999px;background:var(--coral-lt);cursor:pointer;transition:background .2s;
+}
+.tswitch .track::after{
+  content:"";position:absolute;top:2px;left:3px;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--coral);border:2px solid var(--ink);
+  transition:transform .2s,background .2s;
+}
+.tswitch input:checked + .track{background:var(--teal-lt);}
+.tswitch input:checked + .track::after{transform:translateX(26px);background:var(--teal);}
+.wire-view{
+  font-family:'IBM Plex Mono',monospace;font-size:0.86rem;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:var(--ink);color:var(--cream);
+  box-shadow:var(--shadow);padding:16px 18px;min-height:178px;
+  word-break:break-all;line-height:1.8;
+}
+.wire-view .wv-t{
+  font-family:'Caveat',cursive;font-size:1.2rem;font-weight:700;
+  color:var(--gold);display:block;margin-bottom:6px;
+}
+.wire-view .leak{color:#ff9d8a;}
+.wire-view .safe{color:#7fe3d2;}
+
+/* =====================================================
+   QUIZ (sec 10)
+   ===================================================== */
+.qz-q{margin-bottom:22px;}
+.q-txt{font-weight:700;margin-bottom:10px;}
+.qz-opts{display:grid;gap:8px;}
+.qz-opt{
+  text-align:left;font-family:'DM Sans',sans-serif;font-size:0.92rem;
+  border:2px solid var(--ink);border-radius:var(--r);
+  background:#fff;padding:9px 14px;cursor:pointer;
+  transition:background .15s;
+}
+.qz-opt:hover{background:var(--gold-lt);}
+.qz-opt.correct{background:var(--teal-lt);border-color:var(--teal);font-weight:700;}
+.qz-opt.wrong{background:var(--coral-lt);border-color:var(--coral);}
+.qz-opt:disabled{cursor:default;}
+.qz-opt:disabled:hover{background:#fff;}
+.qz-opt.correct:disabled:hover{background:var(--teal-lt);}
+.qz-opt.wrong:disabled:hover{background:var(--coral-lt);}
+.q-fb{
+  display:none;margin-top:8px;font-size:0.88rem;
+  border-left:4px solid var(--teal);padding:6px 12px;background:var(--teal-lt);
+  border-radius:0 var(--r) var(--r) 0;
+}
+.qz-q.answered .q-fb{display:block;}
+#scoreBanner{
+  font-family:'Fraunces',serif;font-size:1.15rem;font-weight:600;
+  text-align:center;border:2px solid var(--ink);border-radius:var(--r);
+  background:var(--gold-lt);box-shadow:var(--shadow);
+  padding:14px;margin-top:8px;display:none;
+}
+
+/* =====================================================
+   CHEAT SHEET (sec 11)
+   ===================================================== */
+.recipe{
+  background:#22223c;color:#f3f0e2;
+  border:2px solid var(--ink);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:28px 32px;
+}
+.recipe .rc-t{
+  font-family:'Caveat',cursive;font-size:1.7rem;font-weight:700;
+  color:var(--coral);display:block;margin-bottom:4px;
+}
+.recipe .rc-sub{font-size:0.86rem;color:rgba(243,240,226,0.6);margin-bottom:18px;}
+.rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 36px;}
+.rc-grid dt{
+  font-family:'IBM Plex Mono',monospace;font-size:0.85rem;font-weight:600;
+  color:#f0c66a;margin-top:10px;
+}
+.rc-grid dd{font-size:0.85rem;color:rgba(243,240,226,0.88);line-height:1.5;}
+.rc-grid dd .em{color:#7fe3d2;font-weight:600;}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+.foot{
+  text-align:center;
+  font-family:'Caveat',cursive;
+  font-size:1.35rem;font-weight:600;
+  color:rgba(26,26,46,0.65);
+  transform:rotate(-1.2deg);
+  padding:10px 0 46px;
+}
+/* =====================================================
+   WIDGET: DNS RESOLVER (added)
+   ===================================================== */
+.dns-flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap;margin:8px 0 4px;}
+.dns-step{
+  flex:1;min-width:130px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:'IBM Plex Mono',monospace;font-size:0.82rem;font-weight:600;
+  border:2px solid var(--ink);border-radius:var(--r);background:#fffdf8;box-shadow:var(--shsm);
+  padding:14px 10px;transition:background .25s,opacity .25s;opacity:0.4;
+}
+.dns-step.lit{opacity:1;background:var(--gold-lt);}
+#dnsName.lit{background:var(--coral-lt);}
+#dnsIp.lit{background:var(--teal-lt);color:var(--teal);}
+.dns-arrow{display:flex;align-items:center;font-size:1.4rem;color:var(--coral);font-weight:700;}
+.dns-parts{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;min-height:34px;}
+.dns-part{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;font-weight:600;border:1.5px solid var(--ink);border-radius:6px;padding:4px 10px;background:#fff;}
+.dns-part .lbl{display:block;font-family:'Caveat',cursive;font-size:0.85rem;color:rgba(26,26,46,0.55);}
+.dns-part.tld{background:var(--blue-lt);}
+.dns-part.dom{background:var(--gold-lt);}
+.dns-part.sub{background:var(--coral-lt);}
+
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sb-brand">
+    <span class="sb-label">AP CSP · Big Ideas</span>
+    <span class="sb-title">The Internet &amp; How It Works</span>
+  </div>
+  <nav class="sb-nav" id="sbNav">
+    <a href="#net-vs-web"><span class="n">01</span>Internet vs. the Web</a>
+    <a href="#ip"><span class="n">02</span>IP, DNS &amp; Protocols</a>
+    <a href="#packets"><span class="n">03</span>Packets &amp; Fault Tolerance</a>
+    <a href="#scale"><span class="n">04</span>Why the Internet Scales</a>
+    <a href="#speed"><span class="n">05</span>Bandwidth · Bit Rate · Latency</a>
+    <a href="#divide"><span class="n">06</span>The Digital Divide</a>
+    <a href="#compression"><span class="n">07</span>Compression Lab</a>
+    <a href="#keys"><span class="n">08</span>Public &amp; Private Keys</a>
+    <a href="#https"><span class="n">09</span>HTTP vs. HTTPS</a>
+    <a href="#quiz"><span class="n">10</span>Check Yourself</a>
+    <a href="#cheat"><span class="n">11</span>Cheat Sheet</a>
+  </nav>
+  <div class="sb-foot">break a router. send the<br>message anyway. →</div>
+</aside>
+
+<main>
+<div class="shell">
+
+<header class="hero">
+  <div class="hero-txt">
+    <span class="eyebrow">no magic, just rules &amp; wires</span>
+    <h1>The Internet &amp;<br><em>how it actually works</em></h1>
+    <p class="lede">Billions of devices, no boss in charge, and your message still arrives in milliseconds. This page unpacks how — and what happens when parts of it break, who gets left out, and how your data stays both <strong>small</strong> and <strong>secret</strong> on the way.</p>
+    <div class="hero-chips">
+      <span class="chip c1">fault tolerance</span>
+      <span class="chip c2">IP addresses</span>
+      <span class="chip c3">compression</span>
+      <span class="chip c4">encryption</span>
+      <span class="chip c1">digital divide</span>
+    </div>
+  </div>
+  <div class="hero-art">
+    <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line class="wire" x1="40" y1="50" x2="130" y2="110" stroke="#4a9b8e" stroke-width="2.5"/>
+      <line class="wire" x1="220" y1="40" x2="130" y2="110" stroke="#e8725a" stroke-width="2.5"/>
+      <line class="wire" x1="130" y1="110" x2="60" y2="180" stroke="#d4a83a" stroke-width="2.5"/>
+      <line class="wire" x1="130" y1="110" x2="210" y2="185" stroke="#4a7fc1" stroke-width="2.5"/>
+      <line class="wire" x1="40" y1="50" x2="220" y2="40" stroke="#4a7fc1" stroke-width="2.5"/>
+      <line class="wire" x1="60" y1="180" x2="210" y2="185" stroke="#e8725a" stroke-width="2.5"/>
+      <circle cx="40" cy="50" r="17" fill="#eef7f5" stroke="#1a1a2e" stroke-width="2.5"/>
+      <circle cx="220" cy="40" r="17" fill="#fdf2ef" stroke="#1a1a2e" stroke-width="2.5"/>
+      <circle cx="130" cy="110" r="21" fill="#fdf8ec" stroke="#1a1a2e" stroke-width="3"/>
+      <circle cx="60" cy="180" r="17" fill="#eef2fb" stroke="#1a1a2e" stroke-width="2.5"/>
+      <circle cx="210" cy="185" r="17" fill="#eef7f5" stroke="#1a1a2e" stroke-width="2.5"/>
+    </svg>
+  </div>
+</header>
+
+<section class="sec rv" id="net-vs-web">
+  <span class="tag"><span class="n">01</span>Two different things</span>
+  <h2>The Internet vs. the World Wide Web</h2>
+  <p>People use these words interchangeably. On the AP exam (and in real life), they are <strong>not the same thing</strong> — and the difference is one of the easiest free points you'll ever earn.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">The Internet = the roads</span>
+      <h4>A network of networks</h4>
+      <p>Physical <strong>hardware</strong> plus the shared rules for using it: fiber-optic cables under the ocean, routers, cell towers, Wi-Fi, satellites, and the protocols that let billions of separate networks act like one giant one. It moves <em>any</em> kind of data — web pages, but also video calls, game data, email, app traffic.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">The Web = the deliveries</span>
+      <h4>Information that travels on it</h4>
+      <p>The <strong>World Wide Web</strong> is one service that runs <em>on top of</em> the Internet: pages, text, images, and links, requested with HTTP and viewed in a browser. The Web is content and links; the Internet is the system that carries them. No Internet → no Web. But the Internet would exist just fine without the Web.</p>
+    </div>
+  </div>
+
+  <div class="co co-gold">
+    <span class="co-t">exam-speak, one sentence each</span>
+    <p><strong>Internet:</strong> a global, interconnected <em>network of networks</em> built on open protocols.<br>
+    <strong>World Wide Web:</strong> a system of linked <em>pages, programs, and files</em> (information) accessed over the Internet using HTTP.</p>
+  </div>
+
+  <h3>Sort it: Internet or Web?</h3>
+  <div class="card">
+    <p style="margin-bottom:14px;">Eight items. Decide whether each one belongs to the <strong>Internet</strong> (hardware + rules for moving data) or the <strong>Web</strong> (information you view in a browser).</p>
+    <div class="sort-item" id="sortItem">Loading…</div>
+    <div class="sort-btns">
+      <button class="btn btn-teal" id="btnNet">🛣️ The Internet</button>
+      <button class="btn btn-coral" id="btnWeb">📄 The Web</button>
+    </div>
+    <div class="sort-fb" id="sortFb">&nbsp;</div>
+    <div class="ctl-row" style="margin-top:10px;">
+      <span class="pill" id="sortProg">1 / 8</span>
+      <span class="pill" id="sortScore">score: 0</span>
+      <button class="btn btn-ghost" id="sortRestart">restart</button>
+    </div>
+  </div>
+</section>
+
+<section class="sec rv" id="ip">
+  <span class="tag t-blue"><span class="n">02</span>Addresses &amp; rules</span>
+  <h2>IP Addresses &amp; the Internet Protocol</h2>
+  <p>For a letter to arrive, the envelope needs an address. For data to arrive, every device on the Internet needs one too: an <strong>IP address</strong> (Internet Protocol address). When your Chromebook joins the school Wi-Fi, it gets one. The server hosting this page has one. Routers use these addresses to decide where to send data next.</p>
+
+  <h3>Build an IPv4 address</h3>
+  <div class="card">
+    <div class="ip-display" id="ipFull">192<span class="dot">.</span>168<span class="dot">.</span>4<span class="dot">.</span>27</div>
+    <div class="oct-grid">
+      <div class="oct">
+        <span class="byte-lab">byte 1</span>
+        <span class="oct-val" id="octVal0">192</span>
+        <input type="range" min="0" max="255" value="192" id="oct0">
+        <span class="oct-bin" id="octBin0">11000000</span>
+      </div>
+      <div class="oct">
+        <span class="byte-lab">byte 2</span>
+        <span class="oct-val" id="octVal1">168</span>
+        <input type="range" min="0" max="255" value="168" id="oct1">
+        <span class="oct-bin" id="octBin1">10101000</span>
+      </div>
+      <div class="oct">
+        <span class="byte-lab">byte 3</span>
+        <span class="oct-val" id="octVal2">4</span>
+        <input type="range" min="0" max="255" value="4" id="oct2">
+        <span class="oct-bin" id="octBin2">00000100</span>
+      </div>
+      <div class="oct">
+        <span class="byte-lab">byte 4</span>
+        <span class="oct-val" id="octVal3">27</span>
+        <input type="range" min="0" max="255" value="27" id="oct3">
+        <span class="oct-bin" id="octBin3">00011011</span>
+      </div>
+    </div>
+    <div class="ctl-row" style="margin-top:14px;">
+      <button class="btn" id="ipRandom">🎲 random address</button>
+      <span class="pill">4 bytes × 8 bits = 32 bits total</span>
+    </div>
+  </div>
+
+  <div class="co co-blue">
+    <span class="co-t">wait, you've seen this before</span>
+    <p>Each chunk of an IPv4 address runs from <span class="mono">0</span> to <span class="mono">255</span> — that's exactly one <span class="mono">byte</span>, the smallest data type from our Data Types unit. An IPv4 address is just <strong>four bytes glued together with dots</strong>. Four bytes = 32 bits = about 4.3 billion possible addresses, and we've basically run out — which is why the newer <strong>IPv6</strong> uses 128 bits (enough to give an address to every grain of sand on Earth, several times over).</p>
+  </div>
+
+  <h3>So what's a protocol?</h3>
+  <p>A <strong>protocol</strong> is a set of rules that lets devices made by different companies, in different countries, running different software, still understand each other. Two matter most for us:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-blue">IP — Internet Protocol</span>
+      <p>The <strong>addressing and routing</strong> rules. Every chunk of data gets a header listing the sender's and receiver's IP addresses — like the to/from on an envelope. Routers read only the header and pass the data toward its destination. IP does its best, but it makes <em>no promises</em> that anything arrives.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-teal">TCP — Transmission Control Protocol</span>
+      <p>The <strong>reliability</strong> rules, working on top of IP. TCP numbers every piece, confirms each arrival, re-requests anything missing, and reassembles everything in order at the far end. Together they're called <strong>TCP/IP</strong> — the rulebook nearly all Internet traffic follows.</p>
+    </div>
+  </div>
+  <div class="co co-teal">
+    <span class="co-t">why "open" matters</span>
+    <p>TCP/IP is an <strong>open standard</strong>: published for free, owned by no company. Anyone can build a device that speaks it — which is exactly why the Internet could grow from a handful of university computers to billions of devices without anyone's permission. Keep that thought for Section 04.</p>
+  </div>
+
+  <h3>TCP vs. UDP &mdash; two ways to ship packets</h3>
+  <p>IP gets packets <em>addressed</em>, but it makes no promise they arrive. The job of caring (or not caring) falls to one of two transport protocols riding on top of IP. Same Internet, two very different promises:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">TCP &mdash; careful &amp; complete</span>
+      <p style="font-size:0.93rem;">Numbers every packet, waits for a confirmation, and <strong>re-sends anything that goes missing</strong>, then reassembles everything in order. Slower, but nothing is lost. Used when every byte must be perfect: web pages, email, file downloads, texting.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">UDP &mdash; fast &amp; &ldquo;good enough&rdquo;</span>
+      <p style="font-size:0.93rem;">Fires packets as fast as possible and <strong>never looks back</strong> &mdash; no confirmations, no re-sends. A few dropped packets are fine. Used when being <em>on time</em> beats being complete: live video calls, streaming, online games.</p>
+    </div>
+  </div>
+  <div class="co co-gold">
+    <span class="co-t">the one-line difference</span>
+    <p>On a laggy video call the picture glitches for a second and then keeps going &mdash; that&rsquo;s <strong>UDP</strong> choosing to skip the late packets rather than freeze. If that were a file download (<strong>TCP</strong>), it would instead pause and wait, because a file with missing bytes is broken.</p>
+  </div>
+
+  <h3>From names to numbers: DNS</h3>
+  <p>You never type <span class="mono">142.250.72.14</span> into your browser &mdash; you type a <strong>name</strong>. But routers only understand numbers. The <strong>Domain Name System (DNS)</strong> is the Internet&rsquo;s phone book: it translates a human-friendly domain name into the IP address the network actually routes to.</p>
+  <div class="card">
+    <p style="margin-bottom:12px;"><strong>Pick a domain</strong> and watch DNS resolve it to a number &mdash; then see how the name itself is built.</p>
+    <div class="ctl-row">
+      <button class="btn" data-dns="maps.library.school.edu">maps.library.school.edu</button>
+      <button class="btn" data-dns="shop.coolsneakers.com">shop.coolsneakers.com</button>
+      <button class="btn" data-dns="mail.gov.uk">mail.gov.uk</button>
+    </div>
+    <div class="dns-flow">
+      <div class="dns-step" id="dnsName">domain</div>
+      <div class="dns-arrow">&rarr;</div>
+      <div class="dns-step" id="dnsServer">&#x1F5C2;&#xFE0F; DNS server<br>&ldquo;what&rsquo;s the IP?&rdquo;</div>
+      <div class="dns-arrow">&rarr;</div>
+      <div class="dns-step" id="dnsIp">IP address</div>
+    </div>
+    <div class="dns-parts" id="dnsParts"></div>
+    <button class="btn btn-teal" id="dnsGo">&#9654; resolve</button>
+  </div>
+  <div class="co co-blue">
+    <span class="co-t">reading a domain right-to-left</span>
+    <p>Domains nest like addresses, widest part last. In <span class="mono">maps.library.school.edu</span>, <span class="mono">.edu</span> is the <strong>top-level domain</strong>, <span class="mono">school.edu</span> is the registered <strong>domain</strong>, and <span class="mono">library</span> and <span class="mono">maps</span> are <strong>subdomains</strong> its owner created. A subdomain always sits to the <em>left</em> of the domain it belongs to &mdash; so <span class="mono">maps.school.edu</span> is part of <span class="mono">school.edu</span>, but <span class="mono">school.edu.com</span> would belong to a completely different owner (whoever owns <span class="mono">.com</span>).</p>
+  </div>
+</section>
+
+<section class="sec rv" id="packets">
+  <span class="tag"><span class="n">03</span>Break it, watch it heal</span>
+  <h2>Packets, Routing &amp; Fault Tolerance</h2>
+
+  <div class="net-split">
+    <!-- LEFT: explanation -->
+    <div class="net-col-text">
+      <p>Your message doesn't travel as one solid lump. It gets chopped into <strong>packets</strong> — small, numbered pieces, each carrying the destination address — and each packet finds <em>its own path</em> through the network. Different packets from the same message can take totally different routes and arrive out of order; TCP puts them back together at the end.</p>
+      <p>Why bother? Because the network has <strong>redundancy</strong>: many extra paths between any two points. If a router dies mid-delivery, packets simply route around it. A system that keeps working when parts fail is called <strong>fault-tolerant</strong>.</p>
+
+      <div class="co">
+        <span class="co-t">the punchline</span>
+        <p>Notice there's <strong>no single router the message depends on</strong> — and no headquarters deciding routes. Each router independently forwards packets toward their destination using whatever paths still exist. That decentralized, redundant design is <em>why</em> the Internet is fault-tolerant. (It was literally designed in the Cold War era to survive losing chunks of itself.)</p>
+      </div>
+
+      <div class="co co-gold">
+        <span class="co-t">vocab lock-in</span>
+        <p><strong>Packet:</strong> a small chunk of data + metadata (addresses, order number). <strong>Routing:</strong> finding a path for each packet, hop by hop. <strong>Redundancy:</strong> extra connections beyond the minimum needed. <strong>Fault tolerance:</strong> the system still works when components fail — <em>because of</em> redundancy.</p>
+      </div>
+
+      <div class="co co-blue">
+        <span class="co-t">what a packet reveals even when it&rsquo;s locked</span>
+        <p>Every packet still needs a readable <strong>header</strong> &mdash; source address, destination address, size, timestamp &mdash; so routers can deliver it. That outside-the-envelope information is called <strong>metadata</strong>. Even if the <em>contents</em> are encrypted (HTTPS, Section 09), anyone watching the wire can still log <em>which sites</em> a device talks to and <em>when</em>. That&rsquo;s exactly how a school or an ISP can monitor browsing without ever reading the messages themselves.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: interactive map -->
+    <div class="net-col-widget">
+      <div class="card" style="margin:0;">
+        <h4>The break-the-network test</h4>
+        <p style="margin-bottom:8px;"><strong>Click any router (lettered circle) to knock it out.</strong> Then press <em>send message</em> and watch 4 packets find their own way from YOU to the SERVER. How many routers can you destroy before the message fails?</p>
+        <div class="net-wrap">
+          <svg id="netSvg" viewBox="0 0 860 380" xmlns="http://www.w3.org/2000/svg">
+            <g id="edgeLayer"></g>
+            <g id="nodeLayer"></g>
+            <g id="pkLayer"></g>
+          </svg>
+        </div>
+        <div class="ctl-row">
+          <button class="btn btn-coral" id="netSend">📨 send message (4 packets)</button>
+          <button class="btn" id="netFix">🔧 repair all routers</button>
+        </div>
+        <div class="status" id="netStatus">Network healthy. All 7 routers online.</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="sec rv" id="scale">
+  <span class="tag t-teal"><span class="n">04</span>Built to grow</span>
+  <h2>Why the Internet Scales</h2>
+  <p><strong>Scalability</strong> means a system can grow — more users, more devices, more traffic — without being redesigned. The Internet went from 4 connected computers in 1969 to tens of billions of devices today <em>running on the same basic design</em>. Three reasons why:</p>
+
+  <div class="grid3">
+    <div class="card">
+      <span class="hd c-teal">Open protocols</span>
+      <p style="font-size:0.93rem;">TCP/IP is free and public. A new device joins by following the rules — no permission, no fee, no central sign-up. Growth is bottom-up.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">No central computer</span>
+      <p style="font-size:0.93rem;">There's no "main server of the Internet" to overload. Routing decisions happen locally at millions of routers, so adding devices doesn't pile work onto one machine.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-blue">Hierarchy</span>
+      <p style="font-size:0.93rem;">Addresses and networks nest inside bigger networks (your laptop → home router → ISP → backbone). Routers only need to know the next hop, not a map of everything.</p>
+    </div>
+  </div>
+
+  <h3>Why not just wire everyone to everyone?</h3>
+  <div class="card">
+    <p style="margin-bottom:10px;">Drag the slider. Compare the number of wires needed if every device connects <strong>directly to every other device</strong>, versus everyone sharing a <strong>routed network</strong>.</p>
+    <div class="ctl-row">
+      <label for="devN" style="font-weight:700;">devices:</label>
+      <input type="range" id="devN" min="2" max="24" value="6" style="flex:1;max-width:300px;">
+      <span class="pill" id="devCount">6 devices</span>
+    </div>
+    <div class="scale-grid">
+      <div class="scale-box">
+        <svg id="svgMesh" viewBox="0 0 220 190"></svg>
+        <span class="scale-num bad" id="wireDirect">15</span>
+        <div style="font-size:0.85rem;">direct wires — every pair<br><span class="mono" style="font-size:0.78rem;">n × (n − 1) ÷ 2</span></div>
+      </div>
+      <div class="scale-box">
+        <svg id="svgStar" viewBox="0 0 220 190"></svg>
+        <span class="scale-num good" id="wireStar">6</span>
+        <div style="font-size:0.85rem;">network wires — one per device<br><span class="mono" style="font-size:0.78rem;">n</span></div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:0.93rem;">At 24 devices, direct wiring already needs <strong>276 wires</strong>. At Internet scale — billions of devices — direct wiring is impossible. Shared routes + addressing is what makes growth affordable. That's scalability by design.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="speed">
+  <span class="tag t-gold"><span class="n">05</span>Three numbers, three meanings</span>
+  <h2>Bandwidth vs. Bit Rate vs. Latency</h2>
+  <p>"My internet is slow" actually mixes up three different measurements. Untangling them tells you <em>what kind</em> of slow you have — and what would actually fix it.</p>
+
+  <table class="cmp">
+    <tr><th style="width:140px;">Term</th><th>What it measures</th><th>Highway version</th><th>Units</th></tr>
+    <tr>
+      <td>Bandwidth</td>
+      <td>The <strong>maximum capacity</strong> of a connection — the most bits that <em>could</em> move per second.</td>
+      <td>Number of lanes on the highway.</td>
+      <td class="mono">Mbps / Gbps</td>
+    </tr>
+    <tr>
+      <td>Bit rate</td>
+      <td>How many bits <strong>actually move</strong> per second right now. Always ≤ bandwidth (congestion, weak Wi-Fi, busy servers).</td>
+      <td>How fast traffic is actually flowing.</td>
+      <td class="mono">bps / Mbps</td>
+    </tr>
+    <tr>
+      <td>Latency</td>
+      <td>The <strong>delay</strong> before data starts arriving — travel time for one round trip.</td>
+      <td>How long the on-ramp light makes you wait.</td>
+      <td class="mono">ms</td>
+    </tr>
+  </table>
+
+  <h3>The race: fiber vs. satellite</h3>
+  <div class="card">
+    <p style="margin-bottom:10px;">Two connections: <strong>Fiber</strong> (500&nbsp;Mbps bandwidth, 12&nbsp;ms latency) and <strong>GEO Satellite</strong> (150&nbsp;Mbps bandwidth, 620&nbsp;ms latency — the signal travels ~35,000&nbsp;km into space and back). Pick a task and see which number decides the winner.</p>
+    <div class="race-tasks">
+      <button class="btn race-task" data-t="0">💬 send a chat message</button>
+      <button class="btn race-task" data-t="1">🌐 load a webpage (3 MB)</button>
+      <button class="btn race-task" data-t="2">🎮 game input (round trip)</button>
+      <button class="btn race-task" data-t="3">⬇️ download a game (60 GB)</button>
+    </div>
+    <div class="race-lane">
+      <div class="race-lab"><span>Fiber · 500 Mbps · 12 ms</span><span class="t" id="timeFib">—</span></div>
+      <div class="race-bar"><div class="race-fill f1" id="fillFib"></div></div>
+    </div>
+    <div class="race-lane">
+      <div class="race-lab"><span>Satellite · 150 Mbps · 620 ms</span><span class="t" id="timeSat">—</span></div>
+      <div class="race-bar"><div class="race-fill f2" id="fillSat"></div></div>
+    </div>
+    <div class="co co-gold race-verdict" id="raceVerdict" style="display:none;">
+      <span class="co-t">what decided it</span>
+      <p id="raceVerdictTxt"></p>
+    </div>
+  </div>
+
+  <div class="co co-blue">
+    <span class="co-t">the rule of thumb</span>
+    <p><strong>Small or back-and-forth data → latency wins.</strong> Gaming, video calls, and clicking links feel snappy or laggy based on milliseconds of delay. <strong>Big one-way data → bandwidth wins.</strong> Downloads and streaming care about capacity. A 500&nbsp;Mbps plan with terrible latency still feels awful for gaming — and that's why "more bandwidth" doesn&rsquo;t fix every problem.</p>
+  </div>
+
+  <h3>What actually carries the bits?</h3>
+  <p>Bandwidth and latency describe <em>how much</em> and <em>how fast</em> &mdash; but the physical <strong>medium</strong> carrying the signal sets the ceiling. Four common ones, fastest-and-furthest first:</p>
+  <table class="cmp">
+    <tr><th style="width:150px;">Medium</th><th>How it carries data</th><th>Trade-off</th></tr>
+    <tr><td>Fiber-optic</td><td>Pulses of <strong>light</strong> through glass strands.</td><td>Highest bandwidth, lowest loss over long distance &mdash; the backbone of the Internet. Costly to install.</td></tr>
+    <tr><td>Copper wire</td><td>Electrical signals (older phone/cable lines).</td><td>Cheap and everywhere, but the signal weakens faster over distance and carries less.</td></tr>
+    <tr><td>Radio / wireless</td><td>Radio waves through the air (Wi-Fi, cellular, 5G).</td><td>No cables &mdash; convenient and mobile, but shared, and walls and distance cause interference.</td></tr>
+    <tr><td>Satellite</td><td>Radio waves bounced off a satellite in orbit.</td><td>Reaches places no cable can, but the trip up to orbit and back adds big <em>latency</em>.</td></tr>
+  </table>
+  <div class="co co-teal">
+    <span class="co-t">don&rsquo;t mix up &ldquo;fast medium&rdquo; and &ldquo;low latency&rdquo;</span>
+    <p>For sending data over a <strong>long distance</strong>, fiber-optic is the fastest medium &mdash; light through glass loses almost nothing on the way. Satellite&rsquo;s problem isn&rsquo;t a slow medium (its signal is also radio at light-speed); it&rsquo;s the sheer <em>distance</em> up to orbit and back. That&rsquo;s a <strong>latency</strong> issue, not a bandwidth one.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="divide">
+  <span class="tag t-blue"><span class="n">06</span>Who gets left out</span>
+  <h2>The Digital Divide</h2>
+  <p>Everything on this page assumes you <em>have</em> the Internet. Billions of people don't — or have access so limited it barely counts. The <strong>digital divide</strong> is the gap between people who have full access to computing devices and the Internet, and people who don't.</p>
+  <p>The divide isn't one single gap. It runs along several lines at once:</p>
+  <div class="grid3">
+    <div class="card">
+      <span class="hd c-coral">Geography</span>
+      <p style="font-size:0.92rem;">Cities get fiber; rural areas may only have slow DSL, expensive satellite, or nothing. Running cable to remote places costs more than companies earn back.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-gold">Income</span>
+      <p style="font-size:0.92rem;">Monthly plans, devices, and data caps cost real money. A family may share one phone — and a phone plan is not the same as a laptop with home broadband.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-teal">Infrastructure &amp; policy</span>
+      <p style="font-size:0.92rem;">Some regions lack reliable electricity, cell coverage, or competition between providers. Government choices about funding and regulation shape who gets connected.</p>
+    </div>
+  </div>
+
+  <h3>Same homework, three students</h3>
+  <p>Tonight's assignment: <em>watch a 15-minute video, then write and submit a one-page response by 8 a.m.</em> Click each card to see how the same task plays out.</p>
+  <div class="grid3">
+    <div class="card dd-card" data-p="0">
+      <span class="hd c-teal">Maya</span>
+      <p style="font-size:0.9rem;">Fiber at home, her own laptop, quiet room.</p>
+      <span class="dd-open">click to follow her evening →</span>
+      <div class="dd-detail"><ul>
+        <li>7:00 — video streams instantly in HD.</li>
+        <li>7:20 — types response on her laptop, submits.</li>
+        <li>7:45 — done. Free evening.</li>
+      </ul></div>
+    </div>
+    <div class="card dd-card" data-p="1">
+      <span class="hd c-gold">Jordan</span>
+      <p style="font-size:0.9rem;">No home internet — shares a phone with a data cap.</p>
+      <span class="dd-open">click to follow his evening →</span>
+      <div class="dd-detail"><ul>
+        <li>7:00 — waits for his sister to finish using the phone.</li>
+        <li>8:10 — watches at lowest quality to save data; it still burns most of what's left this month.</li>
+        <li>9:00 — thumb-types a full page into a phone browser; the form times out once and erases it.</li>
+        <li>10:40 — submits. Same grade at stake, triple the time.</li>
+      </ul></div>
+    </div>
+    <div class="card dd-card" data-p="2">
+      <span class="hd c-coral">Riley</span>
+      <p style="font-size:0.9rem;">Rural — no broadband at home at all.</p>
+      <span class="dd-open">click to follow her evening →</span>
+      <div class="dd-detail"><ul>
+        <li>6:30 — parent drives her 25 minutes to the library.</li>
+        <li>7:50 — library closes at 8; the video buffers twice and she skips the last 3 minutes.</li>
+        <li>8:30 — drafts the response on paper at home, offline.</li>
+        <li>7:15 a.m. — retypes and submits from the school parking lot Wi-Fi.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="co">
+    <span class="co-t">why this is a CS topic, not just a social-studies topic</span>
+    <p>School, jobs, banking, healthcare, and government services keep moving online — so unequal access turns into unequal <em>opportunity</em>. AP CSP expects you to discuss how the digital divide affects who benefits from computing innovations, and how design choices (low-bandwidth modes, offline features, mobile-first pages) can widen or shrink the gap.</p>
+  </div>
+
+  <h3>Debate-starters</h3>
+  <div class="card">
+    <div class="reveal-wrap">
+      <button class="btn">🤔 Is internet access a luxury, a utility (like electricity), or a right?</button>
+      <div class="reveal-a">There's no single right answer — that's the debate. Consider: can you fully participate in school, work, or government services today without it? Utilities are usually regulated so everyone can get them at fair prices. What would change if the Internet were treated that way?</div>
+    </div>
+    <div class="reveal-wrap">
+      <button class="btn">🤔 A town can fund either faster internet for the school OR home hotspots for 200 families. Which closes the divide more?</button>
+      <div class="reveal-a">Arguments both ways: the school upgrade helps every student equally — but only during school hours. Hotspots help fewer people but reach the exact place the divide lives: home, where homework happens. Strong answers weigh <em>who</em> is being left out and <em>when</em>.</div>
+    </div>
+    <div class="reveal-wrap">
+      <button class="btn">🤔 Does giving everyone a smartphone close the digital divide?</button>
+      <div class="reveal-a">It helps, but only partly. Try writing an essay, coding a Processing sketch, or filling out a job application on a 6-inch screen with a data cap. Quality of access — device, speed, data limits, reliability — matters as much as access itself.</div>
+    </div>
+  </div>
+</section>
+<section class="sec rv" id="compression">
+  <span class="tag t-gold"><span class="n">07</span>Smaller files, two philosophies</span>
+  <h2>Compression: Lossless vs. Lossy</h2>
+  <p>Every photo, song, and page you send gets <strong>compressed</strong> — rewritten to use fewer bits — because fewer bits means faster transfer and less storage. There are exactly two philosophies, and the difference is one question: <em>can you get the original back, bit for bit?</em></p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">Lossless — yes, perfectly</span>
+      <p style="font-size:0.94rem;">Finds <strong>patterns and repetition</strong> and describes them more efficiently. Decompressing rebuilds the <em>exact</em> original — every bit identical. Used when any change would be a disaster: text, code, spreadsheets, ZIP files, PNG images.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">Lossy — no, and that's the point</span>
+      <p style="font-size:0.94rem;"><strong>Throws away</strong> details humans barely notice — tiny color differences, sounds masked by louder sounds. Much smaller files, but the discarded data is <em>gone forever</em>. Used for media where "looks/sounds the same" is good enough: JPEG, MP3, streaming video.</p>
+    </div>
+  </div>
+
+  <h3>Lab A — lossless, by hand (run-length encoding)</h3>
+  <div class="card">
+    <p style="margin-bottom:10px;">One simple lossless trick: instead of storing every pixel, store <strong>runs</strong> — "16 white, 3 black, 5 white…". <strong>Click pixels to draw</strong> (or load a preset) and watch the compressed size react. Then hit <em>decompress</em> to prove nothing was lost.</p>
+    <div class="ctl-row">
+      <button class="btn" id="rleHeart">❤ heart</button>
+      <button class="btn" id="rleLetters">"HI"</button>
+      <button class="btn" id="rleStripes">stripes</button>
+      <button class="btn" id="rleCheck">checkerboard</button>
+      <button class="btn btn-ghost" id="rleClear">clear</button>
+    </div>
+    <div class="px-grids">
+      <div class="px-block">
+        <div class="px-grid editable" id="rleGrid"></div>
+        <span class="px-cap">original — click to draw</span>
+      </div>
+      <div class="px-block">
+        <div class="px-grid" id="rleGrid2"></div>
+        <span class="px-cap" id="rleMatch">decompressed copy</span>
+      </div>
+    </div>
+    <div class="rle-out" id="rleOut"></div>
+    <div class="size-meter">
+      <span class="size-tag before" id="rleRaw">raw: 160 B</span>
+      <span style="font-size:1.3rem;">→</span>
+      <span class="size-tag after" id="rleComp">compressed: ? B</span>
+      <span class="pill" id="rleRatio"></span>
+      <button class="btn btn-teal" id="rleDecode">▶ decompress</button>
+    </div>
+  </div>
+  <div class="co co-gold">
+    <span class="co-t">try the checkerboard. seriously.</span>
+    <p>Compression isn't magic — it only wins when there are <strong>patterns to exploit</strong>. A checkerboard has no runs longer than 1, so run-length encoding makes the file <em>bigger</em> than the original. Random-looking data is the worst case for every compression algorithm.</p>
+  </div>
+
+  <h3>Lab B — lossy, with a quality slider</h3>
+  <div class="card">
+    <p style="margin-bottom:10px;">This sunset "photo" has thousands of slightly-different colors. Lossy compression merges similar colors and nearby pixels. <strong>Drag the quality down</strong> and watch the size collapse — and the detail disappear with it. The third panel shows exactly what got thrown away.</p>
+    <div class="ctl-row">
+      <label for="qSlider" style="font-weight:700;">quality:</label>
+      <input type="range" id="qSlider" min="1" max="100" value="100" style="flex:1;max-width:320px;">
+      <span class="pill" id="qVal">100</span>
+    </div>
+    <div class="cmp-canvases">
+      <div class="px-block">
+        <canvas id="cmpOrig" width="160" height="100"></canvas>
+        <span class="px-cap">original · 48.0 KB</span>
+      </div>
+      <div class="px-block">
+        <canvas id="cmpLossy" width="160" height="100"></canvas>
+        <span class="px-cap" id="cmpStats">compressed</span>
+      </div>
+      <div class="px-block">
+        <canvas id="cmpDiff" width="160" height="100"></canvas>
+        <span class="px-cap">what was thrown away</span>
+      </div>
+    </div>
+    <div class="co" style="margin-top:18px;margin-bottom:0;">
+      <span class="co-t">gone means gone</span>
+      <p style="margin-bottom:0;">Slide quality back up to 100 and the compressed image recovers — but only because we still have the original here. In real life, once you save a JPEG at low quality and delete the original, <strong>that detail is unrecoverable</strong>. Re-saving at high quality just makes a big file of a bad image.</p>
+    </div>
+  </div>
+
+  <h3>Lab C — which would you choose?</h3>
+  <div class="card" id="pickWrap">
+    <p style="margin-bottom:4px;">For each file, pick a compression philosophy. Think about what breaks if data goes missing.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="keys">
+  <span class="tag"><span class="n">08</span>Locking without meeting</span>
+  <h2>Public &amp; Private Key Encryption</h2>
+  <p>Here's the problem: packets cross dozens of routers owned by strangers, and anyone along the path can read them — like sending a postcard. Encryption scrambles the message so only the intended reader can unscramble it. But that creates a puzzle: <strong>if Alice and Bob have never met, how do they agree on a secret key without an eavesdropper hearing it?</strong></p>
+
+  <h3>Two families of encryption</h3>
+  <p>Before the clever part, the basic split. All encryption falls into one of two families &mdash; and the difference is simply <em>how many keys</em> are involved:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-gold">Symmetric &mdash; one shared secret key</span>
+      <p style="font-size:0.93rem;">The <strong>same single key</strong> locks and unlocks. Fast and simple &mdash; like a house key both people own a copy of. The catch: that key must stay secret, so <strong>how do you get a copy to the other person</strong> across an Internet full of eavesdroppers without it being stolen on the way?</p>
+    </div>
+    <div class="card">
+      <span class="hd c-teal">Asymmetric &mdash; a public + private pair</span>
+      <p style="font-size:0.93rem;">Two <em>different</em> mathematically linked keys: one to lock, a different one to unlock. Nothing secret ever has to travel. This is <strong>public key encryption</strong>, and it exists to solve exactly the key-sharing problem symmetric encryption can&rsquo;t.</p>
+    </div>
+  </div>
+  <div class="co co-blue">
+    <span class="co-t">real systems use both</span>
+    <p>Symmetric is fast but can&rsquo;t safely share its key; asymmetric can share keys safely but is slow. So HTTPS uses asymmetric encryption <em>once</em> at the start &mdash; just long enough to secretly agree on a fresh symmetric key &mdash; then switches to fast symmetric encryption for the rest of the conversation. Best of both. (More in Section 09.)</p>
+  </div>
+  <p>The genius answer — <strong>public key encryption</strong> — uses a <em>pair</em> of mathematically linked keys:</p>
+  <div class="grid2">
+    <div class="card">
+      <span class="hd c-teal">🔓 Public key — share with everyone</span>
+      <p style="font-size:0.94rem;">Like a pile of <strong>open padlocks</strong> Bob hands out freely. Anyone can snap one shut on a box (encrypt a message <em>to</em> Bob). But snapping a padlock shut doesn't help you open one.</p>
+    </div>
+    <div class="card">
+      <span class="hd c-coral">🔑 Private key — never leaves Bob</span>
+      <p style="font-size:0.94rem;">The <strong>only key</strong> that opens those padlocks (decrypts). Bob keeps it secret forever. What the public key locks, only the private key unlocks.</p>
+    </div>
+  </div>
+
+  <h3>Watch it happen: Alice → Bob (with Eve in the middle)</h3>
+  <div class="card">
+    <div class="ctl-row">
+      <label for="keyMsg" style="font-weight:700;">Alice's message:</label>
+      <input type="text" id="keyMsg" value="meet me at 3pm" maxlength="28"
+        style="font-family:'IBM Plex Mono',monospace;font-size:0.9rem;flex:1;max-width:300px;padding:7px 10px;border:2px solid var(--ink);border-radius:6px;background:var(--cream);">
+    </div>
+    <div class="ks-scene">
+      <div class="ks-person" id="ksAlice">
+        <div class="ks-face">👩‍💻</div>
+        <div class="ks-name">Alice <span style="font-weight:400;font-size:0.8rem;">(sender)</span></div>
+        <div class="ks-keys"><span class="ks-key pub" id="kAlicePub">BOB'S 🔓 PUBLIC</span></div>
+        <div class="ks-msg" id="mAlice"></div>
+      </div>
+      <div class="ks-person" id="ksEve">
+        <div class="ks-face">🕵️</div>
+        <div class="ks-name">Eve <span style="font-weight:400;font-size:0.8rem;">(eavesdropper)</span></div>
+        <div class="ks-keys"><span class="ks-key pub" id="kEvePub">BOB'S 🔓 PUBLIC</span></div>
+        <div class="ks-msg" id="mEve"></div>
+      </div>
+      <div class="ks-person" id="ksBob">
+        <div class="ks-face">👨‍💻</div>
+        <div class="ks-name">Bob <span style="font-weight:400;font-size:0.8rem;">(receiver)</span></div>
+        <div class="ks-keys"><span class="ks-key pub" id="kBobPub">🔓 PUBLIC</span><span class="ks-key priv" id="kBobPriv">🔑 PRIVATE</span></div>
+        <div class="ks-msg" id="mBob"></div>
+      </div>
+    </div>
+    <div class="ks-cap" id="ksCap">
+      <span class="ks-cap-t" id="ksCapT"></span>
+      <span id="ksCapB" style="font-size:0.93rem;"></span>
+    </div>
+    <div class="ctl-row" style="margin-top:14px;">
+      <button class="btn" id="keyBack">← back</button>
+      <button class="btn btn-coral" id="keyNext">next →</button>
+      <button class="btn btn-ghost" id="keyRestart">restart</button>
+      <div class="ks-dots" id="keyDots"></div>
+    </div>
+  </div>
+
+  <div class="co co-blue">
+    <span class="co-t">why can't Eve just reverse it?</span>
+    <p>The key pair is built from math that's <strong>easy one way, brutally hard backwards</strong>. Quick: what's 61 × 53? You can do that on paper (3233). Now: which two prime numbers multiply to make 9797? Suddenly you're guessing. Real systems use primes <em>hundreds of digits long</em> — multiplying them takes a computer microseconds; un-multiplying (factoring) would take longer than the age of the universe. Eve has the public key and the scrambled message, and it still doesn't help her.</p>
+  </div>
+  <div class="co co-gold">
+    <span class="co-t">big idea, exam version</span>
+    <p>Public key encryption means two parties can communicate securely <strong>without ever meeting to exchange a secret key</strong> — the public key can be shared openly because it only encrypts; only the paired private key decrypts.</p>
+  </div>
+</section>
+
+<section class="sec rv" id="https">
+  <span class="tag t-teal"><span class="n">09</span>The padlock in your browser</span>
+  <h2>HTTP vs. HTTPS</h2>
+  <p><strong>HTTP</strong> (HyperText Transfer Protocol) is the protocol of the Web — the rules a browser uses to request pages and a server uses to respond. It works great. It has one catastrophic flaw: everything travels as <strong>plain readable text</strong>.</p>
+  <p><strong>HTTPS</strong> is the same HTTP with one added letter — <strong>S for Secure</strong> — wrapping every request in encryption (a system called TLS). And here's the connection to Section 08: when you visit an HTTPS site, your browser uses the site's <em>public key</em> to secretly agree on encryption for the whole conversation. Public key cryptography is happening every time you see the padlock.</p>
+
+  <div class="card">
+    <h4>What Eve sees on the wire</h4>
+    <p style="margin-bottom:14px;">You're logging into a website while Eve watches the network traffic (easy to do on public Wi-Fi). Flip the protocol switch and send the login.</p>
+    <div class="wire-grid">
+      <div class="fake-form">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.78rem;border:1.5px solid var(--ink);border-radius:6px;padding:4px 8px;background:var(--cream);" id="urlBar">http://sketchy-games.com/login</div>
+        <label for="fUser">username</label>
+        <input type="text" id="fUser" value="sam_draws_stuff">
+        <label for="fPass">password</label>
+        <input type="text" id="fPass" value="tigers123!">
+        <div class="switch-row">
+          <span class="proto-lab https-off" id="protoLab">HTTP</span>
+          <label class="tswitch"><input type="checkbox" id="tlsToggle"><span class="track"></span></label>
+          <span style="font-size:0.8rem;color:rgba(26,26,46,0.6);">← flip me</span>
+        </div>
+        <button class="btn btn-coral" id="wireSend" style="width:100%;margin-top:8px;">send login</button>
+      </div>
+      <div class="wire-view" id="wireView">
+        <span class="wv-t">📡 Eve's packet sniffer</span>
+        <span style="color:rgba(243,240,226,0.55);">waiting for traffic…</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="co">
+    <span class="co-t">the padlock means less than you think</span>
+    <p>HTTPS guarantees the connection is <strong>encrypted in transit</strong> — Eve can't read it. It does <strong>not</strong> guarantee the website itself is honest. A scam site can have a perfectly valid padlock. HTTPS answers "can anyone snoop on this conversation?" — not "should I trust who I'm talking to?"</p>
+  </div>
+</section>
+<section class="sec rv" id="quiz">
+  <span class="tag t-blue"><span class="n">10</span>Prove it</span>
+  <h2>Check Yourself</h2>
+  <p>Eight questions, instant feedback. These use <em>different examples</em> than anything you'll be graded on — this is practice, not an answer key.</p>
+  <div class="card">
+    <div id="quizWrap"></div>
+    <div id="scoreBanner"></div>
+  </div>
+</section>
+
+<section class="sec rv" id="cheat">
+  <span class="tag"><span class="n">11</span>One card to rule them all</span>
+  <h2>Cheat Sheet</h2>
+  <div class="recipe">
+    <span class="rc-t">the internet — quick reference</span>
+    <div class="rc-sub">every term from this page, one line each</div>
+    <dl class="rc-grid">
+      <dt>Internet</dt><dd>Global <span class="em">network of networks</span> — hardware + open protocols that move any data.</dd>
+      <dt>World Wide Web</dt><dd>Pages, files &amp; links (<span class="em">information</span>) accessed over the Internet via HTTP.</dd>
+      <dt>IP address</dt><dd>Unique address per device. IPv4 = <span class="em">4 bytes (32 bits)</span>, each 0–255. IPv6 = 128 bits.</dd>
+      <dt>Protocol</dt><dd>Shared <span class="em">set of rules</span> so any device can talk to any other. Open standards → growth.</dd>
+      <dt>DNS</dt><dd>The Internet&rsquo;s phone book &mdash; translates a <span class="em">domain name into an IP address</span>. A subdomain sits to the left of its domain.</dd>
+      <dt>IP / TCP</dt><dd>IP = <span class="em">addressing &amp; routing</span> (no promises). TCP = <span class="em">order, delivery confirmation, reassembly</span>.</dd>
+      <dt>TCP vs. UDP</dt><dd>TCP = <span class="em">reliable</span> (re-sends, in order): web, email, files. UDP = <span class="em">on-time</span> (no re-sends): calls, streaming, games.</dd>
+      <dt>Packet</dt><dd>Small numbered chunk of a message + destination address; each routes <span class="em">independently</span>.</dd>
+      <dt>Redundancy</dt><dd><span class="em">Extra paths</span> beyond the minimum — the reason failures don't stop delivery.</dd>
+      <dt>Fault tolerance</dt><dd>System keeps working <span class="em">when parts fail</span>; packets route around damage.</dd>
+      <dt>Scalability</dt><dd>Grows without redesign — open protocols, <span class="em">no central computer</span>, hierarchy.</dd>
+      <dt>Bandwidth</dt><dd><span class="em">Maximum capacity</span> of a connection (Mbps). Lanes on the highway.</dd>
+      <dt>Bit rate</dt><dd>Bits <span class="em">actually transferred</span> per second — can't exceed bandwidth.</dd>
+      <dt>Latency</dt><dd><span class="em">Delay</span> (ms) for a round trip. Gaming &amp; calls live and die by it.</dd>
+      <dt>Transmission media</dt><dd><span class="em">Fiber</span> = fastest/most over distance (light). Copper = cheap, shorter reach. Radio/5G = wireless, shared. Satellite = far reach, high latency.</dd>
+      <dt>Digital divide</dt><dd>Gap in access to computing/Internet across <span class="em">geography, income, infrastructure</span>.</dd>
+      <dt>Lossless</dt><dd>Compress via patterns; decompression restores the original <span class="em">exactly</span>. Text, code, ZIP, PNG.</dd>
+      <dt>Lossy</dt><dd>Deletes detail humans barely notice; <span class="em">unrecoverable</span> but much smaller. JPEG, MP3, video.</dd>
+      <dt>Symmetric key</dt><dd><span class="em">One shared secret key</span> locks &amp; unlocks &mdash; fast, but the key must be shared safely first. HTTPS uses it after an asymmetric handshake.</dd>
+      <dt>Public key</dt><dd>Shared openly; <span class="em">encrypts only</span>. An open padlock anyone can snap shut.</dd>
+      <dt>Private key</dt><dd>Never shared; the <span class="em">only</span> thing that decrypts what the public key locked.</dd>
+      <dt>HTTPS</dt><dd>HTTP + <span class="em">encryption (TLS)</span>, set up using public-key crypto. Padlock = private, not trustworthy.</dd>
+    </dl>
+  </div>
+</section>
+
+<footer class="foot">— the internet is people agreeing on rules. that's the whole trick. —</footer>
+
+</div>
+</main>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+function safe(name,fn){try{fn();}catch(e){console.error('widget "'+name+'" failed:',e);}}
+
+/* ---------- scrollspy + reveal ---------- */
+safe('scrollspy',()=>{
+  const links=[...document.querySelectorAll('#sbNav a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+  const spy=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{
+      if(!en.isIntersecting)return;
+      const i=secs.indexOf(en.target);
+      links.forEach((a,j)=>a.classList.toggle('active',j===i));
+    });
+  },{rootMargin:'-35% 0px -55% 0px'});
+  secs.forEach(s=>s&&spy.observe(s));
+  const rev=new IntersectionObserver(ents=>{
+    ents.forEach(en=>{if(en.isIntersecting){en.target.classList.add('on');rev.unobserve(en.target);}});
+  },{threshold:0.06});
+  document.querySelectorAll('.rv').forEach(s=>rev.observe(s));
+});
+
+/* ---------- 01: sort game ---------- */
+safe('sort',()=>{
+  const ITEMS=[
+    {t:'An undersea fiber-optic cable',a:0,fb:'Physical hardware that moves data — Internet.'},
+    {t:"Your school's homepage — the HTML, text & images",a:1,fb:'Linked information viewed in a browser — Web.'},
+    {t:'A Wi-Fi router',a:0,fb:'A device that forwards packets — Internet hardware.'},
+    {t:'A hyperlink connecting two pages',a:1,fb:'Links between pages are the "web" in World Wide Web.'},
+    {t:'An IP address like 172.16.254.1',a:0,fb:'Addressing belongs to the Internet Protocol — the rulebook for moving data.'},
+    {t:'A YouTube video page',a:1,fb:'Web content — delivered to you over the Internet.'},
+    {t:'The TCP/IP protocols',a:0,fb:'The shared rules of the network itself — Internet.'},
+    {t:'This study page you are reading right now',a:1,fb:'A page of information fetched with HTTP — Web (carried by the Internet).'}
+  ];
+  let i=0,score=0,locked=false;
+  const item=$('sortItem'),fb=$('sortFb'),prog=$('sortProg'),sc=$('sortScore');
+  function show(){
+    if(i>=ITEMS.length){
+      item.textContent='🎉 Done! You scored '+score+' / '+ITEMS.length+'.';
+      fb.className='sort-fb';
+      fb.textContent=score===ITEMS.length?'Perfect — the Internet carries; the Web is what gets carried.':'Review the two cards above, then hit restart.';
+      prog.textContent='8 / 8';return;
+    }
+    item.textContent=ITEMS[i].t;
+    prog.textContent=(i+1)+' / '+ITEMS.length;
+    fb.className='sort-fb';fb.innerHTML='&nbsp;';
+  }
+  function answer(a){
+    if(locked||i>=ITEMS.length)return;
+    locked=true;
+    const it=ITEMS[i],ok=a===it.a;
+    if(ok)score++;
+    sc.textContent='score: '+score;
+    fb.className='sort-fb '+(ok?'ok':'no');
+    fb.textContent=(ok?'✓ Correct — ':'✗ Not quite — ')+it.fb;
+    setTimeout(()=>{i++;locked=false;show();},1500);
+  }
+  $('btnNet').addEventListener('click',()=>answer(0));
+  $('btnWeb').addEventListener('click',()=>answer(1));
+  $('sortRestart').addEventListener('click',()=>{i=0;score=0;locked=false;sc.textContent='score: 0';show();});
+  show();
+});
+
+/* ---------- 02: IP builder ---------- */
+safe('ip',()=>{
+  const sliders=[0,1,2,3].map(i=>$('oct'+i));
+  function paint(){
+    const vals=sliders.map(s=>+s.value);
+    vals.forEach((v,i)=>{
+      $('octVal'+i).textContent=v;
+      $('octBin'+i).textContent=v.toString(2).padStart(8,'0');
+    });
+    $('ipFull').innerHTML=vals.join('<span class="dot">.</span>');
+  }
+  sliders.forEach(s=>s.addEventListener('input',paint));
+  $('ipRandom').addEventListener('click',()=>{
+    sliders.forEach(s=>s.value=Math.floor(Math.random()*256));
+    paint();
+  });
+  paint();
+});
+
+/* ---------- 03: network map ---------- */
+safe('network',()=>{
+  const NS='http://www.w3.org/2000/svg';
+  const NODES={
+    YOU:{x:70, y:190,end:true,label:'YOU'},
+    A:{x:230,y:75}, B:{x:230,y:190}, C:{x:230,y:305},
+    D:{x:430,y:120},E:{x:430,y:260},
+    F:{x:630,y:75}, G:{x:630,y:305},
+    SRV:{x:790,y:190,end:true,label:'SERVER'}
+  };
+  const EDGES=[['YOU','A'],['YOU','B'],['YOU','C'],['A','D'],['B','D'],['B','E'],['C','E'],['D','F'],['D','G'],['E','F'],['E','G'],['F','SRV'],['G','SRV']];
+  const broken=new Set();
+  const edgeLayer=$('edgeLayer'),nodeLayer=$('nodeLayer'),pkLayer=$('pkLayer'),status=$('netStatus');
+  const PKCOLORS=['#e8725a','#4a9b8e','#d4a83a','#4a7fc1'];
+  let flying=0;
+
+  const edgeEls={};
+  EDGES.forEach(([a,b])=>{
+    const ln=document.createElementNS(NS,'line');
+    ln.setAttribute('x1',NODES[a].x);ln.setAttribute('y1',NODES[a].y);
+    ln.setAttribute('x2',NODES[b].x);ln.setAttribute('y2',NODES[b].y);
+    ln.classList.add('edge');
+    edgeLayer.appendChild(ln);
+    edgeEls[a+'-'+b]=ln;
+  });
+  Object.keys(NODES).forEach(id=>{
+    const n=NODES[id];
+    const g=document.createElementNS(NS,'g');
+    if(n.end){
+      g.classList.add('endpoint');
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',32);
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',n.x);t.setAttribute('y',n.y+4.5);
+      t.textContent=n.label;
+      g.appendChild(c);g.appendChild(t);
+    }else{
+      g.classList.add('router');
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r',24);
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',n.x);t.setAttribute('y',n.y+5.5);
+      t.textContent=id;
+      const x1=document.createElementNS(NS,'line');
+      x1.setAttribute('x1',n.x-12);x1.setAttribute('y1',n.y-12);
+      x1.setAttribute('x2',n.x+12);x1.setAttribute('y2',n.y+12);
+      x1.classList.add('xmark');
+      const x2=document.createElementNS(NS,'line');
+      x2.setAttribute('x1',n.x+12);x2.setAttribute('y1',n.y-12);
+      x2.setAttribute('x2',n.x-12);x2.setAttribute('y2',n.y+12);
+      x2.classList.add('xmark');
+      g.appendChild(c);g.appendChild(t);g.appendChild(x1);g.appendChild(x2);
+      g.addEventListener('click',()=>{
+        if(broken.has(id))broken.delete(id);else broken.add(id);
+        g.classList.toggle('broken',broken.has(id));
+        paintEdges();idleStatus();
+      });
+    }
+    nodeLayer.appendChild(g);
+  });
+
+  function paintEdges(){
+    EDGES.forEach(([a,b])=>{
+      edgeEls[a+'-'+b].classList.toggle('dead',broken.has(a)||broken.has(b));
+    });
+  }
+  function adjacency(){
+    const adj={};Object.keys(NODES).forEach(k=>adj[k]=[]);
+    EDGES.forEach(([a,b])=>{
+      if(broken.has(a)||broken.has(b))return;
+      adj[a].push(b);adj[b].push(a);
+    });
+    return adj;
+  }
+  function bfs(randomize){
+    const adj=adjacency();
+    const prev={YOU:null},queue=['YOU'];
+    while(queue.length){
+      const cur=queue.shift();
+      if(cur==='SRV')break;
+      const nbrs=adj[cur].slice();
+      if(randomize)nbrs.sort(()=>Math.random()-0.5);
+      nbrs.forEach(nx=>{
+        if(!(nx in prev)){prev[nx]=cur;queue.push(nx);}
+      });
+    }
+    if(!('SRV' in prev))return null;
+    const path=[];let cur='SRV';
+    while(cur){path.unshift(cur);cur=prev[cur];}
+    return path;
+  }
+  function idleStatus(){
+    const down=broken.size;
+    if(!bfs(false)){
+      status.textContent='⚠ '+down+' router'+(down===1?'':'s')+' down — the network is PARTITIONED. No route from YOU to SERVER exists.';
+    }else{
+      status.textContent=down===0?'Network healthy. All 7 routers online.':down+' router'+(down===1?'':'s')+' down — but routes still exist. Try sending the message.';
+    }
+  }
+  function animatePacket(path,color,delay,onDone){
+    const pts=path.map(id=>NODES[id]);
+    const poly=document.createElementNS(NS,'polyline');
+    poly.setAttribute('points',pts.map(p=>p.x+','+p.y).join(' '));
+    poly.setAttribute('fill','none');poly.setAttribute('stroke',color);
+    poly.setAttribute('stroke-width','3');poly.setAttribute('opacity','0');
+    pkLayer.appendChild(poly);
+    const dot=document.createElementNS(NS,'circle');
+    dot.setAttribute('r',8);dot.setAttribute('fill',color);dot.classList.add('pk');
+    dot.setAttribute('opacity','0');
+    pkLayer.appendChild(dot);
+    const segs=[];let total=0;
+    for(let i=0;i<pts.length-1;i++){
+      const len=Math.hypot(pts[i+1].x-pts[i].x,pts[i+1].y-pts[i].y);
+      segs.push({a:pts[i],b:pts[i+1],len});total+=len;
+    }
+    const dur=total/0.34;
+    let start=null;
+    function frame(ts){
+      if(start===null)start=ts+delay;
+      const t=ts-start;
+      if(t<0){requestAnimationFrame(frame);return;}
+      dot.setAttribute('opacity','1');poly.setAttribute('opacity','0.28');
+      let d=Math.min(t/dur,1)*total,acc=0,x=pts[0].x,y=pts[0].y;
+      for(const s of segs){
+        if(d<=acc+s.len){
+          const f=(d-acc)/s.len;
+          x=s.a.x+(s.b.x-s.a.x)*f;y=s.a.y+(s.b.y-s.a.y)*f;break;
+        }
+        acc+=s.len;x=s.b.x;y=s.b.y;
+      }
+      dot.setAttribute('cx',x);dot.setAttribute('cy',y);
+      if(t<dur){requestAnimationFrame(frame);}
+      else{setTimeout(()=>{dot.remove();poly.remove();onDone();},420);}
+    }
+    requestAnimationFrame(frame);
+  }
+  $('netSend').addEventListener('click',()=>{
+    if(flying>0)return;
+    pkLayer.innerHTML='';
+    if(!bfs(false)){
+      status.textContent='✗ 0 of 4 packets delivered. Every route is destroyed — even the Internet can\'t route around a fully partitioned network. Repair a router and retry.';
+      return;
+    }
+    const routes=[];
+    for(let i=0;i<4;i++)routes.push(bfs(true));
+    const distinct=new Set(routes.map(r=>r.join('>'))).size;
+    flying=4;let arrived=0;
+    status.textContent='📨 4 packets in flight — watch them choose their own routes…';
+    routes.forEach((r,i)=>animatePacket(r,PKCOLORS[i],i*380,()=>{
+      arrived++;flying--;
+      if(flying===0){
+        status.textContent='✓ All 4 packets arrived using '+distinct+' distinct route'+(distinct===1?'':'s')+(broken.size?' — even with '+broken.size+' router'+(broken.size===1?'':'s')+' down':'')+'. TCP reassembles them in order. That\'s fault tolerance.';
+      }
+    }));
+  });
+  $('netFix').addEventListener('click',()=>{
+    broken.clear();
+    document.querySelectorAll('#netSvg .router').forEach(g=>g.classList.remove('broken'));
+    paintEdges();idleStatus();
+  });
+  idleStatus();
+});
+
+/* ---------- 04: scale wires ---------- */
+safe('scale',()=>{
+  const NS='http://www.w3.org/2000/svg';
+  function ring(n){
+    const pts=[];
+    for(let i=0;i<n;i++){
+      const a=-Math.PI/2+i*2*Math.PI/n;
+      pts.push({x:110+82*Math.cos(a),y:95+78*Math.sin(a)});
+    }
+    return pts;
+  }
+  function line(svg,x1,y1,x2,y2,stroke,op){
+    const l=document.createElementNS(NS,'line');
+    l.setAttribute('x1',x1);l.setAttribute('y1',y1);
+    l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+    l.setAttribute('stroke',stroke);l.setAttribute('stroke-width','1.4');
+    l.setAttribute('opacity',op);svg.appendChild(l);
+  }
+  function dot(svg,x,y,fill){
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',6);
+    c.setAttribute('fill',fill);c.setAttribute('stroke','#1a1a2e');c.setAttribute('stroke-width','1.8');
+    svg.appendChild(c);
+  }
+  function paint(){
+    const n=+$('devN').value;
+    $('devCount').textContent=n+' devices';
+    const mesh=$('svgMesh'),star=$('svgStar');
+    mesh.innerHTML='';star.innerHTML='';
+    const pts=ring(n);
+    for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)
+      line(mesh,pts[i].x,pts[i].y,pts[j].x,pts[j].y,'#e8725a',0.5);
+    pts.forEach(p=>dot(mesh,p.x,p.y,'#eef2fb'));
+    pts.forEach(p=>line(star,p.x,p.y,110,95,'#4a9b8e',0.8));
+    const sq=document.createElementNS(NS,'rect');
+    sq.setAttribute('x',98);sq.setAttribute('y',83);
+    sq.setAttribute('width',24);sq.setAttribute('height',24);sq.setAttribute('rx',5);
+    sq.setAttribute('fill','#fdf8ec');sq.setAttribute('stroke','#1a1a2e');sq.setAttribute('stroke-width','2');
+    star.appendChild(sq);
+    pts.forEach(p=>dot(star,p.x,p.y,'#eef2fb'));
+    $('wireDirect').textContent=(n*(n-1)/2).toLocaleString();
+    $('wireStar').textContent=n;
+  }
+  $('devN').addEventListener('input',paint);
+  paint();
+});
+
+/* ---------- 05: speed race ---------- */
+safe('race',()=>{
+  const FIB={bw:500,lat:12},SAT={bw:150,lat:620};
+  const TASKS=[
+    {bits:2*1024*8,rt:false,
+     v:'The message is tiny — transfer takes well under a millisecond on BOTH connections. Nearly the entire wait is latency. Satellite loses by ~50× despite having plenty of bandwidth.'},
+    {bits:3*8*1e6,rt:false,
+     v:'Both numbers matter here, but latency is still most of satellite\'s total (620 of ~780 ms). Real pages are worse: they need many small back-and-forth requests, paying the latency cost over and over.'},
+    {bits:64,rt:true,
+     v:'A button press is a few bytes — bandwidth is irrelevant. What matters is the ROUND TRIP: your input goes to the server and the result comes back. 1.24 seconds between pressing jump and seeing it = unplayable. Latency is everything.'},
+    {bits:60*8*1e9,rt:false,
+     v:'Now latency (under a second) vanishes next to MINUTES of transfer. Pure bandwidth contest: 500 Mbps finishes in ~16 min, 150 Mbps takes ~53 min. Satellite\'s 620 ms head-start penalty doesn\'t matter at all.'}
+  ];
+  function time(conn,task){
+    if(task.rt)return 2*conn.lat;
+    return conn.lat+task.bits/(conn.bw*1e6)*1000;
+  }
+  function fmt(ms){
+    if(ms<1000)return Math.round(ms)+' ms';
+    if(ms<90*1000)return (ms/1000).toFixed(1)+' s';
+    return (ms/60000).toFixed(1)+' min';
+  }
+  document.querySelectorAll('.race-task').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.race-task').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      const task=TASKS[+btn.dataset.t];
+      const tf=time(FIB,task),ts=time(SAT,task),mx=Math.max(tf,ts);
+      $('fillFib').style.width='0%';$('fillSat').style.width='0%';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        $('fillFib').style.width=Math.max(2,tf/mx*100)+'%';
+        $('fillSat').style.width=Math.max(2,ts/mx*100)+'%';
+      }));
+      $('timeFib').textContent=fmt(tf);
+      $('timeSat').textContent=fmt(ts);
+      $('raceVerdict').style.display='block';
+      $('raceVerdictTxt').textContent=task.v;
+    });
+  });
+});
+
+/* ---------- 06: digital divide ---------- */
+safe('divide',()=>{
+  document.querySelectorAll('.dd-card').forEach(c=>{
+    c.addEventListener('click',()=>c.classList.toggle('open'));
+  });
+  document.querySelectorAll('.reveal-wrap > .btn').forEach(b=>{
+    b.addEventListener('click',()=>b.parentElement.classList.toggle('open'));
+  });
+});
+
+/* ---------- 07a: RLE lossless lab ---------- */
+safe('rle',()=>{
+  const COLS=16,ROWS=10,N=COLS*ROWS;
+  const grid=$('rleGrid'),grid2=$('rleGrid2');
+  let cells=[],cells2=[],state=new Array(N).fill(0);
+
+  for(let i=0;i<N;i++){
+    const c=document.createElement('div');c.className='px';
+    c.addEventListener('click',()=>{state[i]^=1;paint();encode();resetCopy();});
+    grid.appendChild(c);cells.push(c);
+    const d=document.createElement('div');d.className='px';
+    grid2.appendChild(d);cells2.push(d);
+  }
+  function paint(){cells.forEach((c,i)=>c.classList.toggle('on',!!state[i]));}
+  function resetCopy(){
+    cells2.forEach(c=>c.classList.remove('on'));
+    $('rleMatch').textContent='decompressed copy';
+    $('rleMatch').style.color='';
+  }
+  function runs(){
+    const out=[];let cur=state[0],len=1;
+    for(let i=1;i<N;i++){
+      if(state[i]===cur&&len<99){len++;}
+      else{out.push([len,cur]);cur=state[i];len=1;}
+    }
+    out.push([len,cur]);return out;
+  }
+  function encode(){
+    const r=runs();
+    $('rleOut').innerHTML=r.map(([n,v])=>
+      '<span style="white-space:nowrap;">'+n+(v?'⬛':'⬜')+'</span>').join(' ');
+    const comp=r.length*2;            // 1 byte count + 1 byte color per run
+    $('rleComp').textContent='compressed: '+comp+' B';
+    const pct=Math.round((1-comp/N)*100);
+    const ratio=$('rleRatio');
+    if(comp>N){ratio.textContent='😬 '+Math.abs(pct)+'% BIGGER — worst case for RLE!';ratio.style.background='var(--coral-lt)';}
+    else{ratio.textContent=pct+'% smaller';ratio.style.background='var(--teal-lt)';}
+  }
+  let anim=null;
+  $('rleDecode').addEventListener('click',()=>{
+    if(anim)clearInterval(anim);
+    resetCopy();
+    const r=runs();let ri=0,off=0,pos=0;
+    anim=setInterval(()=>{
+      for(let k=0;k<6;k++){                 // 6 px per tick
+        if(ri>=r.length){
+          clearInterval(anim);anim=null;
+          $('rleMatch').textContent='identical to the original ✓ — nothing was lost';
+          $('rleMatch').style.color='var(--teal)';
+          return;
+        }
+        const[n,v]=r[ri];
+        cells2[pos].classList.toggle('on',!!v);pos++;off++;
+        if(off>=n){off=0;ri++;}
+      }
+    },18);
+  });
+  /* presets: rows of 16 chars, '#'=on */
+  const P={
+    heart:[
+      '................',
+      '....XX...XX.....',
+      '...XXXX.XXXX....',
+      '...XXXXXXXXX....',
+      '...XXXXXXXXX....',
+      '....XXXXXXX.....',
+      '.....XXXXX......',
+      '......XXX.......',
+      '.......X........',
+      '................'],
+    hi:[
+      '................',
+      '..X...X..XXXXX..',
+      '..X...X....X....',
+      '..X...X....X....',
+      '..XXXXX....X....',
+      '..X...X....X....',
+      '..X...X....X....',
+      '..X...X..XXXXX..',
+      '................',
+      '................']
+  };
+  function load(arr){state=arr.join('').split('').map(ch=>ch==='X'?1:0);paint();encode();resetCopy();}
+  $('rleHeart').addEventListener('click',()=>load(P.heart));
+  $('rleLetters').addEventListener('click',()=>load(P.hi));
+  $('rleStripes').addEventListener('click',()=>{
+    state=state.map((_,i)=>Math.floor(Math.floor(i/COLS)/2)%2===0?1:0);paint();encode();resetCopy();
+  });
+  $('rleCheck').addEventListener('click',()=>{
+    state=state.map((_,i)=>(i%COLS+Math.floor(i/COLS))%2);paint();encode();resetCopy();
+  });
+  $('rleClear').addEventListener('click',()=>{state.fill(0);paint();encode();resetCopy();});
+  load(P.heart);
+});
+
+/* ---------- 07b: lossy quality lab ---------- */
+safe('lossy',()=>{
+  const W=160,H=100;
+  const oc=$('cmpOrig'),lc=$('cmpLossy'),dc=$('cmpDiff');
+  const og=oc.getContext('2d'),lg=lc.getContext('2d'),dg=dc.getContext('2d');
+
+  /* paint the "original photo": a sunset */
+  const sky=og.createLinearGradient(0,0,0,62);
+  sky.addColorStop(0,'#1d2a52');sky.addColorStop(0.45,'#b04a3e');
+  sky.addColorStop(0.8,'#e8884a');sky.addColorStop(1,'#f2c14e');
+  og.fillStyle=sky;og.fillRect(0,0,W,62);
+  const glow=og.createRadialGradient(80,58,3,80,58,30);
+  glow.addColorStop(0,'rgba(255,238,170,0.95)');glow.addColorStop(1,'rgba(255,238,170,0)');
+  og.fillStyle=glow;og.fillRect(0,0,W,62);
+  og.fillStyle='#ffe9a8';og.beginPath();og.arc(80,58,11,Math.PI,0);og.fill();
+  const sea=og.createLinearGradient(0,62,0,H);
+  sea.addColorStop(0,'#d98a4e');sea.addColorStop(0.35,'#7a5a7e');sea.addColorStop(1,'#27355c');
+  og.fillStyle=sea;og.fillRect(0,62,W,H-62);
+  for(let y=64;y<H;y+=3){                       // sun shimmer on the water
+    const w=26-(y-64)*0.45+Math.sin(y*1.7)*6;
+    og.fillStyle='rgba(255,222,150,'+(0.5-(y-64)*0.011)+')';
+    og.fillRect(80-w/2,y,w,1.5);
+  }
+  og.fillStyle='#16203d';                       // headlands
+  og.beginPath();og.moveTo(0,62);og.lineTo(0,46);og.quadraticCurveTo(22,40,44,62);og.fill();
+  og.beginPath();og.moveTo(W,62);og.lineTo(W,50);og.quadraticCurveTo(132,42,108,62);og.fill();
+
+  const orig=og.getImageData(0,0,W,H);
+  const ORIG_B=W*H*3;                            // 48,000 B uncompressed
+
+  function render(q){
+    $('qVal').textContent=q;
+    const block=q>=80?1:q>=55?2:q>=30?4:8;
+    const levels=Math.max(2,Math.min(32,Math.round(q/4)));
+    const step=255/(levels-1);
+    const out=lg.createImageData(W,H);
+    for(let by=0;by<H;by+=block){
+      for(let bx=0;bx<W;bx+=block){
+        let r=0,g=0,b=0,n=0;
+        for(let y=by;y<Math.min(by+block,H);y++)for(let x=bx;x<Math.min(bx+block,W);x++){
+          const i=(y*W+x)*4;r+=orig.data[i];g+=orig.data[i+1];b+=orig.data[i+2];n++;
+        }
+        r=Math.round(r/n/step)*step;g=Math.round(g/n/step)*step;b=Math.round(b/n/step)*step;
+        for(let y=by;y<Math.min(by+block,H);y++)for(let x=bx;x<Math.min(bx+block,W);x++){
+          const i=(y*W+x)*4;
+          out.data[i]=r;out.data[i+1]=g;out.data[i+2]=b;out.data[i+3]=255;
+        }
+      }
+    }
+    lg.putImageData(out,0,0);
+    const blocks=Math.ceil(W/block)*Math.ceil(H/block);
+    const est=Math.round(blocks*3*Math.log2(levels)/8);
+    const pct=Math.max(1,Math.round(est/ORIG_B*100));
+    $('cmpStats').textContent='≈ '+(est/1000).toFixed(1)+' KB — '+pct+'% of original';
+    /* what got thrown away (difference ×5) */
+    const diff=dg.createImageData(W,H);
+    for(let i=0;i<orig.data.length;i+=4){
+      diff.data[i]  =Math.min(255,Math.abs(orig.data[i]  -out.data[i])*5);
+      diff.data[i+1]=Math.min(255,Math.abs(orig.data[i+1]-out.data[i+1])*5);
+      diff.data[i+2]=Math.min(255,Math.abs(orig.data[i+2]-out.data[i+2])*5);
+      diff.data[i+3]=255;
+    }
+    dg.putImageData(diff,0,0);
+  }
+  $('qSlider').addEventListener('input',e=>render(+e.target.value));
+  render(100);
+});
+
+/* ---------- 07c: lossy or lossless? picker ---------- */
+safe('picker',()=>{
+  const SC=[
+    {q:'📝 Your English essay (.docx) emailed to your teacher',a:0,
+     fb:'Lossless — change one letter and the meaning changes. Text must come back exactly.'},
+    {q:'🏖️ A beach photo texted to a friend',a:1,
+     fb:'Lossy (JPEG) — your friend will never notice a few million missing details, and it sends 10× faster.'},
+    {q:'🎧 A song streaming on Spotify',a:1,
+     fb:'Lossy (AAC/Ogg) — it deletes frequencies your ears barely register. Way smaller, sounds the same.'},
+    {q:'🏦 Your bank statement PDF',a:0,
+     fb:'Lossless — "approximately $500" is not a balance. Numbers must be exact.'},
+    {q:'🩻 A hospital X-ray sent to a specialist',a:0,
+     fb:'Lossless — a "barely noticeable" smudge might be the diagnosis. Medical images can\'t gamble.'},
+    {q:'📦 A .zip of your Processing sketches',a:0,
+     fb:'Lossless — code with even one changed character won\'t compile. ZIP always restores files exactly.'},
+    {q:'😂 A meme reposted for the 1000th time',a:1,
+     fb:'Lossy — and you can SEE it. Every re-save throws away more detail. That\'s why old memes look deep-fried.'}
+  ];
+  const wrap=$('pickWrap');
+  SC.forEach(s=>{
+    const row=document.createElement('div');row.className='pick-row';
+    const q=document.createElement('div');q.className='pick-q';q.textContent=s.q;
+    const bL=document.createElement('button');bL.className='btn';bL.textContent='lossless';
+    const bY=document.createElement('button');bY.className='btn';bY.textContent='lossy';
+    const fb=document.createElement('div');fb.className='pick-fb';
+    const btns=[bL,bY];
+    btns.forEach((b,i)=>b.addEventListener('click',()=>{
+      if(row.classList.contains('done'))return;
+      row.classList.add('done');
+      btns[s.a].classList.add('ok');
+      if(i!==s.a)b.classList.add('no');
+      fb.textContent=(i===s.a?'✓ ':'✗ ')+s.fb;
+      btns.forEach(x=>x.disabled=true);
+    }));
+    row.append(q,bL,bY,fb);wrap.appendChild(row);
+  });
+});
+
+/* ---------- 08: public/private key stepper ---------- */
+safe('keys',()=>{
+  const STEPS=6;let step=0;
+  const dots=$('keyDots');
+  for(let i=0;i<STEPS;i++){const d=document.createElement('span');d.className='ks-dot';dots.appendChild(d);}
+  const clean=s=>s.split('').filter(c=>{const k=c.charCodeAt(0);return k>=32&&k<=126;}).join('')||'hi bob';
+  const enc=s=>s.split('').map((c,i)=>String.fromCharCode((c.charCodeAt(0)-32+7+i*5)%95+32)).join('');
+
+  const CAP=[
+    m=>['Step 1 — Bob makes a key pair',
+        'Bob\u2019s computer generates two mathematically linked keys: a PUBLIC key \uD83D\uDD13 (an open padlock he can hand to anyone) and a PRIVATE key \uD83D\uDD11 (the only key that opens that padlock). The private key never leaves his computer.'],
+    m=>['Step 2 — Bob hands the public key to EVERYONE',
+        'Alice asks for Bob\u2019s public key \u2014 and Eve, listening on the wire, grabs a copy too. Bob doesn\u2019t care. The public key can only LOCK. It cannot unlock anything.'],
+    m=>['Step 3 — Alice snaps the padlock shut',
+        'Alice locks her message with Bob\u2019s public key: \u201C'+m.plain+'\u201D becomes \u201C'+m.cipher+'\u201D. Once it\u2019s snapped shut, even Alice can\u2019t reopen it.'],
+    m=>['Step 4 — Eve intercepts\u2026 and gets nothing',
+        'Eve copies the locked message right off the wire. She tries her copy of the public key \u2014 nothing. Public keys only lock. Without Bob\u2019s PRIVATE key, \u201C'+m.cipher+'\u201D is meaningless noise.'],
+    m=>['Step 5 — Bob\u2019s private key opens it',
+        'Only the private key matches the padlock. Bob unlocks \u201C'+m.cipher+'\u201D right back to \u201C'+m.plain+'\u201D. Eve saw every byte that crossed the network and still learned nothing.'],
+    m=>['The big idea \uD83D\uDCA1',
+        'Anyone can lock (public \uD83D\uDD13). Exactly one person can unlock (private \uD83D\uDD11). No secret key ever traveled across the network, so there was nothing for Eve to steal. This exact trick is how HTTPS begins \u2014 keep scrolling \u2193']
+  ];
+
+  function render(){
+    const plain=clean($('keyMsg').value),cipher=enc(plain),m={plain,cipher};
+    ['kBobPub','kBobPriv','kAlicePub','kEvePub'].forEach(id=>$(id).classList.remove('show'));
+    ['ksAlice','ksEve','ksBob'].forEach(id=>$(id).classList.remove('lit'));
+    [['mAlice','ks-msg'],['mEve','ks-msg'],['mBob','ks-msg']].forEach(([id,base])=>{const el=$(id);el.className=base;el.textContent='';});
+
+    $('kBobPub').classList.add('show');$('kBobPriv').classList.add('show');
+    if(step>=1){$('kAlicePub').classList.add('show');$('kEvePub').classList.add('show');}
+    if(step>=2){const e=$('mAlice');e.className='ks-msg show cipher';e.textContent=cipher;}
+    if(step>=3){const e=$('mEve');e.className='ks-msg show fail';e.textContent=cipher+'  \u2715 still locked';}
+    if(step>=4){const e=$('mBob');e.className='ks-msg show';e.textContent=plain+' \u2713';}
+    const lit=['ksBob','ksAlice','ksAlice','ksEve','ksBob',null][step];
+    if(lit)$(lit).classList.add('lit');
+
+    const[t,b]=CAP[step](m);
+    $('ksCapT').textContent=t;$('ksCapB').textContent=b;
+    [...dots.children].forEach((d,i)=>d.classList.toggle('on',i===step));
+    $('keyBack').disabled=step===0;$('keyNext').disabled=step===STEPS-1;
+  }
+  $('keyNext').addEventListener('click',()=>{if(step<STEPS-1){step++;render();}});
+  $('keyBack').addEventListener('click',()=>{if(step>0){step--;render();}});
+  $('keyRestart').addEventListener('click',()=>{step=0;render();});
+  $('keyMsg').addEventListener('input',render);
+  render();
+});
+
+/* ---------- 09: HTTP vs HTTPS wire sniffer ---------- */
+safe('https',()=>{
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const scramble=s=>{
+    const CH='aA7bB2cC9dD4eE8fF3gG1hH6iI5jJ0kKxXqQzZ+/==WmPrTv';
+    let h=13;return s.split('').map(c=>{h=(h*31+c.charCodeAt(0))%CH.length;return CH[h];}).join('');
+  };
+  function setProto(){
+    const on=$('tlsToggle').checked,lab=$('protoLab');
+    lab.textContent=on?'HTTPS':'HTTP';
+    lab.className='proto-lab '+(on?'https-on':'https-off');
+    $('urlBar').textContent=(on?'https':'http')+'://sketchy-games.com/login';
+  }
+  $('tlsToggle').addEventListener('change',setProto);
+  $('wireSend').addEventListener('click',()=>{
+    const u=$('fUser').value||'(blank)',p=$('fPass').value||'(blank)';
+    const on=$('tlsToggle').checked;
+    let html='<span style="opacity:0.55;">\u2500\u2500 Eve\u2019s packet sniffer \u00b7 capturing port '+(on?'443':'80')+' \u2500\u2500</span>\n\n';
+    if(!on){
+      html+='POST /login HTTP/1.1\nHost: sketchy-games.com\nContent-Type: application/x-www-form-urlencoded\n\n'
+        +'username=<span class="leak">'+esc(u)+'</span>\n'
+        +'password=<span class="leak">'+esc(p)+'</span>\n\n'
+        +'<span class="leak">\uD83D\uDE08 Eve just read your password in plain text.</span>';
+    }else{
+      html+='TLSv1.3 \u00b7 Application Data \u00b7 encrypted\n\n'
+        +'<span class="safe">'+scramble('username='+u)+'</span>\n'
+        +'<span class="safe">'+scramble('password='+p+'~~~')+'</span>\n\n'
+        +'<span class="safe">\uD83D\uDD12 Eve captured every packet \u2014 and got pure noise.</span>\n'
+        +'<span style="opacity:0.55;">(careful: the padlock means PRIVATE, not TRUSTWORTHY \u2014\n sketchy-games.com can still be a scam, just an encrypted one)</span>';
+    }
+    $('wireView').innerHTML=html;
+  });
+  setProto();
+});
+
+/* ---------- 02b: DNS resolver ---------- */
+safe('dns',()=>{
+  const fakeIp=name=>{let h=7;for(const c of name)h=(h*31+c.charCodeAt(0))%256;const b=()=>{h=(h*131+17)%256;return h;};return [(b()||23),b(),b(),(b()||9)].join('.');};
+  let current='maps.library.school.edu';
+  const nameEl=$('dnsName'),ipEl=$('dnsIp'),srvEl=$('dnsServer'),partsEl=$('dnsParts');
+  function showParts(d){
+    const segs=d.split('.');const tld=segs.pop();const dom=segs.pop();
+    const parts=segs.map(x=>['sub',x,'subdomain']);
+    parts.push(['dom',dom,'domain']);parts.push(['tld',tld,'top-level']);
+    partsEl.innerHTML=parts.map(([cls,txt,lab])=>'<span class="dns-part '+cls+'"><span class="lbl">'+lab+'</span>'+txt+'</span>').join('');
+  }
+  function setDomain(d){current=d;nameEl.textContent=d;ipEl.textContent='IP address';
+    [nameEl,srvEl,ipEl].forEach(e=>e.classList.remove('lit'));nameEl.classList.add('lit');showParts(d);}
+  function resolve(){
+    [nameEl,srvEl,ipEl].forEach(e=>e.classList.remove('lit'));nameEl.classList.add('lit');
+    setTimeout(()=>srvEl.classList.add('lit'),350);
+    setTimeout(()=>{ipEl.textContent=fakeIp(current);ipEl.classList.add('lit');},800);
+  }
+  document.querySelectorAll('[data-dns]').forEach(b=>b.addEventListener('click',()=>setDomain(b.getAttribute('data-dns'))));
+  $('dnsGo').addEventListener('click',resolve);
+  setDomain(current);
+});
+
+/* ---------- 10: quiz ---------- */
+safe('quiz',()=>{
+  const QS=[
+    {q:'A classmate says \u201CI\u2019m putting my project ON the Internet\u201D when they really mean publishing a web page. Most precise fix?',
+     o:['They\u2019re identical terms, so it\u2019s already correct',
+        'The page lives on the Web \u2014 one service that runs on top of the Internet',
+        'Web pages travel without using the Internet at all',
+        'Only the Internet stores images; the Web only stores text'],
+     a:1,fb:'The Web (pages + links via HTTP) is one service carried BY the Internet \u2014 the underlying network of networks.'},
+    {q:'Which of these could be a real IPv4 address?',
+     o:['10.0.288.4','172.31.6.250','192.168.1','8.8.8.8.8'],
+     a:1,fb:'IPv4 = four numbers, each 0\u2013255 (one byte). 288 is too big, three numbers is too few, five is one too many.'},
+    {q:'A school hosts the site grades.northside.k12.us. Which name is a SUBDOMAIN of northside.k12.us?',
+     o:['northside.k12.us.net','library.northside.k12.us','northside.us','k12.northside.org'],
+     a:1,fb:'A subdomain sits to the LEFT of the domain it belongs to, so \u201Clibrary.\u201D in front of northside.k12.us is part of that domain.'},
+    {q:'You send a 5 MB photo; it\u2019s split into many packets. Which is true about how they travel?',
+     o:['They must all follow one path, in order',
+        'They can take different paths and arrive out of order, then get reassembled',
+        'They travel together as one big packet to stay in order',
+        'Each packet erases the one before it'],
+     a:1,fb:'Packets route independently \u2014 different paths, possibly out of order \u2014 and TCP reorders them at the destination.'},
+    {q:'A storm knocks out one router on the path to a server, but your request still gets through. This works because the network has\u2026',
+     o:['more bandwidth','redundancy, which gives fault tolerance','a faster IP address','lossless compression'],
+     a:1,fb:'Redundancy = extra paths. When one fails, packets route around it. That ability is fault tolerance.'},
+    {q:'A live multiplayer game needs your moves to arrive RIGHT NOW, and an occasional dropped update is fine. Best transport protocol?',
+     o:['TCP, because it re-sends every lost packet','UDP, because it favors speed over re-sending','DNS, because it finds the fastest server','HTTPS, because it encrypts the moves'],
+     a:1,fb:'UDP fires packets fast and skips re-sends \u2014 ideal when on-time beats complete. TCP would pause to recover lost packets.'},
+    {q:'Your download speed is great, but every video call feels laggy with people talking over each other. The likely culprit is\u2026',
+     o:['too little bandwidth','high latency \u2014 delay on each round trip','a corrupted IP address','too much encryption'],
+     a:1,fb:'Calls send tiny amounts of data, so bandwidth isn\u2019t the problem. The delay (latency) on each round trip is what breaks the rhythm.'},
+    {q:'Why can a website hand its PUBLIC key to anyone \u2014 even an attacker \u2014 without losing security?',
+     o:['The public key is itself a secret',
+        'The public key can only lock; only the never-shared private key unlocks',
+        'Public keys stop working after one use',
+        'An attacker\u2019s computer physically cannot copy keys'],
+     a:1,fb:'Public-key (asymmetric) encryption: the public key only encrypts. Without the paired private key, an intercepted message is useless noise.'}
+  ];
+  const wrap=$('quizWrap');let answered=0,score=0;
+  QS.forEach((it,qi)=>{
+    const box=document.createElement('div');box.className='qz-q';
+    const t=document.createElement('div');t.className='q-txt';t.textContent=(qi+1)+'. '+it.q;
+    const opts=document.createElement('div');opts.className='qz-opts';
+    const fb=document.createElement('div');fb.className='q-fb';
+    it.o.forEach((o,oi)=>{
+      const b=document.createElement('button');b.className='qz-opt';b.textContent=o;
+      b.addEventListener('click',()=>{
+        if(box.classList.contains('answered'))return;
+        box.classList.add('answered');
+        [...opts.children].forEach(x=>x.disabled=true);
+        opts.children[it.a].classList.add('correct');
+        if(oi===it.a){score++;fb.textContent='\u2713 '+it.fb;}
+        else{b.classList.add('wrong');fb.textContent='\u2717 '+it.fb;}
+        answered++;
+        if(answered===QS.length){
+          const msg=score===8?'\uD83C\uDFC6 Perfect! You\u2019re ready for tomorrow.'
+            :score>=6?'\uD83D\uDCAA Solid \u2014 skim the cheat sheet below and you\u2019re set.'
+            :score>=4?'\uD83D\uDCD6 Decent start \u2014 replay the widgets for the ones you missed.'
+            :'\uD83D\uDD04 Scroll back up and play with the labs, then try again!';
+          const sb=$('scoreBanner');
+          sb.textContent='Score: '+score+' / '+QS.length+' \u2014 '+msg;
+          sb.style.display='block';
+        }
+      });
+      opts.appendChild(b);
+    });
+    box.append(t,opts,fb);wrap.appendChild(box);
+  });
+});
+
+</script>
+</body>
+</html>
