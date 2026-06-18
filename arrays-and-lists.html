@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Arrays &amp; Lists — IntList &amp; StringList</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbfaf0; --ink:#1a1a2e; --coral:#e8725a; --teal:#4a9b8e;
+    --gold:#d4a83a; --blue:#4a7fc1; --line:rgba(74,127,193,0.09);
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; color:var(--ink);
+    font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.65;
+    background-color:var(--cream);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:24px 24px;
+  }
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    position:fixed; top:0; left:0; width:248px; height:100vh;
+    padding:34px 0 34px 26px; overflow-y:auto;
+    border-right:2px solid var(--ink);
+    background:rgba(251,250,240,0.94);
+  }
+  .sidebar .brand{
+    font-family:'Fraunces',serif; font-weight:600; font-size:21px;
+    line-height:1.15; margin:0 0 4px;
+  }
+  .sidebar .brand .arr{color:var(--coral);}
+  .sidebar .kicker{
+    font-family:'Caveat',cursive; font-size:21px; color:var(--teal);
+    margin:0 0 26px; transform:rotate(-2deg); display:inline-block;
+  }
+  .sidebar nav{display:flex; flex-direction:column; gap:2px;}
+  .sidebar nav a{
+    text-decoration:none; color:var(--ink); font-size:14.5px; font-weight:500;
+    padding:7px 14px 7px 12px; border-left:3px solid transparent;
+    border-radius:0; opacity:.66; transition:opacity .15s, border-color .15s, background .15s;
+  }
+  .sidebar nav a .n{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--blue);
+    margin-right:8px; opacity:.8;
+  }
+  .sidebar nav a:hover{opacity:1; background:rgba(74,127,193,0.07);}
+  .sidebar nav a.active{
+    opacity:1; border-left-color:var(--coral); background:rgba(232,114,90,0.08);
+    font-weight:700;
+  }
+  .sidebar .footnote{
+    margin-top:30px; font-family:'Caveat',cursive; font-size:18px;
+    color:var(--ink); opacity:.6; transform:rotate(-1.5deg);
+    line-height:1.3; padding-right:18px;
+  }
+  /* ---------- Main ---------- */
+  main{margin-left:248px; padding:0 0 120px;}
+  .wrap{max-width:880px; padding:0 48px;}
+  header.page{padding:64px 48px 30px; max-width:880px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--blue); margin:0 0 14px; font-weight:500;
+  }
+  header.page h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:54px; line-height:1.02;
+    margin:0 0 18px; letter-spacing:-.5px;
+  }
+  header.page h1 em{font-style:italic; color:var(--coral);}
+  header.page .lede{font-size:19px; max-width:660px; margin:0;}
+  header.page .lede b{color:var(--teal);}
+  /* ---------- Sections ---------- */
+  section{padding:50px 48px 10px; max-width:880px; scroll-margin-top:20px;}
+  .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--cream); background:var(--ink); padding:5px 16px;
+    border-radius:4px 16px 16px 4px; margin-bottom:18px;
+  }
+  .tag.coral{background:var(--coral);} .tag.teal{background:var(--teal);}
+  .tag.gold{background:var(--gold); color:var(--ink);} .tag.blue{background:var(--blue);}
+  section h2{
+    font-family:'Fraunces',serif; font-weight:600; font-size:34px; line-height:1.08;
+    margin:0 0 16px; letter-spacing:-.3px;
+  }
+  section h3{
+    font-family:'Fraunces',serif; font-weight:600; font-size:22px;
+    margin:34px 0 10px;
+  }
+  section p{margin:0 0 16px;}
+  section p b{color:var(--ink);}
+  .lead{font-size:18.5px;}
+  a.inline{color:var(--blue); text-decoration-thickness:2px; text-underline-offset:2px;}
+  /* ---------- Cards / callouts ---------- */
+  .card{
+    background:var(--paper); border:2px solid var(--ink); border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink); padding:22px 24px; margin:24px 0;
+  }
+  .callout{
+    border-left:5px solid var(--gold); background:rgba(212,168,58,0.10);
+    border-radius:0 10px 10px 0; padding:16px 20px; margin:22px 0;
+  }
+  .callout.coral{border-left-color:var(--coral); background:rgba(232,114,90,0.09);}
+  .callout.teal{border-left-color:var(--teal); background:rgba(74,155,142,0.10);}
+  .callout .lbl{
+    font-family:'Caveat',cursive; font-size:21px; font-weight:700; display:block;
+    margin-bottom:2px;
+  }
+  .callout.coral .lbl{color:var(--coral);} .callout.teal .lbl{color:var(--teal);}
+  .callout .lbl{color:#a8801f;}
+  /* ---------- Code ---------- */
+  pre.code{
+    background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:10px;
+    padding:16px 18px; margin:18px 0; overflow-x:auto;
+    box-shadow:3px 3px 0 rgba(26,26,46,.08);
+  }
+  pre.code code, code.inline{
+    font-family:'IBM Plex Mono',monospace; font-size:14.5px; line-height:1.7;
+  }
+  code.inline{
+    background:#efeddc; padding:2px 7px; border-radius:5px;
+    font-size:14px; border:1px solid #e2dec9; color:var(--ink);
+  }
+  .tok-key{color:var(--blue); font-weight:600;}
+  .tok-type{color:var(--teal); font-weight:600;}
+  .tok-num{color:var(--coral);}
+  .tok-str{color:#b07d18;}
+  .tok-com{color:#9a9580; font-style:italic;}
+  .tok-fn{color:#7a59b0;}
+  pre.code .ln-bad{background:rgba(232,114,90,.12); display:block; margin:0 -18px; padding:0 18px;}
+  /* ---------- Table ---------- */
+  .tablewrap{margin:24px 0; border:2px solid var(--ink); border-radius:12px; overflow:hidden; box-shadow:6px 6px 0 var(--ink);}
+  table.cmp{border-collapse:collapse; width:100%; background:var(--paper); font-size:15px;}
+  table.cmp th, table.cmp td{padding:13px 16px; text-align:left; vertical-align:top; border-bottom:1px solid #ece8d8;}
+  table.cmp thead th{font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--cream);}
+  table.cmp thead th:nth-child(1){background:var(--ink); width:30%;}
+  table.cmp thead th:nth-child(2){background:var(--blue); width:33%;}
+  table.cmp thead th:nth-child(3){background:var(--teal); width:37%;}
+  table.cmp tbody tr:last-child td{border-bottom:none;}
+  table.cmp tbody tr:nth-child(even){background:#fcfbf3;}
+  table.cmp td:first-child{font-weight:600;}
+  table.cmp code{font-family:'IBM Plex Mono',monospace; font-size:13px; background:#f3f1e2; padding:2px 6px; border-radius:4px; border:1px solid #e7e3d2;}
+  .no{color:var(--coral); font-weight:700;}
+  .yes{color:var(--teal); font-weight:700;}
+  /* ---------- Recipe / cheat card (dark) ---------- */
+  .recipe{
+    background:var(--ink); color:#f4f2e6; border-radius:14px; padding:28px 30px;
+    margin:26px 0; box-shadow:8px 8px 0 var(--coral);
+  }
+  .recipe h3{font-family:'Caveat',cursive; font-size:30px; color:#fff; margin:0 0 4px;}
+  .recipe .sub{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin:0 0 20px;}
+  .recipe .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:0;}
+  .recipe .col{padding:0 20px; border-right:1px dashed rgba(244,242,230,.22);}
+  .recipe .col:first-child{padding-left:0;} .recipe .col:last-child{border-right:none; padding-right:0;}
+  .recipe .col h4{font-family:'Fraunces',serif; font-size:17px; margin:0 0 10px; color:#fff;}
+  .recipe .col h4 .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle;}
+  .recipe ul{list-style:none; margin:0; padding:0;}
+  .recipe li{font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.45; margin-bottom:11px; color:#d9d6c6;}
+  .recipe li b{color:#fff; font-weight:600;}
+  .recipe li .c{color:var(--gold);}
+  /* ---------- 3-beat mental model ---------- */
+  .beats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:26px 0 22px;}
+  .beat{background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:18px 18px 14px; box-shadow:5px 5px 0 var(--teal); position:relative;}
+  .beat .bn{position:absolute; top:-14px; left:16px; width:28px; height:28px; border-radius:50%; background:var(--teal); color:#fff; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; box-shadow:2px 2px 0 var(--ink);}
+  .beat b{display:block; font-family:'Fraunces',serif; font-weight:600; font-size:16px; margin:8px 0 7px;}
+  .beat p{margin:0; font-size:13.5px; color:#444; line-height:1.5;}
+  .beat code.inline{font-size:12.5px;}
+  /* ---------- Widgets ---------- */
+  .widget{
+    background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+    box-shadow:6px 6px 0 var(--blue); padding:24px; margin:26px 0;
+  }
+  .widget .whead{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap;}
+  .widget .wtitle{font-family:'Fraunces',serif; font-weight:600; font-size:20px;}
+  .widget .whint{font-family:'Caveat',cursive; font-size:18px; color:var(--teal);}
+  .widget .wdesc{font-size:14.5px; margin:0 0 18px; color:#444;}
+  .btn{
+    font-family:'DM Sans',sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+    border:2px solid var(--ink); border-radius:8px; padding:8px 16px; background:var(--gold);
+    color:var(--ink); box-shadow:3px 3px 0 var(--ink); transition:transform .08s, box-shadow .08s;
+  }
+  .btn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
+  .btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+  .btn.sec{background:var(--cream);}
+  .btn.teal{background:var(--teal); color:#fff;}
+  .btn.coral{background:var(--coral); color:#fff;}
+  .btn:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:3px 3px 0 var(--ink);}
+  .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;}
+  .controls input[type=number], .controls input[type=text]{
+    font-family:'IBM Plex Mono',monospace; font-size:14px; padding:7px 9px; width:64px;
+    border:2px solid var(--ink); border-radius:7px; background:#fdfcf4;
+  }
+  .controls input[type=text]{width:96px;}
+  .controls label{font-size:13.5px; font-weight:600;}
+  /* boxes for array/list visuals */
+  .boxes{display:flex; gap:9px; flex-wrap:wrap; margin:8px 0 4px; min-height:60px; align-items:flex-end;}
+  .box{
+    width:54px; text-align:center; transition:transform .2s, background .2s, border-color .2s;
+  }
+  .box .val{
+    border:2px solid var(--ink); border-radius:8px; background:#fdfcf4; padding:11px 0;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:16px;
+  }
+  .box .idx{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blue); margin-top:4px;}
+  .box.on .val{background:var(--gold); border-color:var(--ink); transform:translateY(-6px); box-shadow:3px 5px 0 rgba(26,26,46,.25);}
+  .box.pass .val{background:rgba(74,155,142,.25); border-color:var(--teal);}
+  .box.fail .val{background:rgba(232,114,90,.18); border-color:var(--coral);}
+  .box.ghost .val{opacity:.32; border-style:dashed;}
+  /* code+trace side panel */
+  .splitw{display:grid; grid-template-columns:1.25fr 1fr; gap:18px; align-items:start;}
+  .traceln{font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.75; white-space:pre; padding:1px 8px; border-radius:4px;}
+  .traceln.hi{background:var(--gold); color:var(--ink);}
+  .statebox{background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:9px; padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13.5px;}
+  .statebox .row{display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #e6e2cf;}
+  .statebox .row:last-child{border-bottom:none;}
+  .statebox .k{color:var(--blue);} .statebox .v{font-weight:600;}
+  .outbox{background:var(--ink); color:#cfeee6; border-radius:9px; padding:12px 14px; font-family:'IBM Plex Mono',monospace; font-size:13px; min-height:48px; margin-top:12px; white-space:pre-wrap; line-height:1.6;}
+  .outbox .muted{color:#6f6f84;}
+  .verdict{font-family:'Caveat',cursive; font-size:22px; min-height:30px; margin-top:6px;}
+  .verdict.t{color:var(--teal);} .verdict.f{color:var(--coral);}
+  /* counters for repetition trap */
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .codepane{background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:10px; padding:14px 16px; overflow:auto; max-height:340px;}
+  .codepane .ttl{font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;}
+  .codepane.bad .ttl{color:var(--coral);} .codepane.good .ttl{color:var(--teal);}
+  .codepane pre{margin:0; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.6; white-space:pre;}
+  .linecount{font-family:'Caveat',cursive; font-size:24px; margin-top:8px; font-weight:700;}
+  .codepane.bad .linecount{color:var(--coral);} .codepane.good .linecount{color:var(--teal);}
+  /* self-check */
+  .quiz{margin:18px 0;}
+  .qitem{background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:18px 20px; margin-bottom:16px; box-shadow:4px 4px 0 rgba(26,26,46,.12);}
+  .qitem .q{font-weight:700; margin-bottom:10px;}
+  .qitem .ans{display:none; margin-top:12px; border-top:2px dashed #ddd9c7; padding-top:12px; font-size:15px;}
+  .qitem .ans.show{display:block;}
+  .qitem .ans b{color:var(--teal);}
+  /* footer */
+  footer.page{max-width:880px; padding:40px 48px 0;}
+  footer.page .sig{font-family:'Caveat',cursive; font-size:26px; color:var(--ink); opacity:.78; transform:rotate(-1.5deg); display:inline-block;}
+  footer.page .rule{height:2px; background:var(--ink); opacity:.15; margin:0 0 22px; max-width:120px;}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <p class="brand">The <span class="arr">[ ]</span> &amp; List<br>Field Guide</p>
+  <span class="kicker">arrays · IntList · StringList</span>
+  <nav id="nav">
+    <a href="#why" data-sec="why"><span class="n">00</span>Why arrays?</a>
+    <a href="#recap" data-sec="recap"><span class="n">01</span>Array recap</a>
+    <a href="#loop" data-sec="loop"><span class="n">02</span>One &rarr; many</a>
+    <a href="#intlist" data-sec="intlist"><span class="n">03</span>Meet IntList</a>
+    <a href="#stringlist" data-sec="stringlist"><span class="n">04</span>Meet StringList</a>
+    <a href="#compare" data-sec="compare"><span class="n">05</span>Array vs List</a>
+    <a href="#patterns" data-sec="patterns"><span class="n">06</span>Loop patterns</a>
+    <a href="#cheatsheet" data-sec="cheatsheet"><span class="n">07</span>Cheat sheet</a>
+    <a href="#check" data-sec="check"><span class="n">08</span>Check yourself</a>
+  </nav>
+  <p class="footnote">An array is a parking lot with painted spaces. A list is a line of people.</p>
+</aside>
+
+<main>
+  <header class="page">
+    <p class="eyebrow">Processing · Java Mode · Data Structures</p>
+    <h1>Arrays &amp; Lists:<br>storing <em>many things</em> at once</h1>
+    <p class="lede">You already know arrays. Today we add two flexible cousins — <b>IntList</b> and <b>StringList</b> — and figure out when each one is the right tool. The secret weapon for all three is the same: <b>the loop</b>.</p>
+  </header>
+
+  <section id="why"><span class="tag coral">Start here</span>
+<h2>Why do we even need arrays?</h2>
+<p class="lead">Say you're tracking quiz scores and you want to print which ones passed (70 or higher). With separate variables, you'd write a new variable <em>and</em> a new <code class="inline">if</code> for every single student:</p>
+
+<pre class="code"><code>int score1 = 85;
+int score2 = 62;
+int score3 = 90;
+int score4 = 71;
+int score5 = 55;
+
+if (score1 >= 70) { println("Student 1 passed"); }
+if (score2 >= 70) { println("Student 2 passed"); }
+if (score3 >= 70) { println("Student 3 passed"); }
+if (score4 >= 70) { println("Student 4 passed"); }
+if (score5 >= 70) { println("Student 5 passed"); }</code></pre>
+
+<p>Five scores, ten lines of near-identical code. Now imagine your class has <b>30</b> students. Or <b>300</b>. You'd be copy-pasting that <code class="inline">if</code> forever, changing one number each time. That's the pain arrays were invented to kill.</p>
+
+<p>An <b>array</b> lets you store all the scores under one name, and a <b>loop</b> runs the check <em>once</em> — no matter how many scores there are:</p>
+
+<pre class="code"><code>int[] scores = {85, 62, 90, 71, 55};
+
+for (int i = 0; i &lt; scores.length; i++) {
+  if (scores[i] >= 70) {
+    println("Student " + (i + 1) + " passed");
+  }
+}</code></pre>
+
+<div class="callout coral">
+  <span class="lbl">The whole point ↓</span>
+  The array-and-loop version <b>does not get longer when you add more data</b>. Drag the slider below and watch.
+</div>
+
+<div class="widget" id="trapWidget">
+  <div class="whead">
+    <span class="wtitle">The Repetition Trap</span>
+    <span class="whint">more students = more pain?</span>
+  </div>
+  <p class="wdesc">Change the number of students. The <b>variables way</b> grows every time. The <b>array way</b> stays exactly the same height.</p>
+  <div class="controls">
+    <button class="btn sec" id="trapMinus">&minus;</button>
+    <label>Students: <b id="trapCount">5</b></label>
+    <button class="btn" id="trapPlus">+</button>
+  </div>
+  <div class="twocol">
+    <div class="codepane bad">
+      <div class="ttl">✗ A variable + an if for each one</div>
+      <pre id="trapBad"></pre>
+      <div class="linecount" id="trapBadLines"></div>
+    </div>
+    <div class="codepane good">
+      <div class="ttl">✓ One array + one loop</div>
+      <pre id="trapGood"></pre>
+      <div class="linecount" id="trapGoodLines"></div>
+    </div>
+  </div>
+</div></section>
+  <section id="recap"><span class="tag blue">Refresher</span>
+<h2>A 30-second array recap</h2>
+<p class="lead">You've been living in arrays, so this is just a tune-up. An array is a row of numbered boxes, all the same type, created with a fixed size.</p>
+
+<pre class="code"><code>int[] scores = {85, 62, 90, 71, 55};   // five boxes, filled
+int[] empties = new int[5];            // five boxes, all 0</code></pre>
+
+<p>Every box has an <b>index</b>, and indexes always start at <b>0</b>:</p>
+
+<div class="boxes" id="recapBoxes"></div>
+
+<p>You reach into a box with square brackets:</p>
+<pre class="code"><code>scores[0]                   // reads 85  (the FIRST box)
+scores[scores.length - 1]   // reads 55  (the LAST box)
+scores[2] = 100;            // overwrites the third box with 100
+scores.length               // 5  (how many boxes — no parentheses!)</code></pre>
+
+<div class="callout coral">
+  <span class="lbl">The last index is length − 1 ↓</span>
+  Counting starts at 0, so five boxes are numbered 0–4 — the last is always at <code class="inline">length - 1</code>, <b>never</b> <code class="inline">length</code>. Reach for <code class="inline">scores[scores.length - 1]</code> instead of hardcoding <code class="inline">scores[4]</code>, and it keeps working even after the array changes size. Step one box too far — <code class="inline">scores[5]</code> or <code class="inline">scores[scores.length]</code> — and Processing crashes with <code class="inline">ArrayIndexOutOfBoundsException</code>. That off-by-one is the single most common array bug there is.
+</div>
+
+<div class="callout">
+  <span class="lbl">Watch this one ↓</span>
+  An array's size is locked the moment you make it. <code class="inline">int[5]</code> is <b>always</b> five boxes — you can't <code class="inline">append</code> a sixth or delete one. That single limitation is exactly what <b>IntList</b> and <b>StringList</b> fix.
+</div></section>
+  <section id="loop"><span class="tag teal">The big idea</span>
+<h2>Make it work for one. Then let the loop scale it.</h2>
+<p class="lead">Here's the mindset that makes arrays click: <b>first solve the problem for a single item</b>, then wrap that exact logic in a loop so it repeats for every item.</p>
+
+<p>Checking <em>one</em> score is easy:</p>
+<pre class="code"><code>if (scores[0] >= 70) {        // just the first box
+  println("Passed!");
+}</code></pre>
+
+<p>That's the whole job — for one box. A loop takes that <em>same</em> body and runs it on box 0, then box 1, then box 2… changing only the index <code class="inline">i</code> each time. You write the logic once; the loop does it five times (or five hundred).</p>
+
+<pre class="code"><code>for (int i = 0; i &lt; scores.length; i++) {
+  if (scores[i] >= 70) {              // the SAME check, now on box i
+    println("Student " + (i + 1) + " passed");
+  }
+}</code></pre>
+
+<div class="widget" id="stepWidget">
+  <div class="whead">
+    <span class="wtitle">Loop Stepper</span>
+    <span class="whint">one box at a time →</span>
+  </div>
+  <p class="wdesc">Step through the loop yourself. Watch <code class="inline">i</code> climb, see which box it's looking at, and check whether <code class="inline">scores[i] >= 70</code> is true before the next step.</p>
+
+  <div class="boxes" id="stepBoxes"></div>
+
+  <div class="splitw" style="margin-top:14px;">
+    <div>
+      <div id="stepCode"></div>
+    </div>
+    <div>
+      <div class="statebox" id="stepState"></div>
+      <div class="verdict" id="stepVerdict">&nbsp;</div>
+    </div>
+  </div>
+
+  <div class="outbox" id="stepOut"><span class="muted">// console output appears here</span></div>
+
+  <div class="controls" style="margin-top:16px;">
+    <button class="btn" id="stepNext">Step ▸</button>
+    <button class="btn teal" id="stepAuto">Auto-run ⏩</button>
+    <button class="btn sec" id="stepReset">Reset ↺</button>
+  </div>
+</div>
+
+<div class="callout teal">
+  <span class="lbl">Notice ↓</span>
+  Every trip through the loop runs the <b>identical</b> two lines you wrote for one box. The only thing that changes is <code class="inline">i</code>. That's why you never copy-paste — the loop <em>is</em> the copy-paste, done correctly.
+</div></section>
+  <section id="intlist"><span class="tag gold">New tool</span>
+<h2>Meet <code class="inline">IntList</code>: an array that can grow</h2>
+<p class="lead">Arrays are great when you know the size up front. But what if items get added and removed while the program runs — a high-score list, a shopping cart, players joining a game? That's the job for an <b>IntList</b>. It holds <code class="inline">int</code> values like an array, but it can <b>stretch and shrink</b>.</p>
+
+<pre class="code"><code>IntList scores = new IntList();   // starts EMPTY (size 0)
+scores.append(85);                // size 1  →  [85]
+scores.append(62);                // size 2  →  [85, 62]
+scores.append(90);                // size 3  →  [85, 62, 90]</code></pre>
+
+<p>Notice you never declared a size. You just keep <code class="inline">append</code>-ing and it keeps growing. Here are the moves you'll use most:</p>
+
+<div class="card">
+  <table class="cmp" style="box-shadow:none; border:none;">
+    <tbody>
+      <tr><td><code>append(v)</code></td><td>Add value <code>v</code> to the <b>end</b> of the list.</td></tr>
+      <tr><td><code>get(i)</code></td><td>Read the value at index <code>i</code>.</td></tr>
+      <tr><td><code>set(i, v)</code></td><td>Overwrite index <code>i</code> with value <code>v</code>.</td></tr>
+      <tr><td><code>size()</code></td><td>How many values are in the list right now <b>(parentheses!)</b>.</td></tr>
+      <tr><td><code>remove(i)</code></td><td>Delete index <code>i</code>; everything after it shifts left.</td></tr>
+      <tr><td><code>hasValue(v)</code></td><td>Returns <code>true</code>/<code>false</code> — is <code>v</code> in the list?</td></tr>
+      <tr><td><code>index(v)</code></td><td>Returns the index where <code>v</code> first appears (or <code>-1</code>).</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="widget" id="ilWidget">
+  <div class="whead">
+    <span class="wtitle">IntList Playground</span>
+    <span class="whint">watch it stretch &amp; shrink</span>
+  </div>
+  <p class="wdesc">Run the methods and watch the boxes react. Unlike an array, the size changes right in front of you.</p>
+
+  <div class="boxes" id="ilBoxes"></div>
+  <div class="statebox" id="ilState" style="margin:6px 0 16px; max-width:260px;"></div>
+
+  <div class="controls">
+    <input type="number" id="ilAppendV" value="50" aria-label="value to append">
+    <button class="btn" id="ilAppend">append(v)</button>
+  </div>
+  <div class="controls">
+    <input type="number" id="ilSetI" value="0" aria-label="index"> &lt; this index is set to this value &gt;
+    <input type="number" id="ilSetV" value="99" aria-label="value">
+    <button class="btn" id="ilSet">set(i, v)</button>
+  </div>
+  <div class="controls">
+    <input type="number" id="ilGetI" value="0" aria-label="index">
+    <button class="btn sec" id="ilGet">get(i)</button>
+    <input type="number" id="ilRemI" value="0" aria-label="index">
+    <button class="btn coral" id="ilRem">remove(i)</button>
+  </div>
+  <div class="controls">
+    <button class="btn sec" id="ilReset">reset list ↺</button>
+    <span class="verdict t" id="ilMsg" style="margin:0;">&nbsp;</span>
+  </div>
+</div>
+
+<h3>The loop barely changes</h3>
+<p>Walking an IntList uses the <em>same</em> loop shape as an array. Only two things swap: <code class="inline">.length</code> becomes <code class="inline">.size()</code>, and <code class="inline">[i]</code> becomes <code class="inline">.get(i)</code>.</p>
+<pre class="code"><code>for (int i = 0; i &lt; scores.size(); i++) {   // .size() not .length
+  if (scores.get(i) >= 70) {                // .get(i) not [i]
+    println("Student " + (i + 1) + " passed");
+  }
+}</code></pre></section>
+  <section id="stringlist"><span class="tag gold">New tool</span>
+<h2>Meet <code class="inline">StringList</code>: the same idea, for words</h2>
+<p class="lead">A <b>StringList</b> is IntList's twin — it grows and shrinks the same way and uses the same method names — but it holds <code class="inline">String</code> values instead of numbers. Names, words, answers, file names: anything text.</p>
+
+<pre class="code"><code>StringList names = new StringList();   // empty
+names.append("Sam");                   // ["Sam"]
+names.append("Maria");                 // ["Sam", "Maria"]
+names.append("Devin");                 // ["Sam", "Maria", "Devin"]
+
+names.get(1)            // "Maria"
+names.set(0, "Sammy");  // ["Sammy", "Maria", "Devin"]
+names.size()            // 3
+names.hasValue("Devin") // true</code></pre>
+
+<p>Everything you just learned for IntList — <code class="inline">append</code>, <code class="inline">get</code>, <code class="inline">set</code>, <code class="inline">size</code>, <code class="inline">remove</code>, <code class="inline">hasValue</code>, <code class="inline">index</code> — works identically here. Learn the moves once, use them on both.</p>
+
+<h3>A few text-only bonus moves</h3>
+<p>Because the values are words, StringList throws in some helpers that wouldn't make sense for numbers:</p>
+<pre class="code"><code>names.sort();    // puts the words in alphabetical order
+names.lower();   // makes every entry lowercase
+names.upper();   // makes every entry UPPERCASE</code></pre>
+
+<p>And the loop? Same shape again — greet every name in the list:</p>
+<pre class="code"><code>for (int i = 0; i &lt; names.size(); i++) {
+  println("Hello, " + names.get(i) + "!");
+}</code></pre>
+
+<div class="callout coral">
+  <span class="lbl">String gotcha — don't forget! ↓</span>
+  When you compare the strings you pull out of a list, use <code class="inline">.equals()</code>, not <code class="inline">==</code>. So <code class="inline">names.get(i).equals("Sam")</code> — never <code class="inline">names.get(i) == "Sam"</code>. With text, <code class="inline">==</code> checks the wrong thing and will burn you.
+</div></section>
+  <section id="compare"><span class="tag">Side by side</span>
+<h2>Array vs. List: the cheat table</h2>
+<p class="lead">Same goal, different syntax. This is the table to keep open while you code. The big mental split: arrays use <b>square brackets</b> and a <b>locked size</b>; lists use <b>methods</b> and can <b>change size</b>.</p>
+
+<div class="tablewrap">
+  <table class="cmp">
+    <thead>
+      <tr><th>What you want to do</th><th>Array</th><th>IntList / StringList</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Create it</td>
+        <td><code>int[] a = new int[5];</code><br>or <code>int[] a = {…};</code></td>
+        <td><code>IntList a = new IntList();</code><br><code>StringList s = new StringList();</code></td>
+      </tr>
+      <tr>
+        <td>Add a brand-new item</td>
+        <td><span class="no">✗</span> can't — size is locked</td>
+        <td><code>a.append(value);</code></td>
+      </tr>
+      <tr>
+        <td>Read item at index <code>i</code></td>
+        <td><code>a[i]</code></td>
+        <td><code>a.get(i)</code></td>
+      </tr>
+      <tr>
+        <td>Read the <b>last</b> item</td>
+        <td><code>a[a.length - 1]</code></td>
+        <td><code>a.get(a.size() - 1)</code></td>
+      </tr>
+      <tr>
+        <td>Change item at index <code>i</code></td>
+        <td><code>a[i] = value;</code></td>
+        <td><code>a.set(i, value);</code></td>
+      </tr>
+      <tr>
+        <td>How many items?</td>
+        <td><code>a.length</code> <span class="no">(no parentheses)</span></td>
+        <td><code>a.size()</code> <span class="yes">(with parentheses)</span></td>
+      </tr>
+      <tr>
+        <td>Remove an item</td>
+        <td><span class="no">✗</span> can't shrink</td>
+        <td><code>a.remove(i);</code></td>
+      </tr>
+      <tr>
+        <td>Does it contain a value?</td>
+        <td>write your own loop</td>
+        <td><code>a.hasValue(value)</code></td>
+      </tr>
+      <tr>
+        <td>Where is a value? (index)</td>
+        <td>write your own loop</td>
+        <td><code>a.index(value)</code></td>
+      </tr>
+      <tr>
+        <td>Loop through every item</td>
+        <td><code>i &lt; a.length</code> … <code>a[i]</code></td>
+        <td><code>i &lt; a.size()</code> … <code>a.get(i)</code></td>
+      </tr>
+      <tr>
+        <td>Size after it's created</td>
+        <td><span class="no">fixed forever</span></td>
+        <td><span class="yes">grows &amp; shrinks</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="callout">
+  <span class="lbl">The two mistakes everyone makes ↓</span>
+  <b>1.</b> Writing <code class="inline">a.length()</code> on an array (it's <code class="inline">.length</code>, no parentheses) — or <code class="inline">a.size</code> on a list (it's <code class="inline">.size()</code>, <em>with</em> parentheses).<br>
+  <b>2.</b> Trying <code class="inline">list[i]</code> on a list (use <code class="inline">.get(i)</code>) or <code class="inline">array.get(i)</code> on an array (use <code class="inline">[i]</code>).
+</div></section>
+  <section id="patterns"><span class="tag teal">The payoff</span>
+<h2>What can you actually DO with a pile of values?</h2>
+<p class="lead">Storing values is only half the story. The real power is answering questions about <em>all</em> of them at once: What's the total? The highest? How many are 95? Is a value even in there? Every one of these is the same loop wearing a different hat.</p>
+
+<p>They all share one rhythm — the <b>accumulator pattern</b>. You keep a single variable holding "the answer so far," and the loop updates it one item at a time:</p>
+
+<div class="beats">
+  <div class="beat"><span class="bn">1</span><b>Before the loop</b><p>Make a variable to hold the answer-in-progress.<br><code class="inline">int total = 0;</code></p></div>
+  <div class="beat"><span class="bn">2</span><b>During each pass</b><p>Update it using the current item.<br><code class="inline">total += scores[i];</code></p></div>
+  <div class="beat"><span class="bn">3</span><b>After the loop</b><p>The variable now holds your answer.<br><code class="inline">println(total);</code></p></div>
+</div>
+
+<h3>1 · Adding it all up — and the average</h3>
+<p>Start the total at 0, then pour each value into it. Once you have the total, the average is just the total divided by how many there are.</p>
+<pre class="code"><code>int total = 0;                          // before: an empty bucket
+for (int i = 0; i &lt; scores.length; i++) {
+  total = total + scores[i];            // during: add this one in
+}
+float average = (float) total / scores.length;   // after
+println("Total: " + total + "   Average: " + average);</code></pre>
+<div class="callout"><span class="lbl">Why the (float)? ↓</span>Without it, <code class="inline">int / int</code> throws away the decimals — <code class="inline">7 / 2</code> gives <code class="inline">3</code>, not <code class="inline">3.5</code>. Casting one side to <code class="inline">float</code> keeps the fraction.</div>
+
+<h3>2 · The biggest and the smallest</h3>
+<p>Keep a "champion" variable. Start it at the <b>first</b> value, then challenge it against every other value — if you find a bigger one, crown a new champion.</p>
+<pre class="code"><code>int highest = scores[0];                // before: assume the first is best
+for (int i = 0; i &lt; scores.length; i++) {
+  if (scores[i] > highest) {            // during: found a bigger one?
+    highest = scores[i];                // crown the new champion
+  }
+}
+println("Highest: " + highest);</code></pre>
+<p><b>Smallest is the exact mirror:</b> start <code class="inline">int lowest = scores[0];</code> and flip the comparison to <code class="inline">scores[i] &lt; lowest</code>.</p>
+<div class="callout coral"><span class="lbl">Don't start at 0! ↓</span>If you wrote <code class="inline">int highest = 0;</code> and every score happened to be negative, your loop would report <code class="inline">0</code> as the "highest" — a value that isn't even in the list. Starting at <code class="inline">scores[0]</code> guarantees your champion is always a <em>real</em> value.</div>
+
+<h3>3 · How many times does a value appear?</h3>
+<p>A counter. Start at 0, and add 1 every time the current item matches what you're hunting for.</p>
+<pre class="code"><code>int count = 0;                          // before
+for (int i = 0; i &lt; scores.length; i++) {
+  if (scores[i] == 95) {                // during: is this one a match?
+    count = count + 1;                  // tally it
+  }
+}
+println("95 appears " + count + " times");</code></pre>
+
+<h3>4 · Is the value in there at all?</h3>
+<p>If you only care <em>whether</em> something exists (not how many), use a <code class="inline">boolean</code> flag. Start it <code class="inline">false</code>, and flip it to <code class="inline">true</code> the moment you spot a match.</p>
+<pre class="code"><code>boolean found = false;                  // before: haven't seen it yet
+for (int i = 0; i &lt; scores.length; i++) {
+  if (scores[i] == 95) {
+    found = true;                       // during: saw it!
+  }
+}
+println("Contains 95? " + found);</code></pre>
+
+<div class="callout teal"><span class="lbl">Lists hand you some of these for free ↓</span>
+An <b>IntList</b> has built-in shortcuts so you don't always have to write the loop: <code class="inline">scores.sum()</code>, <code class="inline">scores.min()</code>, <code class="inline">scores.max()</code>, <code class="inline">scores.hasValue(95)</code>, and <code class="inline">scores.index(95)</code> (first position, or −1 if absent). A <b>StringList</b> gives you <code class="inline">hasValue()</code> and <code class="inline">index()</code> too. But notice what's missing: there's <b>no built-in "count how many times"</b> — for that you <em>always</em> write the loop. And plain arrays give you none of these. That's the whole reason the loop versions are the skill worth owning: they work on <b>everything</b>.</div>
+
+<h3>5 · Change every item (a different beast)</h3>
+<p>The four patterns above all <em>reduce</em> the array down to one answer — a sum, a max, a count. This one is the opposite: the loop writes <b>back into</b> the array, changing every element. There's no accumulator at all. Say you want to curve every grade up by 5:</p>
+<pre class="code"><code>for (int i = 0; i &lt; scores.length; i++) {
+  scores[i] = scores[i] + 5;   // overwrite each box with a new value
+}</code></pre>
+<p>After the loop, the array itself has changed — every score is 5 higher than it started. The same shape works to double every value, cap everything at 100, swap the sign — anything where you're <em>modifying</em> the collection rather than summarizing it.</p>
+
+<div class="widget" id="labWidget">
+  <div class="whead">
+    <span class="wtitle">Pattern Lab</span>
+    <span class="whint">one skeleton, six jobs</span>
+  </div>
+  <p class="wdesc">Same five values, six different questions. Pick a job and watch the accumulator fill up as the loop walks the array one box at a time — then see the answer.</p>
+
+  <div class="boxes" id="labBoxes"></div>
+
+  <div class="controls" id="labBtns" style="margin:14px 0 2px;">
+    <button class="btn" data-p="sum">Sum</button>
+    <button class="btn" data-p="avg">Average</button>
+    <button class="btn" data-p="max">Highest</button>
+    <button class="btn" data-p="min">Lowest</button>
+    <button class="btn" data-p="count">Count of 95</button>
+    <button class="btn" data-p="has">Contains 95?</button>
+    <button class="btn sec" id="labReplay" disabled>Replay ↺</button>
+  </div>
+
+  <div class="splitw" style="margin-top:16px;">
+    <div><div id="labCode"><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#9a9580;">// pick a job above to see its loop</span></div></div>
+    <div>
+      <div class="statebox" id="labTrack"><div class="row"><span class="k">accumulator</span><span class="v">—</span></div></div>
+      <div class="verdict" id="labAnswer">&nbsp;</div>
+    </div>
+  </div>
+</div>
+
+<div class="callout teal">
+  <span class="lbl">Put it into practice ↓</span>
+  Knowing these patterns is one thing — knowing <em>which</em> to reach for on a fresh problem is the real skill. The <a class="inline" href="what-to-track.html">What-to-Track clinic</a> walks that decision through four CodingBat problems (<code class="inline">more14</code>, <code class="inline">sum28</code>, <code class="inline">bigDiff</code>, <code class="inline">centeredAverage</code>) with a "decide first" check for each.
+</div></section>
+
+  <section id="cheatsheet"><span class="tag coral">Keep this open</span>
+<h2>The recipe card</h2>
+<p class="lead">Everything in one place. Screenshot it, tape it to your monitor.</p>
+
+<div class="recipe">
+  <h3>Three ways to hold many things</h3>
+  <p class="sub">Processing · Java Mode</p>
+  <div class="grid3">
+    <div class="col">
+      <h4><span class="dot" style="background:#4a7fc1;"></span>int[ ] array</h4>
+      <ul>
+        <li><b>make</b> <span class="c">int[] a = new int[5];</span></li>
+        <li><b>make+fill</b> <span class="c">int[] a = {3,7,1};</span></li>
+        <li><b>read</b> <span class="c">a[i]</span></li>
+        <li><b>last</b> <span class="c">a[a.length-1]</span></li>
+        <li><b>write</b> <span class="c">a[i] = 9;</span></li>
+        <li><b>count</b> <span class="c">a.length</span></li>
+        <li><b>grow?</b> no — fixed size</li>
+        <li><b>loop</b> <span class="c">i &lt; a.length</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4><span class="dot" style="background:#d4a83a;"></span>IntList</h4>
+      <ul>
+        <li><b>make</b> <span class="c">new IntList();</span></li>
+        <li><b>add</b> <span class="c">a.append(9);</span></li>
+        <li><b>read</b> <span class="c">a.get(i)</span></li>
+        <li><b>last</b> <span class="c">a.get(a.size()-1)</span></li>
+        <li><b>write</b> <span class="c">a.set(i, 9);</span></li>
+        <li><b>count</b> <span class="c">a.size()</span></li>
+        <li><b>delete</b> <span class="c">a.remove(i);</span></li>
+        <li><b>find</b> <span class="c">a.hasValue(9)</span></li>
+      </ul>
+    </div>
+    <div class="col">
+      <h4><span class="dot" style="background:#4a9b8e;"></span>StringList</h4>
+      <ul>
+        <li><b>make</b> <span class="c">new StringList();</span></li>
+        <li><b>add</b> <span class="c">s.append("hi");</span></li>
+        <li><b>read</b> <span class="c">s.get(i)</span></li>
+        <li><b>last</b> <span class="c">s.get(s.size()-1)</span></li>
+        <li><b>write</b> <span class="c">s.set(i,"hi");</span></li>
+        <li><b>count</b> <span class="c">s.size()</span></li>
+        <li><b>compare</b> <span class="c">s.get(i).equals("hi")</span></li>
+        <li><b>bonus</b> <span class="c">s.sort(); s.lower();</span></li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+  <section id="check"><span class="tag teal">Test yourself</span>
+<h2>Check yourself</h2>
+<p class="lead">Predict the answer in your head <em>first</em>, then reveal. If you can explain the "why," you've got it.</p>
+
+<div class="quiz" id="quiz">
+  <div class="qitem">
+    <div class="q">1. For <code class="inline">int[] colors = {7, 4, 9};</code>, what does <code class="inline">colors.length</code> give — and why is it a mistake to write <code class="inline">colors.length()</code>?</div>
+    <button class="btn sec qbtn">Reveal answer</button>
+    <div class="ans"><b>3.</b> The array has three boxes. On an <b>array</b>, <code class="inline">length</code> is a property with <b>no parentheses</b> — adding <code class="inline">()</code> tries to call it like a method and won't compile. (Parentheses belong to <code class="inline">.size()</code>, which is the <em>list</em> version.)</div>
+  </div>
+
+  <div class="qitem">
+    <div class="q">2. You run: <code class="inline">IntList nums = new IntList(); nums.append(5); nums.append(9); nums.append(2);</code> &nbsp;What is <code class="inline">nums.size()</code>?</div>
+    <button class="btn sec qbtn">Reveal answer</button>
+    <div class="ans"><b>3.</b> It started empty (size 0), and each <code class="inline">append</code> added one item to the end: <code class="inline">[5, 9, 2]</code>.</div>
+  </div>
+
+  <div class="qitem">
+    <div class="q">3. Continuing from above, you call <code class="inline">nums.remove(0);</code> &nbsp;Now what does <code class="inline">nums.get(0)</code> return?</div>
+    <button class="btn sec qbtn">Reveal answer</button>
+    <div class="ans"><b>9.</b> Removing index 0 deletes the <code class="inline">5</code>, and everything <b>shifts left</b> to fill the gap: the list is now <code class="inline">[9, 2]</code>, so index 0 holds <code class="inline">9</code>. (Remove doesn't leave an empty hole.)</div>
+  </div>
+
+  <div class="qitem">
+    <div class="q">4. What does this loop print?
+<pre class="code" style="margin:10px 0 0;"><code>int[] vals = {2, 8, 5, 8};
+for (int i = 0; i &lt; vals.length; i++) {
+  if (vals[i] == 8) {
+    println("found 8 at index " + i);
+  }
+}</code></pre></div>
+    <button class="btn sec qbtn">Reveal answer</button>
+    <div class="ans">Two lines:<br><code class="inline">found 8 at index 1</code><br><code class="inline">found 8 at index 3</code><br>The loop visits all four boxes; the <code class="inline">if</code> only prints when the value equals 8, which happens at indexes 1 and 3.</div>
+  </div>
+
+  <div class="qitem">
+    <div class="q">5. A roster of players keeps changing all game — people join and quit constantly. Array, or list? Which one, and why?</div>
+    <button class="btn sec qbtn">Reveal answer</button>
+    <div class="ans"><b>A list</b> (here, a <code class="inline">StringList</code> of names). Because the number of players changes while the program runs, you need something that can <code class="inline">append</code> and <code class="inline">remove</code>. An array's locked size can't handle "keeps changing."</div>
+  </div>
+</div></section>
+
+  <footer class="page">
+    <div class="rule"></div>
+    <span class="sig">Pick the right container, then let the loop do the walking. ✦</span>
+  </footer>
+</main>
+
+<script>
+function safe(fn){ try{ fn(); }catch(e){ console.error("widget error:", e); } }
+function el(id){ return document.getElementById(id); }
+
+/* ---------------- syntax highlighter ---------------- */
+var KW = {"for":1,"if":1,"else":1,"while":1,"do":1,"return":1,"break":1,"continue":1,"true":1,"false":1,"null":1,"new":1};
+var TY = {"int":1,"float":1,"double":1,"boolean":1,"char":1,"void":1,"String":1,"IntList":1,"StringList":1,"color":1,"byte":1,"short":1,"long":1};
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function highlight(text){
+  var re=/(\/\/[^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|([\s\S])/g;
+  var out="", m;
+  while((m=re.exec(text))!==null){
+    if(m[1]){ out+='<span class="tok-com">'+esc(m[1])+'</span>'; }
+    else if(m[2]){ out+='<span class="tok-str">'+esc(m[2])+'</span>'; }
+    else if(m[3]){ out+='<span class="tok-num">'+esc(m[3])+'</span>'; }
+    else if(m[4]){
+      var w=m[4], rest=text.slice(re.lastIndex);
+      if(KW[w]) out+='<span class="tok-key">'+w+'</span>';
+      else if(TY[w]) out+='<span class="tok-type">'+w+'</span>';
+      else if(/^\s*\(/.test(rest)) out+='<span class="tok-fn">'+w+'</span>';
+      else out+=esc(w);
+    }
+    else { out+=esc(m[5]); }
+  }
+  return out;
+}
+safe(function(){
+  var blocks=document.querySelectorAll("pre.code > code");
+  for(var i=0;i<blocks.length;i++){ blocks[i].innerHTML=highlight(blocks[i].textContent); }
+});
+
+/* ---------------- scrollspy ---------------- */
+safe(function(){
+  var links=document.querySelectorAll("#nav a");
+  var secs=[];
+  for(var i=0;i<links.length;i++){ var s=el(links[i].getAttribute("data-sec")); if(s) secs.push({a:links[i],s:s}); }
+  function update(){
+    var y=window.scrollY+150, active=secs[0];
+    for(var i=0;i<secs.length;i++){ if(secs[i].s.offsetTop<=y) active=secs[i]; }
+    for(var j=0;j<secs.length;j++){ secs[j].a.classList.toggle("active", secs[j]===active); }
+  }
+  window.addEventListener("scroll", update, {passive:true});
+  window.addEventListener("resize", update);
+  update();
+});
+
+/* ---------------- static box renderer ---------------- */
+function renderBoxes(container, values, opts){
+  opts=opts||{};
+  var html="";
+  for(var i=0;i<values.length;i++){
+    var cls="box"+(opts.cls&&opts.cls[i]?" "+opts.cls[i]:"");
+    html+='<div class="'+cls+'"><div class="val">'+esc(String(values[i]))+'</div><div class="idx">['+i+']</div></div>';
+  }
+  if(values.length===0) html='<div style="font-family:\'IBM Plex Mono\',monospace;color:#9a9580;padding:14px 2px;">(empty — size 0)</div>';
+  container.innerHTML=html;
+}
+safe(function(){ var r=el("recapBoxes"); if(r) renderBoxes(r,[85,62,90,71,55]); });
+
+/* ---------------- WIDGET: repetition trap ---------------- */
+safe(function(){
+  var SAMPLE=[85,62,90,71,55,78,66,93,49,80,74,68];
+  var n=5, MIN=3, MAX=10;
+  var bad=el("trapBad"), good=el("trapGood"), cnt=el("trapCount");
+  var bLines=el("trapBadLines"), gLines=el("trapGoodLines");
+  if(!bad) return;
+  function build(){
+    var i, decl="", ifs="";
+    for(i=0;i<n;i++){ decl+="int score"+(i+1)+" = "+SAMPLE[i]+";\n"; }
+    for(i=0;i<n;i++){ ifs+='if (score'+(i+1)+' >= 70) { println("Student '+(i+1)+' passed"); }\n'; }
+    bad.innerHTML=highlight(decl+"\n"+ifs.trim());
+
+    var vals=[]; for(i=0;i<n;i++) vals.push(SAMPLE[i]);
+    var g="int[] scores = {"+vals.join(", ")+"};\n\n";
+    g+="for (int i = 0; i < scores.length; i++) {\n";
+    g+="  if (scores[i] >= 70) {\n";
+    g+='    println("Student " + (i + 1) + " passed");\n';
+    g+="  }\n}";
+    good.innerHTML=highlight(g);
+
+    cnt.textContent=n;
+    bLines.textContent="▲ "+(2*n)+" lines of code";
+    gLines.textContent="● 6 lines — always";
+  }
+  el("trapPlus").addEventListener("click", function(){ if(n<MAX){ n++; build(); } });
+  el("trapMinus").addEventListener("click", function(){ if(n>MIN){ n--; build(); } });
+  build();
+});
+
+/* ---------------- WIDGET: loop stepper ---------------- */
+safe(function(){
+  var SC=[85,62,90,71,55];
+  var cur=-1, timer=null;
+  var boxesEl=el("stepBoxes"), codeEl=el("stepCode"), stateEl=el("stepState");
+  var verdEl=el("stepVerdict"), outEl=el("stepOut");
+  if(!boxesEl) return;
+  var passed=[];
+  var lines=[
+    'int[] scores = {85, 62, 90, 71, 55};',
+    'for (int i = 0; i < scores.length; i++) {',
+    '  if (scores[i] >= 70) {',
+    '    println("Student " + (i + 1) + " passed");',
+    '  }',
+    '}'
+  ];
+  function drawCode(active, fire){
+    var hot={}; if(active){ hot[1]=1; hot[2]=1; if(fire) hot[3]=1; }
+    var html="";
+    for(var i=0;i<lines.length;i++){
+      html+='<div class="traceln'+(hot[i]?' hi':'')+'">'+highlight(lines[i])+'</div>';
+    }
+    codeEl.innerHTML=html;
+  }
+  function render(){
+    var cls={};
+    for(var i=0;i<SC.length;i++){
+      if(i===cur) cls[i]="on";
+      else if(passed.indexOf(i)>-1) cls[i]="pass";
+      else if(i<cur) cls[i]="fail";
+    }
+    renderBoxes(boxesEl, SC, {cls:cls});
+
+    if(cur<0){
+      drawCode(false,false);
+      stateEl.innerHTML='<div class="row"><span class="k">i</span><span class="v">—</span></div><div class="row"><span class="k">status</span><span class="v">not started</span></div>';
+      verdEl.textContent=""; verdEl.className="verdict";
+      outEl.innerHTML='<span class="muted">// press Step to begin</span>';
+    } else if(cur>=SC.length){
+      drawCode(false,false);
+      stateEl.innerHTML='<div class="row"><span class="k">i</span><span class="v">'+SC.length+'</span></div><div class="row"><span class="k">'+SC.length+' < '+SC.length+'</span><span class="v">false</span></div><div class="row"><span class="k">status</span><span class="v">loop done ✓</span></div>';
+      verdEl.textContent="condition false → loop exits"; verdEl.className="verdict";
+    } else {
+      var v=SC[cur], pass=v>=70;
+      drawCode(true, pass);
+      stateEl.innerHTML='<div class="row"><span class="k">i</span><span class="v">'+cur+'</span></div><div class="row"><span class="k">scores[i]</span><span class="v">'+v+'</span></div><div class="row"><span class="k">scores[i] >= 70</span><span class="v">'+pass+'</span></div>';
+      verdEl.textContent=v+" ≥ 70  →  "+(pass?"true ✓":"false ✗");
+      verdEl.className="verdict "+(pass?"t":"f");
+    }
+    // output
+    if(cur>=0){
+      if(passed.length===0){ outEl.innerHTML='<span class="muted">// nothing printed yet</span>'; }
+      else {
+        var o=""; for(var p=0;p<passed.length;p++){ o+="Student "+(passed[p]+1)+" passed\n"; }
+        outEl.textContent=o.trim();
+      }
+    }
+  }
+  function step(){
+    if(cur>=SC.length) return;
+    cur++;
+    if(cur<SC.length && SC[cur]>=70 && passed.indexOf(cur)<0) passed.push(cur);
+    render();
+    if(cur>=SC.length) stopAuto();
+  }
+  function reset(){ stopAuto(); cur=-1; passed=[]; render(); }
+  function stopAuto(){ if(timer){ clearInterval(timer); timer=null; el("stepAuto").textContent="Auto-run ⏩"; } }
+  el("stepNext").addEventListener("click", step);
+  el("stepReset").addEventListener("click", reset);
+  el("stepAuto").addEventListener("click", function(){
+    if(timer){ stopAuto(); return; }
+    if(cur>=SC.length) reset();
+    el("stepAuto").textContent="Pause ⏸";
+    timer=setInterval(function(){ safe(step); }, 950);
+  });
+  render();
+});
+
+/* ---------------- WIDGET: IntList playground ---------------- */
+safe(function(){
+  var START=[85,62,90];
+  var list=START.slice();
+  var boxesEl=el("ilBoxes"), stateEl=el("ilState"), msgEl=el("ilMsg");
+  if(!boxesEl) return;
+  var flash=-1;
+  function render(){
+    var cls={}; if(flash>-1) cls[flash]="on";
+    renderBoxes(boxesEl, list, {cls:cls});
+    stateEl.innerHTML='<div class="row"><span class="k">size()</span><span class="v">'+list.length+'</span></div>';
+  }
+  function say(t, ok){ msgEl.textContent=t; msgEl.className="verdict "+(ok?"t":"f"); }
+  function num(id, d){ var v=parseInt(el(id).value,10); return isNaN(v)?d:v; }
+  function valid(i){ return i>=0 && i<list.length; }
+
+  el("ilAppend").addEventListener("click", function(){
+    var v=num("ilAppendV",0); list.push(v); flash=-1;
+    render(); say("append("+v+")  →  added at index "+(list.length-1), true);
+  });
+  el("ilSet").addEventListener("click", function(){
+    var i=num("ilSetI",0), v=num("ilSetV",0);
+    if(!valid(i)){ flash=-1; render(); say("set("+i+", "+v+")  →  index "+i+" doesn't exist (size "+list.length+")", false); return; }
+    list[i]=v; flash=i; render(); say("set("+i+", "+v+")  →  box "+i+" is now "+v, true);
+  });
+  el("ilGet").addEventListener("click", function(){
+    var i=num("ilGetI",0);
+    if(!valid(i)){ flash=-1; render(); say("get("+i+")  →  index "+i+" is out of range (size "+list.length+")", false); return; }
+    flash=i; render(); say("get("+i+")  →  returns "+list[i], true);
+    setTimeout(function(){ safe(function(){ flash=-1; render(); }); }, 1200);
+  });
+  el("ilRem").addEventListener("click", function(){
+    var i=num("ilRemI",0);
+    if(!valid(i)){ flash=-1; render(); say("remove("+i+")  →  nothing at index "+i+" (size "+list.length+")", false); return; }
+    var was=list[i]; list.splice(i,1); flash=-1;
+    render(); say("remove("+i+")  →  deleted "+was+"; items after it shifted left", true);
+  });
+  el("ilReset").addEventListener("click", function(){ list=START.slice(); flash=-1; render(); say("list reset to "+START.join(", "), true); });
+
+  render(); say("\u00A0", true);
+});
+
+/* ---------------- self-check reveal ---------------- */
+safe(function(){
+  var btns=document.querySelectorAll(".qbtn");
+  for(var i=0;i<btns.length;i++){
+    (function(b){
+      b.addEventListener("click", function(){
+        var ans=b.parentNode.querySelector(".ans");
+        if(!ans) return;
+        var shown=ans.classList.toggle("show");
+        b.textContent=shown?"Hide answer":"Reveal answer";
+      });
+    })(btns[i]);
+  }
+});
+
+/* ---------------- WIDGET: Pattern Lab ---------------- */
+safe(function(){
+  var DATA=[80,95,70,95,60], TARGET=95;
+  var boxesEl=el("labBoxes"), codeEl=el("labCode"), trackEl=el("labTrack"), ansEl=el("labAnswer"), replay=el("labReplay");
+  if(!boxesEl) return;
+  var timer=null, lastP=null;
+  var A="\u2192", LE="\u2264", GE="\u2265", CK="\u2713";
+
+  var P={
+    sum:{ track:"total",
+      code:["int total = 0;                       // set up before",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  total = total + scores[i];          // update each pass",
+            "}",
+            "println(total);                       // use after"],
+      init:function(){return {total:0};},
+      step:function(s,v){ var p=s.total; s.total+=v; return "total = "+p+" + "+v+"  "+A+"  "+s.total; },
+      show:function(s){return s.total;},
+      done:function(s){return "Sum = "+s.total;}, win:function(){return -1;} },
+    avg:{ track:"total",
+      code:["int total = 0;",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  total = total + scores[i];",
+            "}",
+            "float avg = (float) total / scores.length;"],
+      init:function(){return {total:0};},
+      step:function(s,v){ var p=s.total; s.total+=v; return "total = "+p+" + "+v+"  "+A+"  "+s.total; },
+      show:function(s){return s.total;},
+      done:function(s){return "Average = "+s.total+" / "+DATA.length+" = "+(s.total/DATA.length);}, win:function(){return -1;} },
+    max:{ track:"highest so far",
+      code:["int highest = scores[0];              // start at the FIRST value",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  if (scores[i] > highest) {",
+            "    highest = scores[i];               // found a bigger one",
+            "  }",
+            "}"],
+      init:function(){return {best:DATA[0], at:0};},
+      step:function(s,v,i){ var pb=s.best; if(v>pb){ s.best=v; s.at=i; return v+" > "+pb+"  "+A+"  new highest "+v; } return v+" "+LE+" "+pb+"  "+A+"  stays "+pb; },
+      show:function(s){return s.best;},
+      done:function(s){return "Highest = "+s.best;}, win:function(s){return s.at;} },
+    min:{ track:"lowest so far",
+      code:["int lowest = scores[0];               // start at the FIRST value",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  if (scores[i] < lowest) {",
+            "    lowest = scores[i];                // found a smaller one",
+            "  }",
+            "}"],
+      init:function(){return {best:DATA[0], at:0};},
+      step:function(s,v,i){ var pb=s.best; if(v<pb){ s.best=v; s.at=i; return v+" < "+pb+"  "+A+"  new lowest "+v; } return v+" "+GE+" "+pb+"  "+A+"  stays "+pb; },
+      show:function(s){return s.best;},
+      done:function(s){return "Lowest = "+s.best;}, win:function(s){return s.at;} },
+    count:{ track:"count",
+      code:["int count = 0;                        // set up before",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  if (scores[i] == 95) {",
+            "    count = count + 1;                 // tally a match",
+            "  }",
+            "}"],
+      init:function(){return {count:0};},
+      step:function(s,v){ if(v===TARGET){ s.count++; return v+" == 95  "+A+"  count is now "+s.count; } return v+" != 95  "+A+"  count stays "+s.count; },
+      show:function(s){return s.count;},
+      done:function(s){return "95 appears "+s.count+" time"+(s.count===1?"":"s");}, win:function(){return -1;} },
+    has:{ track:"found",
+      code:["boolean found = false;                // haven't seen it yet",
+            "for (int i = 0; i < scores.length; i++) {",
+            "  if (scores[i] == 95) {",
+            "    found = true;                      // saw it!",
+            "  }",
+            "}"],
+      init:function(){return {found:false};},
+      step:function(s,v){ if(v===TARGET){ if(!s.found){ s.found=true; return v+" == 95  "+A+"  found = true "+CK; } return "already true \u2014 stays true"; } return v+" != 95  "+A+"  still false"; },
+      show:function(s){return ""+s.found;},
+      done:function(s){return "Contains 95?  "+A+"  "+s.found;}, win:function(){return -1;} }
+  };
+
+  function track(p, state, desc, label){
+    trackEl.innerHTML='<div class="row"><span class="k">'+p.track+'</span><span class="v">'+p.show(state)+'</span></div>'
+      +'<div style="margin-top:9px; font-size:12.5px; color:#444; line-height:1.45; min-height:34px;">'+(label?'<b>'+label+'</b> ':'')+desc+'</div>';
+  }
+  function drawCode(p){
+    var html=""; for(var i=0;i<p.code.length;i++){ html+='<div class="traceln">'+highlight(p.code[i])+'</div>'; }
+    codeEl.innerHTML=html;
+  }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+
+  function run(key){
+    stop();
+    var p=P[key]; lastP=key;
+    var state=p.init(), idx=0;
+    drawCode(p);
+    ansEl.textContent=""; ansEl.className="verdict";
+    replay.disabled=false;
+    renderBoxes(boxesEl, DATA);
+    track(p, state, "starting \u2014 walking the array left to right\u2026", "");
+    timer=setInterval(function(){ safe(function(){
+      if(idx>=DATA.length){
+        stop();
+        var w=p.win(state), cls={}; if(w>=0) cls[w]="pass";
+        renderBoxes(boxesEl, DATA, {cls:cls});
+        track(p, state, "loop finished \u2014 the variable now holds the answer.", "done "+CK);
+        ansEl.textContent=p.done(state); ansEl.className="verdict t";
+        return;
+      }
+      var v=DATA[idx], cls={}; cls[idx]="on";
+      renderBoxes(boxesEl, DATA, {cls:cls});
+      track(p, state, p.step(state, v, idx), "i = "+idx+":");
+      idx++;
+    }); }, 780);
+  }
+
+  var btns=document.querySelectorAll("#labBtns .btn[data-p]");
+  for(var i=0;i<btns.length;i++){ (function(b){ b.addEventListener("click", function(){ run(b.getAttribute("data-p")); }); })(btns[i]); }
+  replay.addEventListener("click", function(){ if(lastP) run(lastP); });
+
+  renderBoxes(boxesEl, DATA);
+});
+</script>
+</body>
+</html>

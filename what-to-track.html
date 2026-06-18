@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deciding What to Track — Array Problem Clinic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --cream:#fbfaf0; --ink:#1a1a2e; --coral:#e8725a; --teal:#4a9b8e;
+    --gold:#d4a83a; --blue:#4a7fc1; --line:rgba(74,127,193,0.09);
+    --paper:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; color:var(--ink);
+    font-family:'DM Sans',system-ui,sans-serif; font-size:17px; line-height:1.65;
+    background-color:var(--cream);
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:24px 24px;
+  }
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    position:fixed; top:0; left:0; width:248px; height:100vh;
+    padding:34px 0 34px 26px; overflow-y:auto;
+    border-right:2px solid var(--ink);
+    background:rgba(251,250,240,0.94);
+  }
+  .sidebar .brand{
+    font-family:'Fraunces',serif; font-weight:600; font-size:21px;
+    line-height:1.15; margin:0 0 4px;
+  }
+  .sidebar .brand .arr{color:var(--coral);}
+  .sidebar .kicker{
+    font-family:'Caveat',cursive; font-size:21px; color:var(--teal);
+    margin:0 0 26px; transform:rotate(-2deg); display:inline-block;
+  }
+  .sidebar nav{display:flex; flex-direction:column; gap:2px;}
+  .sidebar nav a{
+    text-decoration:none; color:var(--ink); font-size:14.5px; font-weight:500;
+    padding:7px 14px 7px 12px; border-left:3px solid transparent;
+    border-radius:0; opacity:.66; transition:opacity .15s, border-color .15s, background .15s;
+  }
+  .sidebar nav a .n{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--blue);
+    margin-right:8px; opacity:.8;
+  }
+  .sidebar nav a:hover{opacity:1; background:rgba(74,127,193,0.07);}
+  .sidebar nav a.active{
+    opacity:1; border-left-color:var(--coral); background:rgba(232,114,90,0.08);
+    font-weight:700;
+  }
+  .sidebar .footnote{
+    margin-top:30px; font-family:'Caveat',cursive; font-size:18px;
+    color:var(--ink); opacity:.6; transform:rotate(-1.5deg);
+    line-height:1.3; padding-right:18px;
+  }
+  /* ---------- Main ---------- */
+  main{margin-left:248px; padding:0 0 120px;}
+  .wrap{max-width:880px; padding:0 48px;}
+  header.page{padding:64px 48px 30px; max-width:880px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--blue); margin:0 0 14px; font-weight:500;
+  }
+  header.page h1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:54px; line-height:1.02;
+    margin:0 0 18px; letter-spacing:-.5px;
+  }
+  header.page h1 em{font-style:italic; color:var(--coral);}
+  header.page .lede{font-size:19px; max-width:660px; margin:0;}
+  header.page .lede b{color:var(--teal);}
+  /* ---------- Sections ---------- */
+  section{padding:50px 48px 10px; max-width:880px; scroll-margin-top:20px;}
+  .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--cream); background:var(--ink); padding:5px 16px;
+    border-radius:4px 16px 16px 4px; margin-bottom:18px;
+  }
+  .tag.coral{background:var(--coral);} .tag.teal{background:var(--teal);}
+  .tag.gold{background:var(--gold); color:var(--ink);} .tag.blue{background:var(--blue);}
+  section h2{
+    font-family:'Fraunces',serif; font-weight:600; font-size:34px; line-height:1.08;
+    margin:0 0 16px; letter-spacing:-.3px;
+  }
+  section h3{
+    font-family:'Fraunces',serif; font-weight:600; font-size:22px;
+    margin:34px 0 10px;
+  }
+  section p{margin:0 0 16px;}
+  section p b{color:var(--ink);}
+  .lead{font-size:18.5px;}
+  a.inline{color:var(--blue); text-decoration-thickness:2px; text-underline-offset:2px;}
+  /* ---------- Cards / callouts ---------- */
+  .card{
+    background:var(--paper); border:2px solid var(--ink); border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink); padding:22px 24px; margin:24px 0;
+  }
+  .callout{
+    border-left:5px solid var(--gold); background:rgba(212,168,58,0.10);
+    border-radius:0 10px 10px 0; padding:16px 20px; margin:22px 0;
+  }
+  .callout.coral{border-left-color:var(--coral); background:rgba(232,114,90,0.09);}
+  .callout.teal{border-left-color:var(--teal); background:rgba(74,155,142,0.10);}
+  .callout .lbl{
+    font-family:'Caveat',cursive; font-size:21px; font-weight:700; display:block;
+    margin-bottom:2px;
+  }
+  .callout.coral .lbl{color:var(--coral);} .callout.teal .lbl{color:var(--teal);}
+  .callout .lbl{color:#a8801f;}
+  /* ---------- Code ---------- */
+  pre.code{
+    background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:10px;
+    padding:16px 18px; margin:18px 0; overflow-x:auto;
+    box-shadow:3px 3px 0 rgba(26,26,46,.08);
+  }
+  pre.code code, code.inline{
+    font-family:'IBM Plex Mono',monospace; font-size:14.5px; line-height:1.7;
+  }
+  code.inline{
+    background:#efeddc; padding:2px 7px; border-radius:5px;
+    font-size:14px; border:1px solid #e2dec9; color:var(--ink);
+  }
+  .tok-key{color:var(--blue); font-weight:600;}
+  .tok-type{color:var(--teal); font-weight:600;}
+  .tok-num{color:var(--coral);}
+  .tok-str{color:#b07d18;}
+  .tok-com{color:#9a9580; font-style:italic;}
+  .tok-fn{color:#7a59b0;}
+  pre.code .ln-bad{background:rgba(232,114,90,.12); display:block; margin:0 -18px; padding:0 18px;}
+  /* ---------- Table ---------- */
+  .tablewrap{margin:24px 0; border:2px solid var(--ink); border-radius:12px; overflow:hidden; box-shadow:6px 6px 0 var(--ink);}
+  table.cmp{border-collapse:collapse; width:100%; background:var(--paper); font-size:15px;}
+  table.cmp th, table.cmp td{padding:13px 16px; text-align:left; vertical-align:top; border-bottom:1px solid #ece8d8;}
+  table.cmp thead th{font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase; color:var(--cream);}
+  table.cmp thead th:nth-child(1){background:var(--ink); width:30%;}
+  table.cmp thead th:nth-child(2){background:var(--blue); width:33%;}
+  table.cmp thead th:nth-child(3){background:var(--teal); width:37%;}
+  table.cmp tbody tr:last-child td{border-bottom:none;}
+  table.cmp tbody tr:nth-child(even){background:#fcfbf3;}
+  table.cmp td:first-child{font-weight:600;}
+  table.cmp code{font-family:'IBM Plex Mono',monospace; font-size:13px; background:#f3f1e2; padding:2px 6px; border-radius:4px; border:1px solid #e7e3d2;}
+  .no{color:var(--coral); font-weight:700;}
+  .yes{color:var(--teal); font-weight:700;}
+  /* ---------- Recipe / cheat card (dark) ---------- */
+  .recipe{
+    background:var(--ink); color:#f4f2e6; border-radius:14px; padding:28px 30px;
+    margin:26px 0; box-shadow:8px 8px 0 var(--coral);
+  }
+  .recipe h3{font-family:'Caveat',cursive; font-size:30px; color:#fff; margin:0 0 4px;}
+  .recipe .sub{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin:0 0 20px;}
+  .recipe .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:0;}
+  .recipe .col{padding:0 20px; border-right:1px dashed rgba(244,242,230,.22);}
+  .recipe .col:first-child{padding-left:0;} .recipe .col:last-child{border-right:none; padding-right:0;}
+  .recipe .col h4{font-family:'Fraunces',serif; font-size:17px; margin:0 0 10px; color:#fff;}
+  .recipe .col h4 .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:middle;}
+  .recipe ul{list-style:none; margin:0; padding:0;}
+  .recipe li{font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.45; margin-bottom:11px; color:#d9d6c6;}
+  .recipe li b{color:#fff; font-weight:600;}
+  .recipe li .c{color:var(--gold);}
+  /* ---------- 3-beat mental model ---------- */
+  .beats{display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:26px 0 22px;}
+  .beat{background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:18px 18px 14px; box-shadow:5px 5px 0 var(--teal); position:relative;}
+  .beat .bn{position:absolute; top:-14px; left:16px; width:28px; height:28px; border-radius:50%; background:var(--teal); color:#fff; font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; display:flex; align-items:center; justify-content:center; box-shadow:2px 2px 0 var(--ink);}
+  .beat b{display:block; font-family:'Fraunces',serif; font-weight:600; font-size:16px; margin:8px 0 7px;}
+  .beat p{margin:0; font-size:13.5px; color:#444; line-height:1.5;}
+  .beat code.inline{font-size:12.5px;}
+  /* ---------- Widgets ---------- */
+  .widget{
+    background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+    box-shadow:6px 6px 0 var(--blue); padding:24px; margin:26px 0;
+  }
+  .widget .whead{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap;}
+  .widget .wtitle{font-family:'Fraunces',serif; font-weight:600; font-size:20px;}
+  .widget .whint{font-family:'Caveat',cursive; font-size:18px; color:var(--teal);}
+  .widget .wdesc{font-size:14.5px; margin:0 0 18px; color:#444;}
+  .btn{
+    font-family:'DM Sans',sans-serif; font-weight:700; font-size:14px; cursor:pointer;
+    border:2px solid var(--ink); border-radius:8px; padding:8px 16px; background:var(--gold);
+    color:var(--ink); box-shadow:3px 3px 0 var(--ink); transition:transform .08s, box-shadow .08s;
+  }
+  .btn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 var(--ink);}
+  .btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+  .btn.sec{background:var(--cream);}
+  .btn.teal{background:var(--teal); color:#fff;}
+  .btn.coral{background:var(--coral); color:#fff;}
+  .btn:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:3px 3px 0 var(--ink);}
+  .controls{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;}
+  .controls input[type=number], .controls input[type=text]{
+    font-family:'IBM Plex Mono',monospace; font-size:14px; padding:7px 9px; width:64px;
+    border:2px solid var(--ink); border-radius:7px; background:#fdfcf4;
+  }
+  .controls input[type=text]{width:96px;}
+  .controls label{font-size:13.5px; font-weight:600;}
+  /* boxes for array/list visuals */
+  .boxes{display:flex; gap:9px; flex-wrap:wrap; margin:8px 0 4px; min-height:60px; align-items:flex-end;}
+  .box{
+    width:54px; text-align:center; transition:transform .2s, background .2s, border-color .2s;
+  }
+  .box .val{
+    border:2px solid var(--ink); border-radius:8px; background:#fdfcf4; padding:11px 0;
+    font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:16px;
+  }
+  .box .idx{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blue); margin-top:4px;}
+  .box.on .val{background:var(--gold); border-color:var(--ink); transform:translateY(-6px); box-shadow:3px 5px 0 rgba(26,26,46,.25);}
+  .box.pass .val{background:rgba(74,155,142,.25); border-color:var(--teal);}
+  .box.fail .val{background:rgba(232,114,90,.18); border-color:var(--coral);}
+  .box.ghost .val{opacity:.32; border-style:dashed;}
+  /* code+trace side panel */
+  .splitw{display:grid; grid-template-columns:1.25fr 1fr; gap:18px; align-items:start;}
+  .traceln{font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.75; white-space:pre; padding:1px 8px; border-radius:4px;}
+  .traceln.hi{background:var(--gold); color:var(--ink);}
+  .statebox{background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:9px; padding:14px 16px; font-family:'IBM Plex Mono',monospace; font-size:13.5px;}
+  .statebox .row{display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dashed #e6e2cf;}
+  .statebox .row:last-child{border-bottom:none;}
+  .statebox .k{color:var(--blue);} .statebox .v{font-weight:600;}
+  .outbox{background:var(--ink); color:#cfeee6; border-radius:9px; padding:12px 14px; font-family:'IBM Plex Mono',monospace; font-size:13px; min-height:48px; margin-top:12px; white-space:pre-wrap; line-height:1.6;}
+  .outbox .muted{color:#6f6f84;}
+  .verdict{font-family:'Caveat',cursive; font-size:22px; min-height:30px; margin-top:6px;}
+  .verdict.t{color:var(--teal);} .verdict.f{color:var(--coral);}
+  /* counters for repetition trap */
+  .twocol{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .codepane{background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:10px; padding:14px 16px; overflow:auto; max-height:340px;}
+  .codepane .ttl{font-family:'DM Sans',sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;}
+  .codepane.bad .ttl{color:var(--coral);} .codepane.good .ttl{color:var(--teal);}
+  .codepane pre{margin:0; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.6; white-space:pre;}
+  .linecount{font-family:'Caveat',cursive; font-size:24px; margin-top:8px; font-weight:700;}
+  .codepane.bad .linecount{color:var(--coral);} .codepane.good .linecount{color:var(--teal);}
+  /* self-check */
+  .quiz{margin:18px 0;}
+  .qitem{background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:18px 20px; margin-bottom:16px; box-shadow:4px 4px 0 rgba(26,26,46,.12);}
+  .qitem .q{font-weight:700; margin-bottom:10px;}
+  .qitem .ans{display:none; margin-top:12px; border-top:2px dashed #ddd9c7; padding-top:12px; font-size:15px;}
+  .qitem .ans.show{display:block;}
+  .qitem .ans b{color:var(--teal);}
+  /* footer */
+  footer.page{max-width:880px; padding:40px 48px 0;}
+  footer.page .sig{font-family:'Caveat',cursive; font-size:26px; color:var(--ink); opacity:.78; transform:rotate(-1.5deg); display:inline-block;}
+  footer.page .rule{height:2px; background:var(--ink); opacity:.15; margin:0 0 22px; max-width:120px;}
+
+  /* ---------- problem clinic additions ---------- */
+  .sig-line{font-family:'IBM Plex Mono',monospace; font-size:15px; font-weight:600; color:var(--ink); background:#efeddc; border:1.5px solid #e2dec9; border-radius:8px; padding:9px 14px; display:inline-block; margin:2px 0 14px;}
+  .examples{display:flex; flex-wrap:wrap; gap:9px; margin:10px 0 20px;}
+  .ex{font-family:'IBM Plex Mono',monospace; font-size:13px; background:#fdfcf4; border:1.5px solid #e6e2cf; border-radius:8px; padding:7px 12px;}
+  .ex .arr{color:var(--blue); margin:0 7px;}
+  .ex .out{font-weight:700; color:var(--coral);}
+  .ex .outT{font-weight:700; color:var(--teal);}
+  .rsteps{margin:24px 0 6px;}
+  .rstep{display:flex; gap:16px; align-items:flex-start; background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:16px 18px; margin-bottom:12px; box-shadow:5px 5px 0 var(--blue);}
+  .rstep .rn{flex:0 0 auto; width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; font-family:'Fraunces',serif; font-weight:600; font-size:18px; display:flex; align-items:center; justify-content:center; box-shadow:2px 2px 0 var(--ink);}
+  .rstep .rbody b{font-family:'Fraunces',serif; font-weight:600; font-size:17px; display:block; margin-bottom:4px;}
+  .rstep .rbody p{margin:0; font-size:14.5px; color:#444; line-height:1.55;}
+  .rstep.hot{box-shadow:5px 5px 0 var(--coral);}
+  .rstep.hot .rn{background:var(--coral);}
+  .picker{background:var(--paper); border:2px solid var(--ink); border-radius:14px; padding:20px 22px; margin:22px 0; box-shadow:6px 6px 0 var(--gold);}
+  .picker .pq{font-family:'Fraunces',serif; font-weight:600; font-size:18px; margin-bottom:14px;}
+  .picker .pq .think{font-family:'Caveat',cursive; color:#a8801f; font-size:21px; margin-right:8px;}
+  .opt{display:block; border:2px solid #e6e2cf; border-radius:10px; padding:11px 14px; margin-bottom:9px; cursor:pointer; font-size:15px; transition:border-color .15s, background .15s;}
+  .opt:hover{border-color:var(--blue);}
+  .opt input{margin-right:10px;}
+  .opt.must{border-color:var(--teal); background:rgba(74,155,142,.08);}
+  .opt.skip{border-color:#e6e2cf; background:#faf9ef; color:#6f6f6a;}
+  .opt.flag{box-shadow:0 0 0 2px var(--coral);}
+  .opt .why{display:block; margin:7px 0 0 26px; font-size:13px; color:#555; line-height:1.45;}
+  .opt.must .why b{color:var(--teal);}
+  .opt.skip .why b{color:#9a9580;}
+  .picker .check{margin-top:6px;}
+  .pfeedback{display:none; margin-top:14px; border-top:2px dashed #ddd9c7; padding-top:12px; font-size:14.5px; line-height:1.6;}
+  .pfeedback.show{display:block;}
+  .pfeedback .ok{font-family:'Caveat',cursive; font-size:21px; color:var(--teal); font-weight:700; margin-right:4px;}
+  .pfeedback .warn{font-family:'Caveat',cursive; font-size:21px; color:var(--coral); font-weight:700; margin-right:4px;}
+
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <p class="brand">What to <span class="arr">Track</span></p>
+  <span class="kicker">a problem-solving clinic</span>
+  <nav id="nav">
+    <a href="#framework" data-sec="framework"><span class="n">00</span>The method</a>
+    <a href="#more14" data-sec="more14"><span class="n">01</span>more14</a>
+    <a href="#sum28" data-sec="sum28"><span class="n">02</span>sum28</a>
+    <a href="#bigdiff" data-sec="bigdiff"><span class="n">03</span>bigDiff</a>
+    <a href="#centered" data-sec="centered"><span class="n">04</span>centeredAverage</a>
+    <a href="#tracer" data-sec="tracer"><span class="n">05</span>Solution tracer</a>
+    <a href="#yourturn" data-sec="yourturn"><span class="n">06</span>Your turn</a>
+    <a href="#recap" data-sec="recap"><span class="n">07</span>Takeaway</a>
+  </nav>
+  <p class="footnote">The loop is the easy part. Knowing what to remember is the skill.</p>
+</aside>
+
+<main>
+  <header class="page">
+    <p class="eyebrow">Processing · Java Mode · Problem-Solving Clinic</p>
+    <h1>Deciding <em>what to track</em></h1>
+    <p class="lede">The hard part of an array problem usually isn't the loop — it's figuring out <b>what to keep track of</b> as you walk through it. Here's a repeatable way to decide, worked through four classic CodingBat problems.</p>
+  </header>
+
+  <section id="framework"><span class="tag coral">The method</span>
+<h2>Four questions that pick your variables for you</h2>
+<p class="lead">Every problem below cracks open with the same four questions. Step 2 is where the real decision lives — that's the one to slow down on.</p>
+
+<div class="rsteps">
+  <div class="rstep"><span class="rn">1</span><div class="rbody"><b>Name the goal</b><p>What does the function hand back, and what does that value <em>mean</em> in plain English? "A boolean — true when there are more 1's than 4's." "An int — the gap between biggest and smallest."</p></div></div>
+  <div class="rstep hot"><span class="rn">2</span><div class="rbody"><b>Ask: what would I need to KNOW to answer that?</b><p>Turn the goal into the facts you'd need about the whole array. <b>Each fact becomes one variable you track.</b> "More 1's than 4's" needs <em>how many 1's</em> and <em>how many 4's</em> — two counters. This step is the whole game.</p></div></div>
+  <div class="rstep"><span class="rn">3</span><div class="rbody"><b>Set up each tracker</b><p>Give every tracked variable a starting value and a one-line update rule. Counters and sums start at <code class="inline">0</code>; a running max or min starts at the <b>first element</b> (never 0 — remember the negatives trap). Update it each pass using <code class="inline">nums[i]</code>.</p></div></div>
+  <div class="rstep"><span class="rn">4</span><div class="rbody"><b>Combine into the answer</b><p>After the loop, your tracked values hold everything you need. Here you'd check whether <code class="inline">count1 > count4</code> and return <code class="inline">true</code> or <code class="inline">false</code> accordingly.</p></div></div>
+</div>
+
+<div class="callout teal"><span class="lbl">The one habit that matters ↓</span>Before writing any loop, finish this sentence out loud: <em>"To answer this, I need to know ___ and ___."</em> Every blank you name is a variable to declare before the loop. If you can't fill the blanks yet, you're not ready to write the loop — and that's fine. That <em>is</em> the thinking part, and it's the part they're testing.</div></section>
+  <section id="more14"><span class="tag blue">Problem 1</span>
+<h2><code class="inline" style="font-size:.82em">more14</code> — counting two things at once</h2>
+<p class="lead">Return <code class="inline">true</code> if the array holds more 1's than 4's.</p>
+<div class="sig-line">public boolean more14(int[] nums)</div>
+<div class="examples">
+  <span class="ex">[1, 4, 1, 4, 1]<span class="arr">→</span><span class="outT">true</span></span>
+  <span class="ex">[1, 4, 4]<span class="arr">→</span><span class="out">false</span></span>
+  <span class="ex">[4, 4, 1]<span class="arr">→</span><span class="out">false</span></span>
+</div>
+
+<div class="picker" data-key="more14" data-take="You track <b>two counters</b> — one for 1's, one for 4's — then compare them at the end. The sum and the largest value are real facts about the array, but neither helps answer <em>this</em> question.">
+  <div class="pq"><span class="think">decide first →</span>What does <code>more14</code> need to keep track of?</div>
+  <label class="opt" data-ok="1" data-why="A value is either a 1 or it isn't — bump this each time you land on one."><input type="checkbox"> How many 1's are in the array</label>
+  <label class="opt" data-ok="1" data-why="Same idea, a separate counter for the 4's."><input type="checkbox"> How many 4's are in the array</label>
+  <label class="opt" data-ok="0" data-why="The grand total tells you nothing about 1's versus 4's specifically."><input type="checkbox"> The sum of all the numbers</label>
+  <label class="opt" data-ok="0" data-why="The biggest value is irrelevant to how many 1's and 4's there are."><input type="checkbox"> The largest number</label>
+  <button class="btn check">Check my thinking</button>
+  <div class="pfeedback"></div>
+</div>
+
+<h3>Walking it through</h3>
+<p><b>Goal:</b> a boolean — "are there more 1's than 4's?" <b>What I need to know:</b> the count of 1's and the count of 4's — two counters, both starting at 0. <b>Update:</b> each pass, if the value is 1 bump <code class="inline">count1</code>; if it's 4 bump <code class="inline">count4</code>. <b>Combine:</b> return whether <code class="inline">count1</code> beats <code class="inline">count4</code>.</p>
+<pre class="code"><code>public boolean more14(int[] nums) {
+  int count1 = 0;                  // track: how many 1's
+  int count4 = 0;                  // track: how many 4's
+  for (int i = 0; i &lt; nums.length; i++) {
+    if (nums[i] == 1) {
+      count1 = count1 + 1;
+    }
+    if (nums[i] == 4) {
+      count4 = count4 + 1;
+    }
+  }
+  if (count1 > count4) {           // combine the two trackers
+    return true;
+  } else {
+    return false;
+  }
+}</code></pre>
+<p>Two separate <code class="inline">if</code>s, not <code class="inline">else if</code> — though a value can't be both 1 and 4, so it wouldn't matter here. Two independent counters is the move whenever a problem compares the frequency of two things.</p>
+<div class="callout"><span class="lbl">For later — the short way ↓</span>Once true/false really clicks, that whole <code class="inline">if/else</code> collapses into a single line: <code class="inline">return count1 > count4;</code>. The comparison already <em>is</em> a true/false value, so you can hand it straight back. It's a fine shortcut when you want it — but the <code class="inline">if/else</code> above is just as correct, and easier to read while it's still settling in. (Same trick works for <code class="inline">sum28</code>: <code class="inline">return sum2 == 8;</code>.)</div></section>
+  <section id="sum28"><span class="tag blue">Problem 2</span>
+<h2><code class="inline" style="font-size:.82em">sum28</code> — one tracker, but which one?</h2>
+<p class="lead">Add up only the 2's in the array. Return <code class="inline">true</code> if that total comes to exactly 8 — which is really asking "are there exactly four 2's?"</p>
+<div class="sig-line">public boolean sum28(int[] nums)</div>
+<div class="examples">
+  <span class="ex">[2, 3, 2, 2, 4, 2]<span class="arr">→</span><span class="outT">true</span></span>
+  <span class="ex">[2, 3, 2, 4]<span class="arr">→</span><span class="out">false</span></span>
+  <span class="ex">[2, 2, 2, 2]<span class="arr">→</span><span class="outT">true</span></span>
+</div>
+
+<div class="picker" data-key="sum28" data-take="You only need <b>the running total of the 2's</b>. The classic trap is misreading 'the 2's sum to 8' as 'is there an 8 in the array' — completely different. (Counting the 2's and checking for four works too; same thing.)">
+  <div class="pq"><span class="think">decide first →</span>What does <code>sum28</code> need to keep track of?</div>
+  <label class="opt" data-ok="1" data-why="Add 2 to this total every time you land on a 2."><input type="checkbox"> The running total of just the 2's</label>
+  <label class="opt" data-ok="0" data-why="'The 2's sum to 8' is NOT 'contains an 8'. This is the #1 misread on this problem."><input type="checkbox"> Whether an 8 appears in the array</label>
+  <label class="opt" data-ok="0" data-why="The other values never count toward the total at all."><input type="checkbox"> The sum of every number</label>
+  <label class="opt" data-ok="0" data-why="The size of the array is irrelevant here."><input type="checkbox"> How many numbers there are</label>
+  <button class="btn check">Check my thinking</button>
+  <div class="pfeedback"></div>
+</div>
+
+<h3>Walking it through</h3>
+<p><b>Goal:</b> a boolean — "do the 2's add up to 8?" <b>What I need to know:</b> just the running total of the 2's — one accumulator at 0. <b>Update:</b> each time the value is 2, add 2 to it. <b>Combine:</b> return whether that total equals 8.</p>
+<pre class="code"><code>public boolean sum28(int[] nums) {
+  int sum2 = 0;                    // track: the running total of the 2's
+  for (int i = 0; i &lt; nums.length; i++) {
+    if (nums[i] == 2) {
+      sum2 = sum2 + 2;             // each 2 adds 2 to the total
+    }
+  }
+  if (sum2 == 8) {                 // combine: is that total exactly 8?
+    return true;
+  } else {
+    return false;
+  }
+}</code></pre>
+<div class="callout coral"><span class="lbl">Read the goal twice ↓</span>"The sum of the 2's is 8" means each 2 contributes 2 toward a total, so four 2's. It does <em>not</em> mean the array contains the number 8. Misreading the goal in step 1 is exactly how you end up tracking the wrong thing in step 2.</div></section>
+  <section id="bigdiff"><span class="tag blue">Problem 3</span>
+<h2><code class="inline" style="font-size:.82em">bigDiff</code> — two trackers, careful starting values</h2>
+<p class="lead">The array has at least one number. Return the gap between its largest and smallest values.</p>
+<div class="sig-line">public int bigDiff(int[] nums)</div>
+<div class="examples">
+  <span class="ex">[10, 3, 5, 6]<span class="arr">→</span><span class="out">7</span></span>
+  <span class="ex">[7, 2, 10, 9]<span class="arr">→</span><span class="out">8</span></span>
+  <span class="ex">[2, 10, 7, 2]<span class="arr">→</span><span class="out">8</span></span>
+</div>
+
+<div class="picker" data-key="bigDiff" data-take="You track the <b>max</b> and the <b>min</b>, then subtract. Both must start at <code>nums[0]</code> — a real value from the array — not 0.">
+  <div class="pq"><span class="think">decide first →</span>What does <code>bigDiff</code> need to keep track of?</div>
+  <label class="opt" data-ok="1" data-why="The biggest value seen so far — bump it whenever you find something larger."><input type="checkbox"> The largest value</label>
+  <label class="opt" data-ok="1" data-why="The smallest value seen so far — its own tracker, updated the opposite way."><input type="checkbox"> The smallest value</label>
+  <label class="opt" data-ok="0" data-why="A total doesn't help you find the two extremes."><input type="checkbox"> The sum of the numbers</label>
+  <label class="opt" data-ok="0" data-why="The length isn't part of the answer here."><input type="checkbox"> How many values there are</label>
+  <button class="btn check">Check my thinking</button>
+  <div class="pfeedback"></div>
+</div>
+
+<h3>Walking it through</h3>
+<p><b>Goal:</b> an int — the spread, biggest minus smallest. <b>What I need to know:</b> the max and the min. Both start at <code class="inline">nums[0]</code> (a real value from the array). <b>Update:</b> bigger than max → new max; smaller than min → new min. <b>Combine:</b> <code class="inline">max - min</code>.</p>
+<pre class="code"><code>public int bigDiff(int[] nums) {
+  int max = nums[0];               // track: biggest so far (start at first)
+  int min = nums[0];               // track: smallest so far (start at first)
+  for (int i = 0; i &lt; nums.length; i++) {
+    if (nums[i] > max) {
+      max = nums[i];
+    }
+    if (nums[i] &lt; min) {
+      min = nums[i];
+    }
+  }
+  return max - min;                // combine: the spread
+}</code></pre>
+<div class="callout coral"><span class="lbl">The trap that bites here ↓</span>Starting <code class="inline">int max = 0;</code> feels natural — and it's wrong. If every value is negative, 0 would never get beaten and you'd return a max that isn't even in the array. <b>Start both at <code class="inline">nums[0]</code></b> so your champion is always a real value. (Shortcut: Processing's own <code class="inline">max(max, nums[i])</code> and <code class="inline">min(min, nums[i])</code> can replace the if-blocks once you trust the pattern.)</div></section>
+  <section id="centered"><span class="tag gold">Problem 4 · boss level</span>
+<h2><code class="inline" style="font-size:.82em">centeredAverage</code> — three trackers working together</h2>
+<p class="lead">Return the average of the array after dropping one copy of the largest value and one copy of the smallest. At least 3 numbers, and use integer division.</p>
+<div class="sig-line">public int centeredAverage(int[] nums)</div>
+<div class="examples">
+  <span class="ex">[1, 2, 3, 4, 100]<span class="arr">→</span><span class="out">3</span></span>
+  <span class="ex">[1, 1, 5, 5, 10, 8, 7]<span class="arr">→</span><span class="out">5</span></span>
+</div>
+
+<div class="picker" data-key="centered" data-take="You track <b>sum, max, and min</b> in the loop, then compute (sum − max − min) ÷ (length − 2). You do NOT track a length counter — <code>nums.length</code> already knows the size.">
+  <div class="pq"><span class="think">decide first →</span>What does <code>centeredAverage</code> need to keep track of?</div>
+  <label class="opt" data-ok="1" data-why="You'll subtract the max and min back out of this at the very end."><input type="checkbox"> The running sum of all the values</label>
+  <label class="opt" data-ok="1" data-why="So you can drop exactly one copy of it from the sum."><input type="checkbox"> The largest value</label>
+  <label class="opt" data-ok="1" data-why="So you can drop exactly one copy of it too."><input type="checkbox"> The smallest value</label>
+  <label class="opt" data-ok="0" data-why="No need — nums.length already gives the size, so counting it yourself is wasted work."><input type="checkbox"> A counter for how many numbers there are</label>
+  <button class="btn check">Check my thinking</button>
+  <div class="pfeedback"></div>
+</div>
+
+<h3>Walking it through</h3>
+<p>This is the earlier problems stacked together: you need the total (like <code class="inline">sum28</code>) <em>and</em> the max and min (like <code class="inline">bigDiff</code>). Track all three in one loop. To "ignore the largest and smallest," subtract <em>one</em> max and <em>one</em> min from the sum. You removed exactly two values, so divide by <code class="inline">nums.length - 2</code>.</p>
+<pre class="code"><code>public int centeredAverage(int[] nums) {
+  int sum = 0;                     // track: total of everything
+  int max = nums[0];               // track: biggest so far
+  int min = nums[0];               // track: smallest so far
+  for (int i = 0; i &lt; nums.length; i++) {
+    sum = sum + nums[i];
+    if (nums[i] > max) {
+      max = nums[i];
+    }
+    if (nums[i] &lt; min) {
+      min = nums[i];
+    }
+  }
+  return (sum - max - min) / (nums.length - 2);   // drop one max &amp; one min
+}</code></pre>
+<div class="callout teal"><span class="lbl">Why this just works ↓</span>Subtracting one <code class="inline">max</code> and one <code class="inline">min</code> removes exactly one copy of each extreme — so even if the smallest value appears three times, only a single copy leaves the sum (that's the "ignore just one copy" rule, handled for free). Dividing by <code class="inline">length - 2</code> matches the two values you pulled out. Integer division drops the remainder, which is what the problem asks for.</div></section>
+  <section id="tracer"><span class="tag teal">See it run</span>
+<h2>Watch the trackers fill</h2>
+<p class="lead">Pick a problem and step through its loop. The point: the <em>process</em> never changes — only which variables you set up and how they update. Watch each tracker climb, then see how they combine into the return value.</p>
+
+<div class="widget" id="trWidget">
+  <div class="whead">
+    <span class="wtitle">Solution Tracer — <span id="trTitle" style="font-family:'IBM Plex Mono',monospace; font-size:16px; color:var(--coral);">pick one ↓</span></span>
+    <span class="whint">trackers update live</span>
+  </div>
+  <p class="wdesc">Each problem runs on its own sample array. Follow the highlighted box and the tracked variables on the right.</p>
+
+  <div class="boxes" id="trBoxes"></div>
+
+  <div class="controls" id="trBtns" style="margin:14px 0 2px;">
+    <button class="btn" data-k="more14">more14</button>
+    <button class="btn" data-k="sum28">sum28</button>
+    <button class="btn" data-k="bigDiff">bigDiff</button>
+    <button class="btn" data-k="centered">centeredAverage</button>
+    <button class="btn sec" id="trReplay">Replay ↺</button>
+  </div>
+
+  <div class="splitw" style="margin-top:16px;">
+    <div><div id="trCode"><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#9a9580;">// pick a problem above to trace it</span></div></div>
+    <div>
+      <div class="statebox" id="trState"><div class="row"><span class="k">trackers</span><span class="v">—</span></div></div>
+      <div class="verdict" id="trAns">&nbsp;</div>
+    </div>
+  </div>
+</div></section>
+  <section id="yourturn"><span class="tag gold">Your turn · no answer key</span>
+<h2><code class="inline" style="font-size:.82em">sum67</code> — now you decide</h2>
+<p class="lead">Same method, fresh problem — and this time you write the loop. Add up the numbers, but <b>ignore every stretch that starts with a 6 and runs through the next 7</b> (the 6 and the 7 are both skipped; every 6 has a 7 somewhere after it). An empty array returns 0.</p>
+<div class="sig-line">public int sum67(int[] nums)</div>
+<div class="examples">
+  <span class="ex">[1, 2, 2]<span class="arr">→</span><span class="out">5</span></span>
+  <span class="ex">[1, 2, 2, 6, 99, 99, 7]<span class="arr">→</span><span class="out">5</span></span>
+  <span class="ex">[1, 1, 6, 7, 2]<span class="arr">→</span><span class="out">4</span></span>
+</div>
+
+<div class="picker" data-key="sum67" data-take="Two things: the <b>running sum</b> of what you keep, and a <b>boolean skip flag</b>. The flag is the new move — sometimes what you track isn't a number at all, but which <em>mode</em> you're in. A 6 flips skipping on, the next 7 flips it off, and you only add a number while skipping is off.">
+  <div class="pq"><span class="think">decide first →</span>Before writing a line — what does <code>sum67</code> need to keep track of?</div>
+  <label class="opt" data-ok="1" data-why="Add each number you're keeping into this total."><input type="checkbox"> The running total of the numbers you keep</label>
+  <label class="opt" data-ok="1" data-why="An on/off flag: are you inside a 6...7 stretch right now? This is the new kind of tracker."><input type="checkbox"> Whether you're currently in a skip zone</label>
+  <label class="opt" data-ok="0" data-why="You never need a count of 6's — only whether you're skipping at this moment."><input type="checkbox"> How many 6's are in the array</label>
+  <label class="opt" data-ok="0" data-why="You only care about the 7 that closes the current skip, and the flag handles that."><input type="checkbox"> The position of every 7</label>
+  <button class="btn check">Check my thinking</button>
+  <div class="pfeedback"></div>
+</div>
+
+<h3>Now run the method yourself</h3>
+<p><b>1 — Goal:</b> an int, the sum of the numbers you keep. <b>2 — What to know:</b> the running sum, plus a skip flag that's true while you're between a 6 and its 7. <b>3 — Set up:</b> <code class="inline">int sum = 0;</code> and <code class="inline">boolean skip = false;</code>, then decide for each element whether to flip the flag or add the value. <b>4 — Combine:</b> just <code class="inline">return sum;</code>.</p>
+<div class="callout"><span class="lbl">Light hint, then go ↓</span>The order you check things matters. Both the 6 and its closing 7 get skipped — so handle "am I starting or ending a skip zone?" <em>before</em> you decide whether to add the number. Trace <code class="inline">[1, 1, 6, 7, 2]</code> by hand first, watching <code class="inline">skip</code> flip on at the 6 and off at the 7. The code is yours to write.</div>
+<div class="callout teal"><span class="lbl">The bigger lesson ↓</span>Look back at all five: counters, a sum, the two extremes, three trackers at once, and now a <em>mode flag</em>. The thing you track is never the same — but the way you <em>find</em> it always is. Name the goal, fill in <em>"I need to know ___,"</em> and your variables fall out of the answer.</div></section>
+
+  <section id="recap"><span class="tag coral">The takeaway</span>
+<h2>Same method, four different answers</h2>
+<p class="lead">Notice what actually changed from problem to problem: not the loop, not the four-step process — only <b>what you decided to track</b>. And that decision fell straight out of naming the goal.</p>
+
+<div class="tablewrap">
+  <table class="cmp">
+    <thead><tr><th>Problem</th><th>Returns</th><th>What to track</th></tr></thead>
+    <tbody>
+      <tr><td><code>more14</code></td><td>boolean — more 1's than 4's</td><td>count of 1's, count of 4's</td></tr>
+      <tr><td><code>sum28</code></td><td>boolean — do the 2's total 8</td><td>running sum of the 2's</td></tr>
+      <tr><td><code>bigDiff</code></td><td>int — largest minus smallest</td><td>max, min (both start at <code>nums[0]</code>)</td></tr>
+      <tr><td><code>centeredAverage</code></td><td>int — mean, ignoring one max &amp; one min</td><td>sum, max, min</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="callout"><span class="lbl">Next time you're stuck ↓</span>Don't open with a loop. Open by finishing the sentence <em>"to answer this, I need to know ___."</em> Fill every blank, declare one variable per blank, set its start value and update rule — and the loop almost writes itself. The thinking happens <em>before</em> the first <code class="inline">for</code>.</div></section>
+
+  <footer class="page">
+    <div class="rule"></div>
+    <span class="sig">Name the blanks, then the loop writes itself. &#10038;</span>
+  </footer>
+</main>
+
+<script>
+function safe(fn){ try{ fn(); }catch(e){ console.error("widget error:", e); } }
+function el(id){ return document.getElementById(id); }
+
+var KW={"for":1,"if":1,"else":1,"while":1,"do":1,"return":1,"break":1,"continue":1,"true":1,"false":1,"null":1,"new":1,"public":1};
+var TY={"int":1,"float":1,"double":1,"boolean":1,"char":1,"void":1,"String":1,"IntList":1,"StringList":1,"color":1,"byte":1,"short":1,"long":1};
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function highlight(text){
+  var re=/(\/\/[^\n]*)|("(?:[^"\\]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|([\s\S])/g;
+  var out="", m;
+  while((m=re.exec(text))!==null){
+    if(m[1]){ out+='<span class="tok-com">'+esc(m[1])+'</span>'; }
+    else if(m[2]){ out+='<span class="tok-str">'+esc(m[2])+'</span>'; }
+    else if(m[3]){ out+='<span class="tok-num">'+esc(m[3])+'</span>'; }
+    else if(m[4]){
+      var w=m[4], rest=text.slice(re.lastIndex);
+      if(KW[w]) out+='<span class="tok-key">'+w+'</span>';
+      else if(TY[w]) out+='<span class="tok-type">'+w+'</span>';
+      else if(/^\s*\(/.test(rest)) out+='<span class="tok-fn">'+w+'</span>';
+      else out+=esc(w);
+    }
+    else { out+=esc(m[5]); }
+  }
+  return out;
+}
+safe(function(){
+  var blocks=document.querySelectorAll("pre.code > code");
+  for(var i=0;i<blocks.length;i++){ blocks[i].innerHTML=highlight(blocks[i].textContent); }
+});
+
+/* scrollspy */
+safe(function(){
+  var links=document.querySelectorAll("#nav a"), secs=[];
+  for(var i=0;i<links.length;i++){ var s=el(links[i].getAttribute("data-sec")); if(s) secs.push({a:links[i],s:s}); }
+  function update(){
+    var y=window.scrollY+150, active=secs[0];
+    for(var i=0;i<secs.length;i++){ if(secs[i].s.offsetTop<=y) active=secs[i]; }
+    for(var j=0;j<secs.length;j++){ secs[j].a.classList.toggle("active", secs[j]===active); }
+  }
+  window.addEventListener("scroll", update, {passive:true});
+  window.addEventListener("resize", update); update();
+});
+
+/* box renderer */
+function renderBoxes(container, values, opts){
+  opts=opts||{}; var html="";
+  for(var i=0;i<values.length;i++){
+    var cls="box"+(opts.cls&&opts.cls[i]?" "+opts.cls[i]:"");
+    html+='<div class="'+cls+'"><div class="val">'+esc(String(values[i]))+'</div><div class="idx">['+i+']</div></div>';
+  }
+  container.innerHTML=html;
+}
+
+/* ---------------- decide-first picker ---------------- */
+safe(function(){
+  var pickers=document.querySelectorAll(".picker");
+  for(var i=0;i<pickers.length;i++){ (function(pk){
+    var btn=pk.querySelector(".check"), fb=pk.querySelector(".pfeedback");
+    if(!btn) return;
+    btn.addEventListener("click", function(){
+      var opts=pk.querySelectorAll(".opt"), need=0, gotRight=0, wrongPicked=0;
+      for(var j=0;j<opts.length;j++){
+        var o=opts[j], cb=o.querySelector("input"), ok=o.getAttribute("data-ok")==="1", why=o.getAttribute("data-why")||"";
+        o.classList.remove("must","skip","flag");
+        var old=o.querySelector(".why"); if(old) old.remove();
+        var chip=document.createElement("span"); chip.className="why";
+        if(ok){ o.classList.add("must"); need++; if(cb.checked){ gotRight++; } else { o.classList.add("flag"); } chip.innerHTML='<b>track \u2713</b> '+why; }
+        else { o.classList.add("skip"); if(cb.checked){ wrongPicked++; o.classList.add("flag"); } chip.innerHTML='<b>skip</b> '+why; }
+        o.appendChild(chip);
+      }
+      var head = (gotRight===need && wrongPicked===0) ? '<span class="ok">\u2713 Exactly right.</span>' : '<span class="warn">Almost \u2014 check the marks above.</span>';
+      fb.innerHTML=head+' '+(pk.getAttribute("data-take")||"");
+      fb.classList.add("show");
+    });
+  })(pickers[i]); }
+});
+
+/* ---------------- WIDGET: Solution Tracer ---------------- */
+safe(function(){
+  var boxesEl=el("trBoxes"), codeEl=el("trCode"), stateEl=el("trState"), ansEl=el("trAns"), titleEl=el("trTitle");
+  if(!boxesEl) return;
+  var timer=null, lastK=null, A="\u2192";
+  var PR={
+    more14:{ label:"more14", data:[1,4,1,4,1],
+      trackers:[{n:"count1",init:0},{n:"count4",init:0}],
+      code:["int count1 = 0;","int count4 = 0;","for (int i = 0; i < nums.length; i++) {","  if (nums[i] == 1) count1 = count1 + 1;","  if (nums[i] == 4) count4 = count4 + 1;","}","if (count1 > count4) {","  return true;","} else {","  return false;","}"],
+      step:function(s,v){ if(v===1){ s.count1++; return v+" is a 1  "+A+"  count1 = "+s.count1; } if(v===4){ s.count4++; return v+" is a 4  "+A+"  count4 = "+s.count4; } return v+" is neither"; },
+      ans:function(s){ return s.count1+" > "+s.count4+" is "+(s.count1>s.count4)+"  "+A+"  return "+(s.count1>s.count4); } },
+    sum28:{ label:"sum28", data:[2,3,2,2,4,2],
+      trackers:[{n:"sum2",init:0}],
+      code:["int sum2 = 0;","for (int i = 0; i < nums.length; i++) {","  if (nums[i] == 2) sum2 = sum2 + 2;","}","if (sum2 == 8) {","  return true;","} else {","  return false;","}"],
+      step:function(s,v){ if(v===2){ s.sum2+=2; return "a 2!  "+A+"  sum2 = "+s.sum2; } return v+" is not a 2"; },
+      ans:function(s){ return s.sum2+" == 8 is "+(s.sum2===8)+"  "+A+"  return "+(s.sum2===8); } },
+    bigDiff:{ label:"bigDiff", data:[10,3,5,6],
+      trackers:[{n:"max",init:"first"},{n:"min",init:"first"}],
+      code:["int max = nums[0];","int min = nums[0];","for (int i = 0; i < nums.length; i++) {","  if (nums[i] > max) max = nums[i];","  if (nums[i] < min) min = nums[i];","}","return max - min;"],
+      step:function(s,v){ var t=[]; if(v>s.max){ s.max=v; t.push("new max "+v); } if(v<s.min){ s.min=v; t.push("new min "+v); } return t.length? t.join(", ") : v+"  "+A+"  no change"; },
+      ans:function(s){ return "return "+s.max+" - "+s.min+"  "+A+"  "+(s.max-s.min); } },
+    centered:{ label:"centeredAverage", data:[1,2,3,4,100],
+      trackers:[{n:"sum",init:0},{n:"max",init:"first"},{n:"min",init:"first"}],
+      code:["int sum = 0;","int max = nums[0];","int min = nums[0];","for (int i = 0; i < nums.length; i++) {","  sum = sum + nums[i];","  if (nums[i] > max) max = nums[i];","  if (nums[i] < min) min = nums[i];","}","return (sum - max - min) / (nums.length - 2);"],
+      step:function(s,v){ s.sum+=v; var t="sum = "+s.sum; if(v>s.max){ s.max=v; t+=", new max "+v; } if(v<s.min){ s.min=v; t+=", new min "+v; } return t; },
+      ans:function(s){ var n=PR.centered.data.length; return "return ("+s.sum+" - "+s.max+" - "+s.min+") / "+(n-2)+"  "+A+"  "+Math.trunc((s.sum-s.max-s.min)/(n-2)); } }
+  };
+  function init(p){ var s={}; for(var i=0;i<p.trackers.length;i++){ var t=p.trackers[i]; s[t.n]= t.init==="first"? p.data[0] : t.init; } return s; }
+  function drawState(p,s,desc){
+    var h=""; for(var i=0;i<p.trackers.length;i++){ var n=p.trackers[i].n; h+='<div class="row"><span class="k">'+n+'</span><span class="v">'+s[n]+'</span></div>'; }
+    stateEl.innerHTML=h+'<div style="margin-top:9px; font-size:12.5px; color:#444; line-height:1.45; min-height:30px;">'+desc+'</div>';
+  }
+  function drawCode(p){ var h=""; for(var i=0;i<p.code.length;i++){ h+='<div class="traceln">'+highlight(p.code[i])+'</div>'; } codeEl.innerHTML=h; }
+  function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+  function run(key){
+    stop(); var p=PR[key]; lastK=key; var s=init(p), idx=0;
+    titleEl.textContent=p.label;
+    drawCode(p); ansEl.textContent=""; ansEl.className="verdict";
+    renderBoxes(boxesEl, p.data); drawState(p,s,"starting \u2014 walking left to right\u2026");
+    timer=setInterval(function(){ safe(function(){
+      if(idx>=p.data.length){ stop(); ansEl.textContent=p.ans(s); ansEl.className="verdict t"; drawState(p,s,"loop done \u2014 now combine the tracked values."); return; }
+      var v=p.data[idx], cls={}; cls[idx]="on"; renderBoxes(boxesEl, p.data, {cls:cls});
+      drawState(p, s, "<b>i = "+idx+":</b> "+p.step(s,v,idx)); idx++;
+    }); }, 820);
+  }
+  var btns=document.querySelectorAll("#trBtns .btn[data-k]");
+  for(var i=0;i<btns.length;i++){ (function(b){ b.addEventListener("click", function(){ run(b.getAttribute("data-k")); }); })(btns[i]); }
+  el("trReplay").addEventListener("click", function(){ if(lastK) run(lastK); });
+});
+</script>
+</body>
+</html>
