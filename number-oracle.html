@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Number Oracle — Project Assignment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fbfaf0;
+  --ink:#1a1a2e;
+  --coral:#e8725a;
+  --teal:#4a9b8e;
+  --gold:#d4a83a;
+  --blue:#4a7fc1;
+  --paper-line:rgba(74,127,193,0.08);
+  --sidebar-w:248px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'DM Sans',system-ui,sans-serif;
+  color:var(--ink);
+  background-color:var(--cream);
+  background-image:
+    linear-gradient(var(--paper-line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--paper-line) 1px,transparent 1px);
+  background-size:25px 25px;
+  line-height:1.62;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar{
+  position:fixed; top:0; left:0; width:var(--sidebar-w); height:100vh;
+  background:var(--cream); border-right:2px solid var(--ink);
+  padding:26px 0 40px; overflow-y:auto; z-index:10;
+}
+.sidebar .brand{ font-family:'Fraunces',serif; font-weight:700; font-size:21px; padding:0 24px 2px; line-height:1.1; }
+.sidebar .brand small{ display:block; font-family:'Caveat',cursive; font-weight:600; font-size:18px; color:var(--coral); margin-top:2px; }
+.sidebar nav{ margin-top:20px; }
+.sidebar a{
+  display:block; padding:9px 22px 9px 20px; color:var(--ink); text-decoration:none;
+  font-size:14px; font-weight:500; border-left:4px solid transparent;
+}
+.sidebar a:hover{ background:rgba(74,127,193,0.08); }
+.sidebar a.active{ border-left-color:var(--coral); color:var(--coral); font-weight:700; background:rgba(232,114,90,0.07); }
+.sidebar a .num{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--teal); margin-right:9px; }
+.sidebar .divider{ height:1px; background:rgba(26,26,46,0.14); margin:14px 22px; }
+
+/* ---------- Layout ---------- */
+.main{ margin-left:var(--sidebar-w); padding:56px 64px 90px; max-width:940px; }
+section{ padding-top:34px; margin-top:30px; border-top:1px dashed rgba(26,26,46,0.18); scroll-margin-top:20px; }
+section#overview{ border-top:none; padding-top:0; margin-top:0; }
+
+/* ---------- Type ---------- */
+h1{ font-family:'Fraunces',serif; font-weight:700; font-size:48px; line-height:1.03; margin:0 0 12px; }
+h2{ font-family:'Fraunces',serif; font-weight:600; font-size:31px; margin:0 0 12px; }
+h3{ font-family:'Fraunces',serif; font-weight:600; font-size:21px; margin:22px 0 8px; }
+h4{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin:0 0 6px; }
+p{ margin:10px 0; }
+.lead{ font-size:18px; color:#3a3a4e; }
+.subtle{ color:#6a6a78; }
+
+/* ---------- Tags / eyebrows ---------- */
+.tag{
+  display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+  font-weight:600; letter-spacing:0.07em; text-transform:uppercase;
+  padding:5px 14px; border-radius:4px 16px 16px 4px; color:#fff; margin-bottom:14px;
+}
+.tag.coral{background:var(--coral);} .tag.teal{background:var(--teal);}
+.tag.gold{background:var(--gold);color:var(--ink);} .tag.blue{background:var(--blue);} .tag.ink{background:var(--ink);}
+
+/* ---------- Cards ---------- */
+.card{ background:#fff; border:2px solid var(--ink); box-shadow:6px 6px 0 var(--ink); padding:22px 26px; margin:18px 0; }
+.card.coral{ box-shadow:6px 6px 0 var(--coral); }
+.card.teal{ box-shadow:6px 6px 0 var(--teal); }
+.card.gold{ box-shadow:6px 6px 0 var(--gold); }
+.card.blue{ box-shadow:6px 6px 0 var(--blue); }
+
+/* ---------- Level headers ---------- */
+.level-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.level-head .ttl{ flex:1 1 auto; }
+.points{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px; background:var(--ink); color:var(--cream); padding:6px 13px; white-space:nowrap; }
+.points.bonus{ background:var(--gold); color:var(--ink); }
+.grade-pill{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6a6a78; margin-top:4px; }
+
+/* ---------- Requirement lists ---------- */
+.req{ list-style:none; padding:0; margin:14px 0; }
+.req li{ position:relative; padding:8px 70px 8px 30px; border-bottom:1px solid rgba(26,26,46,0.09); font-size:15.5px; }
+.req li:last-child{ border-bottom:none; }
+.req li:before{ content:"\25A2"; position:absolute; left:2px; top:8px; color:var(--teal); font-size:16px; }
+.req li b{ font-weight:700; }
+.req .pts{ position:absolute; right:0; top:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#9a9aa6; }
+
+/* ---------- Hint / warn callouts ---------- */
+.hint{ background:rgba(74,159,142,0.09); border-left:4px solid var(--teal); padding:13px 18px; margin:16px 0; font-size:15px; }
+.hint .label{ font-family:'Caveat',cursive; font-size:21px; color:var(--teal); display:block; font-weight:700; margin-bottom:1px; }
+.warn{ background:rgba(232,114,90,0.09); border-left:4px solid var(--coral); padding:13px 18px; margin:16px 0; font-size:15px; }
+.warn .label{ font-family:'Caveat',cursive; font-size:21px; color:var(--coral); display:block; font-weight:700; margin-bottom:1px; }
+.hint code,.warn code{ background:rgba(26,26,46,0.07); }
+
+/* ---------- Code ---------- */
+code{ font-family:'IBM Plex Mono',monospace; font-size:0.9em; background:rgba(74,127,193,0.12); padding:1px 5px; border-radius:3px; }
+pre{ font-family:'IBM Plex Mono',monospace; background:#fdfcf4; border:1px solid rgba(26,26,46,0.15); border-left:4px solid var(--blue); padding:14px 16px; overflow-x:auto; font-size:13.5px; line-height:1.55; margin:14px 0; }
+pre code{ background:none; padding:0; font-size:inherit; }
+.tok-kw{ color:var(--coral); font-weight:600; }
+.tok-type{ color:var(--blue); }
+.tok-str{ color:var(--teal); }
+.tok-num{ color:#a8780f; }
+.tok-com{ color:#9a9aa6; font-style:italic; }
+.tok-fn{ color:#7a5cc0; }
+
+/* ---------- Recipe card (dark cheat sheet) ---------- */
+.recipe{ background:var(--ink); color:var(--cream); border:2px solid var(--ink); box-shadow:6px 6px 0 var(--coral); padding:22px 26px; margin:22px 0; }
+.recipe h3{ color:var(--cream); margin-top:0; }
+.recipe .kicker{ font-family:'Caveat',cursive; color:var(--gold); font-size:22px; display:block; margin-bottom:-4px; }
+.recipe p{ color:#d6d6e0; }
+.recipe pre{ background:#11111d; border-color:#2a2a3e; border-left-color:var(--gold); color:var(--cream); }
+.recipe code{ background:rgba(255,255,255,0.09); color:#e7e7f0; }
+.recipe .tok-kw{ color:#f3937c; } .recipe .tok-type{ color:#8fb6e6; } .recipe .tok-str{ color:#74c6b7; }
+.recipe .tok-num{ color:#e8c25a; } .recipe .tok-com{ color:#7a7a8c; } .recipe .tok-fn{ color:#b79cf0; }
+.recipe table{ width:100%; border-collapse:collapse; margin-top:6px; font-size:14px; }
+.recipe td,.recipe th{ text-align:left; padding:8px 10px; border-bottom:1px solid #2e2e42; vertical-align:top; }
+.recipe th{ color:var(--gold); font-family:'IBM Plex Mono',monospace; font-size:11.5px; text-transform:uppercase; letter-spacing:0.05em; }
+.recipe td:first-child code{ color:#74c6b7; white-space:nowrap; }
+
+/* ---------- Demo ---------- */
+.demo-wrap{ display:flex; flex-direction:column; align-items:center; gap:14px; margin:18px 0; }
+#oracleCanvas{ border:2px solid var(--ink); box-shadow:6px 6px 0 var(--teal); background:#fff; }
+.demo-controls{ display:flex; gap:12px; align-items:center; }
+.btn{ font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; padding:9px 18px; border:2px solid var(--ink); background:var(--cream); color:var(--ink); cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
+.btn:hover{ background:var(--gold); }
+.btn:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+.btn.primary{ background:var(--coral); color:#fff; }
+.btn.primary:hover{ background:#d8624c; }
+.demo-note{ font-family:'Caveat',cursive; font-size:19px; color:var(--coral); }
+
+/* ---------- Modal (mimics JOptionPane) ---------- */
+.modal-back{ position:fixed; inset:0; background:rgba(26,26,46,0.45); display:none; align-items:center; justify-content:center; z-index:50; }
+.modal-back.show{ display:flex; }
+.modal{ background:var(--cream); border:2px solid var(--ink); box-shadow:8px 8px 0 var(--coral); padding:22px 24px; width:330px; }
+.modal label{ display:block; font-weight:600; margin-bottom:10px; font-size:15px; }
+.modal input{ width:100%; font-family:'IBM Plex Mono',monospace; font-size:16px; padding:8px 10px; border:2px solid var(--ink); margin-bottom:14px; background:#fff; }
+.modal .row{ display:flex; gap:10px; justify-content:flex-end; }
+
+/* ---------- Tracker ---------- */
+.tracker{ background:#fff; border:2px solid var(--ink); box-shadow:6px 6px 0 var(--blue); padding:22px 26px; }
+.progress{ height:20px; background:rgba(26,26,46,0.08); border:2px solid var(--ink); margin:12px 0 6px; overflow:hidden; }
+.progress > div{ height:100%; width:0%; background:var(--teal); transition:width .25s ease; }
+.progress-label{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:#5a5a6e; }
+.track-group{ margin:18px 0; }
+.track-group h4{ margin-bottom:4px; }
+.track-group .gp{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#9a9aa6; }
+.track-item{ display:flex; align-items:flex-start; gap:10px; padding:6px 0; border-bottom:1px solid rgba(26,26,46,0.07); }
+.track-item input{ margin-top:4px; width:16px; height:16px; accent-color:var(--coral); flex:none; cursor:pointer; }
+.track-item label{ font-size:14.5px; cursor:pointer; }
+.track-item.done label{ color:#a4a4b0; text-decoration:line-through; }
+.reset-link{ background:none; border:none; color:var(--coral); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; text-decoration:underline; padding:0; margin-top:12px; }
+
+/* ---------- Misc ---------- */
+.pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+.mini-pill{ font-family:'IBM Plex Mono',monospace; font-size:12px; padding:4px 11px; border:1.5px solid var(--ink); background:#fff; }
+.kbd{ font-family:'IBM Plex Mono',monospace; font-size:12px; background:var(--ink); color:var(--cream); padding:2px 7px; border-radius:3px; }
+.two-col{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.checkbox-note{ font-family:'Caveat',cursive; color:var(--teal); font-size:19px; }
+
+/* ---------- Footer ---------- */
+.footer{ margin-top:64px; text-align:center; font-family:'Caveat',cursive; font-size:25px; color:var(--coral); transform:rotate(-1.5deg); }
+.footer span{ display:block; font-family:'DM Sans',sans-serif; font-size:13px; color:#9a9aa6; transform:rotate(1.5deg); margin-top:8px; }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">The Number Oracle<small>a guessing-game build</small></div>
+  <nav>
+    <a href="#overview"><span class="num">00</span>Overview</a>
+    <a href="#demo"><span class="num">★</span>Play the Target</a>
+    <div class="divider"></div>
+    <a href="#level1"><span class="num">01</span>First Contact</a>
+    <a href="#level2"><span class="num">02</span>Warmer, Colder</a>
+    <a href="#level3"><span class="num">03</span>Keeping Track</a>
+    <a href="#level4"><span class="num">04</span>Make It Yours</a>
+    <div class="divider"></div>
+    <a href="#toolbox"><span class="num">⚒</span>The Toolbox</a>
+    <a href="#grading"><span class="num">✓</span>How It's Graded</a>
+    <a href="#checklist"><span class="num">☑</span>Progress Checklist</a>
+  </nav>
+</aside>
+
+<main class="main">
+<section id="overview">
+  <span class="tag coral">Project &middot; Processing (Java mode)</span>
+  <h1>The Number Oracle</h1>
+  <p class="lead">The Oracle is thinking of a secret number between <b>1 and 1000</b>. Your job is to build a game where a player tries to divine that number &mdash; with a limited number of guesses and hints along the way.</p>
+
+  <div class="card teal">
+    <h3 style="margin-top:0;">The pitch</h3>
+    <p>You're building a complete, clickable guessing game from scratch. The player clicks a button, types a guess into a pop-up box, and the Oracle tells them whether they're too high, too low, or spot on. Guesses run out. Tension builds. Eventually the number is cracked &mdash; or the player loses.</p>
+    <p style="margin-bottom:0;">This is the kind of project where <b>every tool you've learned this semester shows up at once</b>: variables, conditionals, loops, functions, and mouse input all working together in a single sketch.</p>
+  </div>
+
+  <h3>What you'll practice</h3>
+  <div class="pill-row">
+    <span class="mini-pill">random()</span>
+    <span class="mini-pill">int / String / boolean</span>
+    <span class="mini-pill">if / else if / else</span>
+    <span class="mini-pill">IntList</span>
+    <span class="mini-pill">for loops</span>
+    <span class="mini-pill">functions</span>
+    <span class="mini-pill">mousePressed()</span>
+    <span class="mini-pill">hover detection</span>
+  </div>
+
+  <h3>How this assignment works</h3>
+  <p>The project is built in <b>four levels</b>. Each level adds features on top of the last, and each is worth points. Start at Level 1 and climb as far as you can &mdash; <b>a working, basic game is worth far more than a fancy idea that doesn't run.</b></p>
+  <ul class="req">
+    <li><b>Level 1 &mdash; First Contact:</b> a working guess-and-check loop <span class="pts">60 pts</span></li>
+    <li><b>Level 2 &mdash; Warmer, Colder:</b> hints + limited guesses <span class="pts">20 pts</span></li>
+    <li><b>Level 3 &mdash; Keeping Track:</b> a guess history + polish <span class="pts">20 pts</span></li>
+    <li><b>Level 4 &mdash; Make It Yours:</b> your own extensions <span class="pts">+15 bonus</span></li>
+  </ul>
+  <p class="subtle">Tip: get each level fully working and tested before you move up. Saving a copy of your sketch at the end of each level is a smart move &mdash; if Level 3 breaks something, you still have a clean Level 2 to turn in.</p>
+
+  <div class="hint">
+    <span class="label">before you write a single line</span>
+    Scroll down and <b>play the target game</b> first. You can't build something well if you don't know exactly how it's supposed to feel.
+  </div>
+</section>
+
+<section id="demo">
+  <span class="tag teal">Play the target</span>
+  <h2>This is what you're building</h2>
+  <p>Click <b>Make a guess&hellip;</b>, type a number, and hit Guess. Notice everything the game does: the running count of guesses left, the too-high / too-low hints, the list of wrong guesses building up on the left, and what happens when you guess the same number twice. <b>Every one of those behaviors is a requirement somewhere below.</b></p>
+
+  <div class="demo-wrap">
+    <canvas id="oracleCanvas" width="600" height="400"></canvas>
+    <div class="demo-controls">
+      <button class="btn" id="demoNew" type="button">New game</button>
+      <span class="demo-note">play it a few times &mdash; try to lose on purpose</span>
+    </div>
+  </div>
+
+  <div class="warn">
+    <span class="label">detective work</span>
+    Play once and win. Then play again and <b>guess the same wrong number twice</b> on purpose. What does the Oracle say? Does your guess count go down that time? That little detail is worth real points in Level 3 &mdash; figure out the rule by playing.
+  </div>
+</section>
+
+<section id="level1">
+  <div class="level-head">
+    <div class="ttl">
+      <span class="tag coral">Level 01 &middot; Foundation</span>
+      <h2>First Contact</h2>
+      <div class="grade-pill">Required to pass &middot; gets the core loop working</div>
+    </div>
+    <span class="points">60 pts</span>
+  </div>
+
+  <p>Goal: a player can make <b>one guess at a time</b> and find out whether they got it right. No hints yet, no guess limit yet &mdash; just the bones of the game. By the end of this level your Oracle should pick a secret number, show instructions on screen, and respond to a clicked guess.</p>
+
+  <h3>Requirements</h3>
+  <ul class="req">
+    <li>The canvas opens at <b>600 &times; 400</b> and your instruction text is readable on screen. <span class="pts">5 pts</span></li>
+    <li>The Oracle picks a <b>secret number</b> using <code>random()</code>, and prints it to the console so <i>you</i> can test the game. <span class="pts">10 pts</span></li>
+    <li>The prompt is displayed on the canvas (something like <i>"I'm thinking of a number between 1 - 1000. Can you guess what it is?"</i>). <span class="pts">5 pts</span></li>
+    <li>A <b>clickable button</b> is drawn on the canvas. <span class="pts">10 pts</span></li>
+    <li>Clicking the button opens an <b>input box</b>, reads what the player typed, and turns it into a number. <span class="pts">15 pts</span></li>
+    <li>After a guess, the screen shows a <b>correct</b> message or an <b>incorrect</b> message. <span class="pts">15 pts</span></li>
+  </ul>
+
+  <div class="hint">
+    <span class="label">stuck? think about&hellip;</span>
+    <p style="margin:6px 0;">&bull; A button is just a <code>rect()</code> you drew. "Clicking the button" means: in <code>mousePressed()</code>, check whether <code>mouseX</code> / <code>mouseY</code> landed <i>inside</i> that rectangle. You already did bounding-box checks like this.</p>
+    <p style="margin:6px 0;">&bull; To pop up a text box, you'll use <code>JOptionPane</code> (see <a href="#toolbox" style="color:var(--teal);">The Toolbox</a>). Whatever the player types comes back as a <b>String</b> &mdash; you'll need to convert it to an <code>int</code> before you can compare it.</p>
+    <p style="margin:6px 0 0;">&bull; Comparing two numbers for "are these equal?" uses <code>==</code>, not <code>=</code>. (One equals sign <i>assigns</i>; two equals signs <i>asks a question</i>.)</p>
+  </div>
+
+  <div class="warn">
+    <span class="label">test like a sneak</span>
+    Because you printed the secret number to the console, you can guess it on purpose to test your "correct!" message, and guess wrong on purpose to test your "incorrect" message. Don't leave that <code>println()</code> in your final game, though &mdash; it's a cheat code.
+  </div>
+</section>
+
+<section id="level2">
+  <div class="level-head">
+    <div class="ttl">
+      <span class="tag gold">Level 02 &middot; Core gameplay</span>
+      <h2>Warmer, Colder</h2>
+      <div class="grade-pill">Turns a toy into an actual game</div>
+    </div>
+    <span class="points">20 pts</span>
+  </div>
+
+  <p>Right now a player has to guess blindly &mdash; not much of a game. In this level you add the two things that make guessing games fun: <b>helpful hints</b> and <b>a sense of pressure</b>. The player should learn whether to go higher or lower, and they should be able to run out of guesses.</p>
+
+  <h3>Requirements</h3>
+  <ul class="req">
+    <li>On a wrong guess, the Oracle says whether it was <b>too high or too low</b>, and tells the player which way to go next. <span class="pts">8 pts</span></li>
+    <li>The game tracks how many guesses have been made and <b>displays how many are left</b>. <span class="pts">6 pts</span></li>
+    <li>When the player runs out of guesses, the game shows a <b>"Game Over"</b> message. <span class="pts">6 pts</span></li>
+  </ul>
+
+  <div class="hint">
+    <span class="label">stuck? think about&hellip;</span>
+    <p style="margin:6px 0;">&bull; "Too high vs. too low" is a three-way decision: equal, greater than, or less than. That's an <code>if</code> / <code>else if</code> / <code>else</code> chain &mdash; exactly the shape you practiced in the conditionals unit.</p>
+    <p style="margin:6px 0;">&bull; "Guesses left" = the max minus how many have been used. You'll need a counter variable that goes up by one each time a guess is entered.</p>
+    <p style="margin:6px 0 0;">&bull; Want a message to appear on two lines? Drop <code>\n</code> in the middle of your String &mdash; for example <code>"Too high.\nTry lower."</code></p>
+  </div>
+
+  <div class="checkbox-note" style="margin-top:14px;">Decide what "out of guesses" means before you code it: does the player get exactly the max number of guesses, or one fewer? Test the edge.</div>
+</section>
+
+<section id="level3">
+  <div class="level-head">
+    <div class="ttl">
+      <span class="tag blue">Level 03 &middot; Data &amp; polish</span>
+      <h2>Keeping Track</h2>
+      <div class="grade-pill">Full marks &middot; the part that needs a list and a loop</div>
+    </div>
+    <span class="points">20 pts</span>
+  </div>
+
+  <p>This is the level that separates a finished game from a great one. The Oracle should <b>remember every wrong guess and show them on screen</b>, notice when a player repeats a guess, and give that satisfying little visual cue when the mouse is over the button. To pull this off you'll need a place to <i>store many numbers</i> &mdash; that's where <code>IntList</code> comes in.</p>
+
+  <h3>Requirements</h3>
+  <ul class="req">
+    <li>Every <b>incorrect guess is stored</b> and the full list is <b>displayed on screen</b>, one under the other. <span class="pts">8 pts</span></li>
+    <li>If the player guesses a number they've <b>already tried</b>, the Oracle tells them &mdash; and that repeat does <b>not</b> cost them a guess. <span class="pts">8 pts</span></li>
+    <li>The button <b>changes color when the mouse hovers over it</b>. <span class="pts">4 pts</span></li>
+  </ul>
+
+  <div class="hint">
+    <span class="label">stuck? think about&hellip;</span>
+    <p style="margin:6px 0;">&bull; One <code>int</code> variable holds one number. To hold a growing collection of wrong guesses, you need an <code>IntList</code> &mdash; see <a href="#toolbox" style="color:var(--teal);">The Toolbox</a> for how to make one, add to it, and read from it.</p>
+    <p style="margin:6px 0;">&bull; To <b>display</b> the whole list, walk through it with a <code>for</code> loop. Your loop counter starts at <code>0</code> and goes up by <code>1</code> until you reach the size of the list. Use the counter to figure out the <code>y</code>-position of each line so they stack instead of landing on top of each other.</p>
+    <p style="margin:6px 0;">&bull; To check "have they guessed this before?", loop through the stored guesses and compare each one to the new guess. A <code>boolean</code> flag (start it <code>false</code>, flip it to <code>true</code> if you find a match) is a clean way to remember the answer.</p>
+    <p style="margin:6px 0 0;">&bull; The hover effect is the same bounding-box idea as the button click &mdash; but checked every frame in <code>draw()</code>. If the mouse is inside the rectangle, fill it one color; otherwise, fill it another.</p>
+  </div>
+
+  <div class="warn">
+    <span class="label">the tricky one</span>
+    The "don't punish repeats" rule is the sneakiest requirement in the project. Go back and <b>play the target game</b> again, repeat a guess on purpose, and watch the guess counter. Match that behavior exactly. Both halves count: it should <b>say something</b> AND it should <b>not lose a guess</b>.
+  </div>
+</section>
+
+<section id="level4">
+  <div class="level-head">
+    <div class="ttl">
+      <span class="tag ink">Level 04 &middot; Challenge</span>
+      <h2>Make It Yours</h2>
+      <div class="grade-pill">Bonus &middot; only attempt after Levels 1&ndash;3 work</div>
+    </div>
+    <span class="points bonus">+15 bonus</span>
+  </div>
+
+  <p>You've built the assigned game. Now make it <i>your</i> game. Pick from the menu below or invent your own feature &mdash; each meaningful, working addition is worth up to <b>+5 bonus points</b>, to a maximum of <b>+15</b>. The only rule: it has to actually run, and it has to clearly do something. Half-finished extensions earn nothing.</p>
+
+  <div class="two-col">
+    <div class="card coral">
+      <h4>Warmer / colder</h4>
+      <p class="subtle" style="margin:0;">Change the message (or the background color) based on <i>how close</i> the guess is &mdash; "burning hot" when they're within 10, "freezing" when they're way off.</p>
+    </div>
+    <div class="card teal">
+      <h4>Play again</h4>
+      <p class="subtle" style="margin:0;">Add a reset button that picks a fresh secret number, clears the guess list, and restarts the game without re-running the sketch.</p>
+    </div>
+    <div class="card gold">
+      <h4>Difficulty modes</h4>
+      <p class="subtle" style="margin:0;">Let the player pick easy / medium / hard, which changes the number range, the guess limit, or both.</p>
+    </div>
+    <div class="card blue">
+      <h4>Guard the input</h4>
+      <p class="subtle" style="margin:0;">Handle bad input gracefully &mdash; what should happen if the player types letters, leaves it blank, or guesses outside the range?</p>
+    </div>
+    <div class="card coral">
+      <h4>Win celebration</h4>
+      <p class="subtle" style="margin:0;">Add a visual payoff on a correct guess &mdash; confetti dots, a color flash, a "you did it in N guesses!" stat.</p>
+    </div>
+    <div class="card teal">
+      <h4>Your idea</h4>
+      <p class="subtle" style="margin:0;">Got something else in mind? Go for it. Leave a comment at the top of your code describing what you added so it gets graded.</p>
+    </div>
+  </div>
+
+  <div class="hint">
+    <span class="label">leave a trail</span>
+    For anything in this level, add a short comment in your code (<code>// LEVEL 4: warmer/colder feedback</code>) so your extension is easy to spot and score.
+  </div>
+</section>
+
+<section id="toolbox">
+  <span class="tag ink">Reference</span>
+  <h2>The Toolbox</h2>
+  <p>Three tools in this project might be new or rusty. Here's just enough syntax to use each one &mdash; <b>how you wire them together to make the game work is the part you figure out.</b></p>
+
+  <div class="recipe">
+    <span class="kicker">new tools for this build</span>
+    <h3>1 &middot; Asking the player to type something</h3>
+    <p>Processing can pop up a little input box using <code>JOptionPane</code>. Whatever the player types comes back as <b>text (a String)</b>, so you convert it to a number before you can compare it.</p>
+    <pre><code><span class="tok-kw">import</span> javax.swing.JOptionPane;   <span class="tok-com">// goes at the very TOP of your sketch</span>
+
+<span class="tok-type">String</span> input = JOptionPane.<span class="tok-fn">showInputDialog</span>(<span class="tok-str">"Enter your guess:"</span>);
+<span class="tok-type">int</span> guess = <span class="tok-type">int</span>(input);   <span class="tok-com">// turn the typed text into a whole number</span></code></pre>
+    <p style="margin-bottom:0;">Once it's an <code>int</code>, comparing it to your secret with <code>==</code> works fine. <span class="tok-com" style="font-style:italic;">(Comparing two <b>Strings</b> would be a different story &mdash; that needs <code>.equals()</code> &mdash; but here you're comparing numbers.)</span></p>
+
+    <h3 style="margin-top:22px;">2 &middot; Storing a whole pile of numbers</h3>
+    <p>One <code>int</code> holds one number. An <code>IntList</code> holds as many as you want and grows as you add to it &mdash; perfect for a list of wrong guesses.</p>
+    <pre><code><span class="tok-type">IntList</span> guesses = <span class="tok-kw">new</span> <span class="tok-type">IntList</span>();   <span class="tok-com">// an empty list of ints</span></code></pre>
+    <table>
+      <tr><th>You write</th><th>What it does</th></tr>
+      <tr><td><code>guesses.append(42)</code></td><td>adds the number 42 to the end of the list</td></tr>
+      <tr><td><code>guesses.size()</code></td><td>gives back how many numbers are in the list right now</td></tr>
+      <tr><td><code>guesses.get(0)</code></td><td>gives back the number at position 0 (the first one &mdash; counting starts at 0)</td></tr>
+    </table>
+
+    <h3 style="margin-top:22px;">3 &middot; Picking the secret number</h3>
+    <pre><code><span class="tok-type">int</span> secret = <span class="tok-type">int</span>(<span class="tok-fn">random</span>(<span class="tok-num">1</span>, <span class="tok-num">1000</span>));</code></pre>
+    <p style="margin-bottom:0;"><code>random(1, 1000)</code> hands you a decimal that's at least 1 and below 1000; wrapping it in <code>int(...)</code> chops off the decimal. <span class="tok-com" style="font-style:italic;">Worth a moment of thought: with that upper number not included, which values can actually come out?</span></p>
+  </div>
+
+  <h3>Walking through a list (the loop shape you'll reuse)</h3>
+  <p>Whenever you need to touch every item in a list &mdash; like to <i>draw</i> all the wrong guesses, or to <i>search</i> them for a repeat &mdash; you use a counting loop. The shape is always the same:</p>
+  <pre><code><span class="tok-kw">for</span> (<span class="tok-type">int</span> i = <span class="tok-num">0</span>; i &lt; howMany; i = i + <span class="tok-num">1</span>) {
+  <span class="tok-com">// use i in here -- this runs once for each item</span>
+}</code></pre>
+  <p class="subtle">It starts at <code>0</code>, climbs by <code>1</code>, and stops before it runs off the end. Any math you need &mdash; like figuring out the <code>y</code>-position of each line you draw &mdash; happens <b>inside</b> the loop, using <code>i</code>.</p>
+
+  <div class="card ink" style="background:var(--ink);color:var(--cream);box-shadow:6px 6px 0 var(--teal);">
+    <h3 style="color:var(--cream);margin-top:0;">Code craft &mdash; this gets looked at too</h3>
+    <p style="color:#d6d6e0;">A working game earns the points in each level. <i>How</i> you write it affects your score too, in small but real ways. Aim for these:</p>
+    <ul class="req" style="margin-bottom:0;">
+      <li style="color:#e7e7f0;border-color:#2e2e42;"><b>Build with helper functions.</b> Give each job its own function &mdash; one for entering a guess, one for checking duplicates, and so on. Don't cram everything into <code>draw()</code>.</li>
+      <li style="color:#e7e7f0;border-color:#2e2e42;"><b>Don't hand a function arguments it never uses.</b> If a function doesn't need a piece of information to do its job, don't pass it in.</li>
+      <li style="color:#e7e7f0;border-color:#2e2e42;"><b>Name things for what they hold.</b> <code>secretNumber</code> and <code>guessesLeft</code>, not <code>x</code> and <code>y2</code>.</li>
+      <li style="color:#e7e7f0;border-color:#2e2e42;border-bottom:none;"><b>Loops start at 0 and count up by 1</b>, with the positioning math inside the loop body.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="grading">
+  <span class="tag coral">Scoring</span>
+  <h2>How It's Graded</h2>
+  <p>Points come from <b>features that actually work</b>, level by level. The levels stack, so finishing more of them means a higher score:</p>
+
+  <div class="card">
+    <table style="width:100%;border-collapse:collapse;font-size:15px;">
+      <tr style="border-bottom:2px solid var(--ink);">
+        <th style="text-align:left;padding:8px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;">If you finish&hellip;</th>
+        <th style="text-align:right;padding:8px 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;">Your score</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(26,26,46,0.1);"><td style="padding:9px 6px;">Level 1 &mdash; a working guess-and-check game</td><td style="text-align:right;padding:9px 6px;font-family:'IBM Plex Mono',monospace;">20 / 25</td></tr>
+      <tr style="border-bottom:1px solid rgba(26,26,46,0.1);"><td style="padding:9px 6px;">Levels 1&ndash;2 &mdash; hints + a guess limit</td><td style="text-align:right;padding:9px 6px;font-family:'IBM Plex Mono',monospace;">22 / 25</td></tr>
+      <tr style="border-bottom:1px solid rgba(26,26,46,0.1);"><td style="padding:9px 6px;"><b>Levels 1&ndash;3 &mdash; the complete project</b></td><td style="text-align:right;padding:9px 6px;font-family:'IBM Plex Mono',monospace;"><b>25 / 25</b></td></tr>
+      <tr><td style="padding:9px 6px;color:var(--gold);">+ Level 4 extensions</td><td style="text-align:right;padding:9px 6px;font-family:'IBM Plex Mono',monospace;color:var(--gold);">up to 30 / 25</td></tr>
+    </table>
+  </div>
+
+  <p>Each level breaks down into the specific point values listed in its section above. Inside a level, partial credit is real &mdash; a feature that <i>mostly</i> works earns most of its points.</p>
+
+  <div class="warn">
+    <span class="label">where points slip away</span>
+    <p style="margin:6px 0;">&bull; A feature that <b>crashes or doesn't run</b> can't earn its points &mdash; test everything before you submit.</p>
+    <p style="margin:6px 0;">&bull; <b>Output bugs</b> count: guess counts that go wrong, wrong guesses that don't show up, "too high" when it should say "too low."</p>
+    <p style="margin:6px 0 0;">&bull; <b>Craft</b> (see the Toolbox): everything jammed into <code>draw()</code>, functions handed values they never use, or single-letter mystery variable names will cost you a little.</p>
+  </div>
+
+  <h3>Turning it in</h3>
+  <p>Submit your <code>.pde</code> sketch (the whole sketch folder if you added anything to it). Put a comment block at the very top with <b>your name</b>, the <b>highest level you completed</b>, and a one-line note about any <b>Level 4 extension</b> you added so it gets credited.</p>
+</section>
+
+<section id="checklist">
+  <span class="tag teal">Track your build</span>
+  <h2>Progress Checklist</h2>
+  <p>Tick these off as you go. Your progress is saved in this browser, so you can close the tab and come back to it. <span class="checkbox-note">This is your to-do list &mdash; not a substitute for testing!</span></p>
+
+  <div class="tracker">
+    <div class="progress"><div id="progFill"></div></div>
+    <div class="progress-label" id="progLabel">0 of 0 checked · 0%</div>
+
+    <div class="track-group">
+      <h4>Level 1 &mdash; First Contact <span class="gp">60 pts</span></h4>
+      <div class="track-item"><input type="checkbox" data-track id="c101"><label for="c101">Canvas is 600&times;400 and text is readable</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c102"><label for="c102">Secret number picked with <code>random()</code> and printed to the console</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c103"><label for="c103">Instructions show on the canvas</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c104"><label for="c104">A clickable button is drawn</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c105"><label for="c105">Clicking opens an input box and reads a number</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c106"><label for="c106">Correct vs. incorrect message appears after a guess</label></div>
+    </div>
+
+    <div class="track-group">
+      <h4>Level 2 &mdash; Warmer, Colder <span class="gp">20 pts</span></h4>
+      <div class="track-item"><input type="checkbox" data-track id="c201"><label for="c201">"Too high / too low" hint with a direction to try next</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c202"><label for="c202">Guesses remaining is tracked and shown</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c203"><label for="c203">"Game Over" appears when guesses run out</label></div>
+    </div>
+
+    <div class="track-group">
+      <h4>Level 3 &mdash; Keeping Track <span class="gp">20 pts</span></h4>
+      <div class="track-item"><input type="checkbox" data-track id="c301"><label for="c301">Wrong guesses are stored in an <code>IntList</code> and listed on screen</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c302"><label for="c302">Repeated guesses are flagged and don't cost a guess</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c303"><label for="c303">Button changes color on hover</label></div>
+    </div>
+
+    <div class="track-group">
+      <h4>Level 4 &mdash; Make It Yours <span class="gp">+15 bonus</span></h4>
+      <div class="track-item"><input type="checkbox" data-track id="c401"><label for="c401">At least one extension added, working, and commented</label></div>
+    </div>
+
+    <div class="track-group">
+      <h4>Before you submit <span class="gp">final check</span></h4>
+      <div class="track-item"><input type="checkbox" data-track id="c501"><label for="c501">Cheat-code <code>println()</code> of the secret number removed</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c502"><label for="c502">Code is split into helper functions (not all in <code>draw()</code>)</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c503"><label for="c503">Name + highest level completed in a comment at the top</label></div>
+      <div class="track-item"><input type="checkbox" data-track id="c504"><label for="c504">Played start-to-finish one last time with no crashes</label></div>
+    </div>
+
+    <button class="reset-link" id="resetTracker" type="button">Reset all checkboxes</button>
+  </div>
+</section>
+
+
+  <div class="footer">
+    Now go make the Oracle sweat.
+    <span>The Number Oracle &middot; Processing (Java mode) project</span>
+  </div>
+</main>
+
+<!-- Demo input modal (mimics JOptionPane) -->
+<div class="modal-back" id="demoModal">
+  <div class="modal">
+    <label for="demoInput">Enter your guess:</label>
+    <input id="demoInput" type="text" inputmode="numeric" autocomplete="off">
+    <div class="row">
+      <button class="btn" id="demoCancel" type="button">Cancel</button>
+      <button class="btn primary" id="demoOk" type="button">Guess</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+function safe(fn){ try{ fn(); }catch(e){ console.error(e); } }
+
+/* ================= Demo game (mirrors the canonical sketch) ================= */
+const MAX_GUESSES = 10;
+let secret, remaining, incorrect, msg, gameOver, won, btnHover;
+let canvas, ctx;
+const W = 600, H = 400;
+const btn = { x:400, y:320, w:150, h:50 };
+
+function newGame(){
+  secret = Math.floor(Math.random()*1000) + 1;   // 1..1000
+  remaining = MAX_GUESSES;
+  incorrect = [];
+  msg = "";
+  gameOver = false;
+  won = false;
+  btnHover = false;
+  draw();
+}
+
+function draw(){
+  if(!ctx) return;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,W,H);
+  ctx.font = "17px 'IBM Plex Mono', monospace";
+
+  ctx.fillStyle = "#000000"; ctx.textAlign = "center";
+  ctx.fillText("I'm thinking of a number between 1 - 1000.", W/2, 50);
+  ctx.fillText("Can you guess what it is?", W/2, 72);
+  ctx.fillText("You have " + remaining + " guesses left.", W/2, 94);
+
+  ctx.fillStyle = won ? "#2f7d70" : "#000000";
+  const lines = msg.split("\n");
+  for(let i=0;i<lines.length;i++){ ctx.fillText(lines[i], W/2, 200 + i*22); }
+
+  const hot = btnHover && !gameOver;
+  ctx.fillStyle = hot ? "#e8725a" : "#dddddd";
+  ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+  ctx.lineWidth = 1; ctx.strokeStyle = "#000000";
+  ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
+  ctx.fillStyle = hot ? "#ffffff" : "#333333";
+  ctx.fillText(gameOver ? "Game over" : "Make a guess...", btn.x + btn.w/2, btn.y + btn.h/2 + 5);
+
+  ctx.textAlign = "left"; ctx.fillStyle = "#000000";
+  ctx.fillText("Incorrect Guesses:", 10, 130);
+  for(let i=0;i<incorrect.length;i++){ ctx.fillText(String(incorrect[i]), 20, 150 + i*20); }
+}
+
+function overButton(mx,my){ return mx>=btn.x && mx<=btn.x+btn.w && my>=btn.y && my<=btn.y+btn.h; }
+function canvasPos(e){
+  const r = canvas.getBoundingClientRect();
+  return { x:(e.clientX - r.left)*(W/r.width), y:(e.clientY - r.top)*(H/r.height) };
+}
+
+function enterGuess(g){
+  if(g === secret){
+    msg = "Congrats! You figured out that it was " + secret + ".";
+    won = true; gameOver = true; draw(); return;
+  }
+  if(g > secret){ msg = "Your guess of " + g + " was too high.\nTry a lower number"; }
+  else { msg = "Your guess of " + g + " was too low.\nTry a higher number"; }
+
+  if(incorrect.indexOf(g) !== -1){
+    msg += "\nYou've already guessed this, btw";   // duplicate: no penalty
+  } else {
+    incorrect.push(g);
+    remaining -= 1;
+  }
+  if(remaining <= 0){ msg = "Game Over.\nYou have used all your guesses."; gameOver = true; }
+  draw();
+}
+
+function openInput(){
+  const back = document.getElementById('demoModal');
+  const input = document.getElementById('demoInput');
+  back.classList.add('show'); input.value = ""; setTimeout(()=>input.focus(),30);
+}
+function closeInput(){ document.getElementById('demoModal').classList.remove('show'); }
+function submitGuess(){
+  const raw = document.getElementById('demoInput').value;
+  closeInput();
+  const g = parseInt(raw, 10);
+  if(isNaN(g)) return;
+  enterGuess(g);
+}
+
+function initDemo(){
+  canvas = document.getElementById('oracleCanvas');
+  if(!canvas) return;
+  ctx = canvas.getContext('2d');
+
+  canvas.addEventListener('mousemove', e=>safe(()=>{
+    const p = canvasPos(e); const h = overButton(p.x,p.y);
+    if(h !== btnHover){ btnHover = h; draw(); }
+    canvas.style.cursor = (h && !gameOver) ? 'pointer' : 'default';
+  }));
+  canvas.addEventListener('mouseleave', ()=>safe(()=>{ if(btnHover){ btnHover=false; draw(); } }));
+  canvas.addEventListener('click', e=>safe(()=>{
+    if(gameOver) return;
+    const p = canvasPos(e);
+    if(overButton(p.x,p.y)) openInput();
+  }));
+
+  document.getElementById('demoOk').addEventListener('click', ()=>safe(submitGuess));
+  document.getElementById('demoCancel').addEventListener('click', ()=>safe(closeInput));
+  document.getElementById('demoInput').addEventListener('keydown', e=>safe(()=>{
+    if(e.key === 'Enter') submitGuess();
+    if(e.key === 'Escape') closeInput();
+  }));
+  const ng = document.getElementById('demoNew');
+  if(ng) ng.addEventListener('click', ()=>safe(newGame));
+
+  newGame();
+}
+
+/* ================= Progress checklist ================= */
+function initTracker(){
+  const root = document.querySelector('.tracker');
+  if(!root) return;
+  const boxes = Array.prototype.slice.call(root.querySelectorAll('input[type="checkbox"][data-track]'));
+  const bar = document.getElementById('progFill');
+  const lbl = document.getElementById('progLabel');
+
+  function update(){
+    let done = 0;
+    boxes.forEach(b=>{
+      const item = b.closest('.track-item');
+      if(b.checked){ done++; if(item) item.classList.add('done'); }
+      else if(item){ item.classList.remove('done'); }
+    });
+    const pct = boxes.length ? Math.round(done/boxes.length*100) : 0;
+    if(bar) bar.style.width = pct + '%';
+    if(lbl) lbl.textContent = done + ' of ' + boxes.length + ' checked  ·  ' + pct + '%';
+  }
+  boxes.forEach(b=>{
+    safe(()=>{ if(localStorage.getItem('oracle_'+b.id) === '1') b.checked = true; });
+    b.addEventListener('change', ()=>{ safe(()=>localStorage.setItem('oracle_'+b.id, b.checked?'1':'0')); update(); });
+  });
+  const reset = document.getElementById('resetTracker');
+  if(reset) reset.addEventListener('click', ()=>{
+    boxes.forEach(b=>{ b.checked = false; safe(()=>localStorage.removeItem('oracle_'+b.id)); });
+    update();
+  });
+  update();
+}
+
+/* ================= Scrollspy ================= */
+function initScrollspy(){
+  const links = Array.prototype.slice.call(document.querySelectorAll('.sidebar a'));
+  const map = {};
+  links.forEach(a=>{ map[a.getAttribute('href').slice(1)] = a; });
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const a = map[en.target.id]; if(a) a.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+  document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  safe(initDemo);
+  safe(initTracker);
+  safe(initScrollspy);
+});
+</script>
+</body>
+</html>
