@@ -1,0 +1,381 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Going Further — Extending the Example</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet"><style>
+:root{
+  --cream:#fbfaf0; --ink:#1a1a2e; --coral:#e8725a; --teal:#4a9b8e;
+  --gold:#d4a83a; --blue:#4a7fc1;
+  --coral-lt:#f8d4cb; --teal-lt:#cfe7e2; --gold-lt:#f2e3b3; --blue-lt:#cfdef0;
+  --gold-d:#a8801f; --paper:#ffffff; --mut:#6b6b7d;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background-color:var(--cream);
+  background-image:
+    linear-gradient(to right, rgba(74,127,193,.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(74,127,193,.10) 1px, transparent 1px);
+  background-size:24px 24px;
+  font-family:'DM Sans',system-ui,sans-serif;
+  color:var(--ink); line-height:1.6; font-size:16px;
+}
+
+/* ---- sidebar ---- */
+.sidebar{position:fixed; top:0; left:0; width:248px; height:100vh; overflow-y:auto;
+  padding:26px 16px 40px; border-right:2px solid var(--ink); background:var(--cream); z-index:5;}
+.sidebar .brand{font-family:'Fraunces',serif; font-weight:600; font-size:21px; line-height:1.05;
+  color:var(--ink); margin-bottom:4px;}
+.sidebar .brand span{display:block; font-family:'Caveat',cursive; font-weight:700; font-size:20px;
+  color:var(--coral); transform:rotate(-2deg); margin-top:2px;}
+.sidebar .switch{margin:16px 0 18px; display:flex; flex-direction:column; gap:6px;}
+.sidebar .switch a.sw{display:block; text-decoration:none; font-family:'DM Sans'; font-weight:700;
+  font-size:13px; color:var(--ink); padding:7px 10px; border:2px solid var(--ink);
+  border-radius:8px; background:#fff; box-shadow:3px 3px 0 var(--ink);}
+.sidebar .switch a.sw.cur{background:var(--gold); }
+.sidebar .switch a.sw:hover{background:var(--gold-lt);}
+.sidebar nav{margin-top:4px;}
+.sidebar nav a{display:block; padding:6px 10px; color:var(--ink); text-decoration:none;
+  border-left:4px solid transparent; font-size:13.5px; border-radius:0 7px 7px 0; line-height:1.3;}
+.sidebar nav a .tnum{font-family:'IBM Plex Mono',monospace; color:var(--mut); margin-right:9px; font-size:12px;}
+.sidebar nav a:hover{background:var(--blue-lt);}
+.sidebar nav a.active{border-left-color:var(--coral); background:var(--coral-lt); font-weight:600;}
+.sidebar nav a.active .tnum{color:var(--coral);}
+
+/* ---- shell ---- */
+.wrap{margin-left:248px;}
+.shell{max-width:900px; margin:0 auto; padding:46px 40px 30px;}
+header.page{margin-bottom:30px;}
+header.page h1{font-family:'Fraunces',serif; font-weight:600; font-size:42px; line-height:1.05; margin:6px 0 10px;}
+header.page .lead{font-size:18px; color:#2a2a3e; max-width:62ch;}
+
+/* ---- sections ---- */
+section{background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+  padding:26px 30px; margin:0 0 28px; box-shadow:6px 6px 0 var(--ink); scroll-margin-top:20px;}
+section h2{font-family:'Fraunces',serif; font-weight:600; font-size:26px; margin:0 0 4px; line-height:1.1;}
+section h3{font-family:'Fraunces',serif; font-weight:600; font-size:18px; margin:22px 0 8px;}
+section .secnum{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--coral); font-weight:600; letter-spacing:1px;}
+p{margin:10px 0;}
+ul,ol{margin:10px 0; padding-left:22px;} li{margin:5px 0;}
+b,strong{font-weight:700;}
+a.inl{color:var(--blue); font-weight:600;}
+
+/* ---- tags ---- */
+.tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.6px;
+  text-transform:uppercase; padding:3px 12px; background:var(--coral); color:#fff;
+  border-radius:4px 16px 16px 4px; font-weight:600; vertical-align:middle; margin:0 4px 4px 0;}
+.tag.t-teal{background:var(--teal);} .tag.t-gold{background:var(--gold); color:var(--ink);}
+.tag.t-blue{background:var(--blue);} .tag.t-ink{background:var(--ink);}
+
+/* ---- inline code ---- */
+.ic{font-family:'IBM Plex Mono',monospace; background:var(--blue-lt); padding:1px 6px;
+  border-radius:5px; font-size:.88em; color:var(--ink);}
+
+/* ---- code blocks ---- */
+pre{margin:14px 0; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.65;
+  tab-size:2;}
+pre.code{background:#fdfcf3; border:2px solid var(--ink); border-radius:10px; padding:15px 18px;}
+pre.recipe{background:var(--ink); color:#f3f3e9; border:2px solid var(--ink); border-radius:10px;
+  padding:16px 19px; box-shadow:6px 6px 0 var(--coral);}
+/* light tokens */
+.co{color:var(--coral); font-weight:600;}
+.co-ty{color:var(--blue); font-weight:600;}
+.co-fn{color:var(--teal); font-weight:600;}
+.co-nu{color:var(--gold-d);}
+.co-cm{color:var(--mut); font-style:italic;}
+.co-st{color:#2f8074;}
+/* dark-block token overrides */
+pre.recipe .co{color:#ff9d86;}
+pre.recipe .co-ty{color:#9cc0f0;}
+pre.recipe .co-fn{color:#86cabd;}
+pre.recipe .co-nu{color:#f0cf7a;}
+pre.recipe .co-cm{color:#9090a3;}
+pre.recipe .co-st{color:#9bd3c8;}
+
+/* ---- callouts ---- */
+.note,.warn,.try,.tip{padding:12px 16px; border-radius:0 10px 10px 0; margin:14px 0;}
+.note{border-left:5px solid var(--blue); background:var(--blue-lt);}
+.warn{border-left:5px solid var(--coral); background:var(--coral-lt);}
+.try{border-left:5px solid var(--teal); background:var(--teal-lt);}
+.tip{border-left:5px solid var(--gold); background:var(--gold-lt);}
+.note b,.warn b,.try b,.tip b{font-weight:700;}
+.callhd{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.6px; text-transform:uppercase;
+  font-weight:600; display:block; margin-bottom:3px;}
+
+/* ---- buttons ---- */
+button.btn{font-family:'DM Sans',sans-serif; font-weight:700; background:var(--coral); color:#fff;
+  border:2px solid var(--ink); border-radius:8px; padding:8px 14px; cursor:pointer; font-size:14px;
+  box-shadow:3px 3px 0 var(--ink); margin:4px 6px 4px 0;}
+button.btn:hover{filter:brightness(1.04);}
+button.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+button.btn.b-teal{background:var(--teal);} button.btn.b-blue{background:var(--blue);}
+button.btn.b-gold{background:var(--gold); color:var(--ink);} button.btn.b-ink{background:var(--ink);}
+
+/* ---- demo box ---- */
+.demo{border:2px dashed var(--ink); border-radius:12px; padding:16px 18px; background:#fff; margin:16px 0;}
+.demo canvas{background:#fff; border:2px solid var(--ink); border-radius:8px; display:block; margin:4px 0 10px;}
+.demo canvas:focus{outline:3px solid var(--gold); outline-offset:2px;}
+.readout{font-family:'IBM Plex Mono',monospace; font-size:14px; background:var(--ink); color:#f3f3e9;
+  display:inline-block; padding:5px 12px; border-radius:7px; margin:4px 0;}
+.bigout{font-family:'IBM Plex Mono',monospace; font-size:30px; font-weight:600; color:var(--coral);
+  display:inline-block; min-width:46px; text-align:center; vertical-align:middle;}
+.demo .row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:6px 0;}
+input[type=range]{accent-color:var(--coral); height:22px;}
+
+/* ---- list-algorithm tiles ---- */
+#algoRow,#listRow{margin:8px 0 4px;}
+.tile{display:inline-block; width:34px; height:34px; line-height:31px; text-align:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; border:2px solid var(--ink); border-radius:7px;
+  margin:3px; background:#fff; transition:background .08s;}
+.tile.hl{background:var(--gold);}
+.tile.match{background:var(--teal); color:#fff;}
+
+/* ---- annotated highlighter ---- */
+pre.anno .hl{border-radius:4px; padding:1px 0;}
+pre.anno.show-param .hl-param,
+pre.anno.show-cond  .hl-cond,
+pre.anno.show-loop  .hl-loop,
+pre.anno.show-call  .hl-call{background:var(--gold-lt); box-shadow:0 0 0 2px var(--gold);}
+
+/* ---- quiz ---- */
+.q{border:2px solid var(--ink); border-radius:10px; padding:14px 16px; margin:14px 0; background:#fdfcf3;}
+.q .qfb{display:none; margin-top:10px; padding:10px 14px; border-radius:8px; font-size:14.5px;}
+.q .qfb.good{background:var(--teal-lt); border-left:5px solid var(--teal);}
+.q .qfb.bad{background:var(--coral-lt); border-left:5px solid var(--coral);}
+
+/* ---- checklist ---- */
+.ck{list-style:none; padding:0; margin:10px 0;}
+.ck li{display:flex; align-items:flex-start; gap:12px; border:2px solid var(--ink); border-radius:10px;
+  padding:11px 14px; margin:8px 0; background:#fdfcf3;}
+.ck input{width:22px; height:22px; accent-color:var(--teal); margin-top:1px; flex:0 0 auto; cursor:pointer;}
+.ck label{cursor:pointer; font-size:15px;}
+.ckbarwrap{border:2px solid var(--ink); border-radius:9px; background:#fff; height:30px; overflow:hidden; margin:14px 0 6px;}
+#ckBar{height:100%; width:0; background:var(--teal); color:#fff; font-family:'IBM Plex Mono',monospace;
+  font-weight:600; text-align:right; padding-right:10px; line-height:30px; transition:width .25s;}
+#ckMsg{display:none; font-family:'Caveat',cursive; font-size:26px; color:var(--teal); transform:rotate(-1deg); margin-top:8px;}
+
+/* ---- footer ---- */
+.foot{font-family:'Caveat',cursive; font-size:25px; color:var(--ink); text-align:center;
+  transform:rotate(-1.5deg); margin:34px 0 14px; opacity:.85;}
+.kbd{font-family:'IBM Plex Mono',monospace; border:2px solid var(--ink); border-bottom-width:3px;
+  border-radius:6px; padding:1px 8px; background:#fff; font-size:13px; font-weight:600;}
+</style></head><body><aside class="sidebar"><div class="brand">AP CSP<span>create task kit</span></div><div class="switch"><a class="sw" href="create-task-requirements.html">① Requirements</a><a class="sw" href="processing-reference.html">② Reference</a><a class="sw" href="worked-example.html">③ Worked example</a><a class="sw cur" href="going-further.html">④ Going further</a></div><nav><a href="#start"><span class="tnum">1</span>Start here: finish first</a><a href="#a1"><span class="tnum">2</span>Add-on · pop-up menu</a><a href="#a2"><span class="tnum">3</span>Add-on · users add coasters</a><a href="#a3"><span class="tnum">4</span>Add-on · track height</a><a href="#a4"><span class="tnum">5</span>Add-on · thrill level</a><a href="#a5"><span class="tnum">6</span>Add-on · and more</a><a href="#play"><span class="tnum">7</span>Try the loaded version</a><a href="#point"><span class="tnum">8</span>The point</a></nav></aside><div class="wrap"><div class="shell">
+<style>
+.console{font-family:'IBM Plex Mono',monospace; font-size:14px; background:var(--ink); color:#e9e9f1;
+  padding:14px 16px; border-radius:10px; white-space:pre; line-height:1.55; margin:10px 0;
+  box-shadow:5px 5px 0 rgba(26,26,46,.22);}
+.firstbox{border:3px solid var(--coral); border-radius:14px; background:var(--coral-lt);
+  padding:16px 20px; margin:16px 0; box-shadow:6px 6px 0 var(--ink);}
+.firstbox h3{margin-top:0;}
+.metlist{list-style:none; padding:0; margin:12px 0;}
+.metlist li{padding:7px 0 7px 30px; position:relative; border-bottom:1px solid var(--blue-lt); font-size:15px;}
+.metlist li:before{content:"\2713"; position:absolute; left:4px; color:var(--teal); font-weight:700; font-size:16px;}
+.metlist li:last-child{border-bottom:none;}
+.addon{border:2px solid var(--ink); border-radius:12px; margin:16px 0; background:#fff;
+  box-shadow:6px 6px 0 var(--ink); overflow:hidden;}
+.addon .ahd{background:var(--coral); color:#fff; padding:11px 18px; font-family:'Fraunces',serif;
+  font-weight:600; font-size:18px; display:flex; align-items:center; gap:11px;}
+.addon .ahd .anum{font-family:'IBM Plex Mono',monospace; font-size:11px; background:#fff; color:var(--ink);
+  padding:2px 10px; border-radius:4px 12px 12px 4px; letter-spacing:.5px; text-transform:uppercase;}
+.addon .abd{padding:16px 20px;}
+.addon .abd > *:first-child{margin-top:0;}
+.uses{font-size:13.5px; background:var(--blue-lt); border-radius:8px; padding:8px 13px; margin:11px 0;}
+.uses a{color:var(--blue); font-weight:700; text-decoration:none;}
+.uses a:hover{text-decoration:underline;}
+.steps{margin:14px 0; padding-left:24px;}
+.steps li{margin:9px 0; font-size:15.5px;}
+.steps li::marker{font-family:'IBM Plex Mono',monospace; color:var(--coral); font-weight:700;}
+.demo h4{font-family:'Fraunces',serif; font-size:15px; margin:14px 0 6px; color:var(--ink);}
+.demo h4:first-child{margin-top:0;}
+.ptab{border-collapse:collapse; font-family:'IBM Plex Mono',monospace; font-size:13px; margin:4px 0 8px;}
+.ptab th,.ptab td{border:1px solid var(--ink); padding:4px 11px; text-align:left;}
+.ptab th{background:var(--ink); color:var(--cream); font-weight:600;}
+.ptab td.idx{color:var(--mut);}
+.seg{opacity:.5;}
+.seg.on{opacity:1; outline:3px solid var(--ink); outline-offset:2px;}
+</style>
+<h1>Going further: add-ons after the finish line</h1><p class="lede">Page 3 already met every requirement. This page shows what comes <i>next</i> &mdash; the same coaster program, slowly growing with pop-up menus, user-added coasters, heights, and thrill levels. Watch the order: the scoring core stays exactly as it was, and every new feature is bolted on top, never in place of it.</p><section id="start"><span class="secnum">01</span><h2>Start here: the requirements are already done</h2><div class="firstbox"><h3>Requirements first. Extras second.</h3><p>The program from the <a class="ic" href="worked-example.html">worked example</a> already meets every Create&nbsp;Task requirement, exactly as written. Nothing on this page is needed to score &mdash; it's what you add <i>after</i> the core works. Build the part that earns points first, save it, and only then start layering on the fun.</p></div><p>Here's what page 3's version already checks off:</p><ul class="metlist"><li>A <b>list</b> (collection) &mdash; <span class="ic">coasters</span>, with a parallel <span class="ic">wooden</span> list</li><li>The list's data <b>used</b> in a loop to build a result</li><li>A <b>student-developed procedure</b> (<span class="ic">findCoasters</span>) with a parameter that is actually used</li><li><b>Sequencing, selection, and iteration</b>, all inside that procedure</li><li>The procedure <b>called</b>, with the argument chosen by user <b>input</b></li><li>Visible <b>output</b></li></ul><p>Done! That version already scores. Now, and only now, let's add on.</p></section><section id="a1"><div class="addon"><div class="ahd"><span class="anum">Add-on 1</span>A pop-up menu instead of typing</div><div class="abd"><p>Typing <span class="ic">1</span> or <span class="ic">2</span> works, but a button menu is friendlier and can't be mistyped. Swap the typed prompt for <span class="ic">showOptionDialog</span>, which hands back the <b>index</b> of whichever button the user clicked.</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#advanced">page 1 &rarr; A pop-up multiple choice</a></div><pre class="code"><span class="co-ty">void</span> <span class="co-fn">setup</span>() {
+  <span class="co-ty">String</span>[] options = { <span class="co-st">&quot;steel&quot;</span>, <span class="co-st">&quot;wooden&quot;</span> };
+  <span class="co-ty">int</span> choice = JOptionPane.<span class="co-fn">showOptionDialog</span>(<span class="co">null</span>,
+      <span class="co-st">&quot;What type of coaster do you want?&quot;</span>, <span class="co-st">&quot;Coaster Picker&quot;</span>,
+      <span class="co-nu">0</span>, <span class="co-nu">3</span>, <span class="co">null</span>, options, options[<span class="co-nu">0</span>]);
+  <span class="co-cm">// choice is the button index: 0 = steel, 1 = wooden</span>
+
+  <span class="co">if</span> (choice == <span class="co-nu">0</span>) {
+    <span class="co-fn">findCoasters</span>(<span class="co">false</span>);
+  } <span class="co">else</span> <span class="co">if</span> (choice == <span class="co-nu">1</span>) {
+    <span class="co-fn">findCoasters</span>(<span class="co">true</span>);
+  }
+}</pre><p>A nice side effect: because a button can't be mistyped, you no longer need the <span class="ic">int()</span> cast or the "invalid input" <span class="ic">else</span> &mdash; the menu only ever offers valid choices.</p></div></div></section><section id="a2"><div class="addon"><div class="ahd"><span class="anum">Add-on 2</span>Let the user add their own coasters</div><div class="abd"><p>Right now the four coasters are hard-coded. Let the rider add their own: ask for a <b>name</b> with a text box, then ask <b>steel or wooden</b> with a button menu, and append to the lists. The move that keeps everything working &mdash; append to <i>both</i> parallel lists so index <span class="ic">i</span> still lines up.</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#advanced">text input</a> + <a href="create-task-requirements.html#advanced">the button menu</a> (page 1)</div><pre class="code"><span class="co-ty">void</span> <span class="co-fn">addCoaster</span>() {
+  <span class="co-ty">String</span> name = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;Name of the coaster?&quot;</span>);
+
+  <span class="co-ty">String</span>[] types = { <span class="co-st">&quot;steel&quot;</span>, <span class="co-st">&quot;wooden&quot;</span> };
+  <span class="co-ty">int</span> t = JOptionPane.<span class="co-fn">showOptionDialog</span>(<span class="co">null</span>,
+      <span class="co-st">&quot;Is &quot;</span> + name + <span class="co-st">&quot; steel or wooden?&quot;</span>, <span class="co-st">&quot;Coaster Type&quot;</span>,
+      <span class="co-nu">0</span>, <span class="co-nu">3</span>, <span class="co">null</span>, types, types[<span class="co-nu">0</span>]);
+
+  coasters.<span class="co-fn">append</span>(name);     <span class="co-cm">// grow the name list...</span>
+  <span class="co">if</span> (t == <span class="co-nu">1</span>) {              <span class="co-cm">// wooden button</span>
+    wooden.<span class="co-fn">append</span>(<span class="co-nu">1</span>);        <span class="co-cm">// ...and grow the wooden list to match</span>
+  } <span class="co">else</span> {                   <span class="co-cm">// steel button</span>
+    wooden.<span class="co-fn">append</span>(<span class="co-nu">0</span>);
+  }
+}</pre><p>This is exactly the situation 2025 Q2C warned about: add to the list and the parallel list has to grow too. Here we do it on purpose, every single time.</p></div></div></section><section id="a3"><div class="addon"><div class="ahd"><span class="anum">Add-on 3</span>Track height too</div><div class="abd"><p>Want more than names and types? Add a <b>third</b> parallel list for height. Declare it next to the others, and prompt for a height when adding a coaster (with <span class="ic">int()</span> to turn the typed text into a number).</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#advanced">text input + int() cast</a> (page 1)</div><pre class="code"><span class="co-ty">IntList</span> heights = <span class="co">new</span> <span class="co-ty">IntList</span>(<span class="co-nu">310</span>, <span class="co-nu">110</span>, <span class="co-nu">125</span>, <span class="co-nu">170</span>);   <span class="co-cm">// feet, parallel to coasters</span></pre><p>Then the <span class="ic">addCoaster</span> procedure grows one more prompt and one more <span class="ic">append</span>:</p><pre class="code"><span class="co-ty">void</span> <span class="co-fn">addCoaster</span>() {
+  <span class="co-ty">String</span> name = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;Name of the coaster?&quot;</span>);
+
+  <span class="co-ty">String</span>[] types = { <span class="co-st">&quot;steel&quot;</span>, <span class="co-st">&quot;wooden&quot;</span> };
+  <span class="co-ty">int</span> t = JOptionPane.<span class="co-fn">showOptionDialog</span>(<span class="co">null</span>,
+      <span class="co-st">&quot;Is &quot;</span> + name + <span class="co-st">&quot; steel or wooden?&quot;</span>, <span class="co-st">&quot;Coaster Type&quot;</span>,
+      <span class="co-nu">0</span>, <span class="co-nu">3</span>, <span class="co">null</span>, types, types[<span class="co-nu">0</span>]);
+
+  <span class="co-ty">String</span> h = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;How tall is &quot;</span> + name + <span class="co-st">&quot; (in feet)?&quot;</span>);
+
+  coasters.<span class="co-fn">append</span>(name);          <span class="co-cm">// all three lists...</span>
+  heights.<span class="co-fn">append</span>(<span class="co-ty">int</span>(h));         <span class="co-cm">// ...grow together...</span>
+  <span class="co">if</span> (t == <span class="co-nu">1</span>) {
+    wooden.<span class="co-fn">append</span>(<span class="co-nu">1</span>);             <span class="co-cm">// ...so index i still lines up everywhere</span>
+  } <span class="co">else</span> {
+    wooden.<span class="co-fn">append</span>(<span class="co-nu">0</span>);
+  }
+}</pre><p>Now <i>three</i> lists move together. The rule just scales: one append per list, every time.</p></div></div></section><section id="a4"><div class="addon"><div class="ahd"><span class="anum">Add-on 4</span>Check the rider's thrill level</div><div class="abd"><p>Heights unlock something fun: a <b>thrill level</b>. Write one small helper whose only job is turning a height into a tier &mdash; then ask the rider how much thrill they want and keep only the coasters at or below it.</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#advanced">the button menu</a> + your own helper procedure (a height &rarr; tier function, one job each &mdash; just how functions should work)</div><pre class="code"><span class="co-ty">String</span>[] thrillNames = { <span class="co-st">&quot;mild&quot;</span>, <span class="co-st">&quot;moderate&quot;</span>, <span class="co-st">&quot;extreme&quot;</span> };
+
+<span class="co-ty">int</span> <span class="co-fn">thrillRank</span>(<span class="co-ty">int</span> feet) {       <span class="co-cm">// one job: turn a height into a thrill tier</span>
+  <span class="co">if</span> (feet &gt; <span class="co-nu">200</span>) {
+    <span class="co">return</span> <span class="co-nu">2</span>;                    <span class="co-cm">// extreme</span>
+  } <span class="co">else</span> <span class="co">if</span> (feet &gt;= <span class="co-nu">130</span>) {
+    <span class="co">return</span> <span class="co-nu">1</span>;                    <span class="co-cm">// moderate</span>
+  } <span class="co">else</span> {
+    <span class="co">return</span> <span class="co-nu">0</span>;                    <span class="co-cm">// mild</span>
+  }
+}</pre><p>Then <span class="ic">findCoasters</span> asks for a thrill level and adds it to the test. The type check from page 3 is untouched &mdash; we just tack on one more <span class="ic">&amp;&amp;</span> and keep a parallel <span class="ic">rideThrill</span> list so the output can show each tier:</p><pre class="code"><span class="co-ty">StringList</span> wantToRide = <span class="co">new</span> <span class="co-ty">StringList</span>();
+<span class="co-ty">StringList</span> rideThrill = <span class="co">new</span> <span class="co-ty">StringList</span>();   <span class="co-cm">// parallel to wantToRide</span>
+
+<span class="co-ty">void</span> <span class="co-fn">findCoasters</span>(<span class="co-ty">boolean</span> madeOfWood) {
+  <span class="co-ty">String</span>[] levels = { <span class="co-st">&quot;mild&quot;</span>, <span class="co-st">&quot;moderate&quot;</span>, <span class="co-st">&quot;extreme&quot;</span> };
+  <span class="co-ty">int</span> pick = JOptionPane.<span class="co-fn">showOptionDialog</span>(<span class="co">null</span>,
+      <span class="co-st">&quot;How much thrill can you handle?&quot;</span>, <span class="co-st">&quot;Thrill Level&quot;</span>,
+      <span class="co-nu">0</span>, <span class="co-nu">3</span>, <span class="co">null</span>, levels, levels[<span class="co-nu">0</span>]);
+
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; coasters.<span class="co-fn">size</span>(); i++) {
+    <span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span> &amp;&amp; <span class="co-fn">thrillRank</span>(heights.<span class="co-fn">get</span>(i)) &lt;= pick) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+      rideThrill.<span class="co-fn">append</span>(thrillNames[<span class="co-fn">thrillRank</span>(heights.<span class="co-fn">get</span>(i))]);
+    } <span class="co">else</span> <span class="co">if</span> (madeOfWood == <span class="co">false</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">0</span> &amp;&amp; <span class="co-fn">thrillRank</span>(heights.<span class="co-fn">get</span>(i)) &lt;= pick) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+      rideThrill.<span class="co-fn">append</span>(thrillNames[<span class="co-fn">thrillRank</span>(heights.<span class="co-fn">get</span>(i))]);
+    }
+  }
+
+  <span class="co-fn">println</span>(<span class="co-st">&quot;Out of the available coasters, you can ride:&quot;</span>);
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; wantToRide.<span class="co-fn">size</span>(); i++) {
+    <span class="co-fn">println</span>((i + <span class="co-nu">1</span>) + <span class="co-st">&quot;: &quot;</span> + wantToRide.<span class="co-fn">get</span>(i) + <span class="co-st">&quot; - &quot;</span> + rideThrill.<span class="co-fn">get</span>(i) + <span class="co-st">&quot; thrill&quot;</span>);
+  }
+}</pre><p>Try the height&nbsp;&rarr;&nbsp;tier helper yourself:</p><div class="demo"><div class="row"><span>height (ft):</span><input type="text" id="tlH" value="170" style="font-family:'IBM Plex Mono',monospace;font-size:15px;padding:7px 11px;border:2px solid var(--ink);border-radius:8px;width:120px"><button class="btn b-gold" id="tlBtn">Check thrill</button><span id="tlOut" style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600"></span></div></div></div></div></section><section id="a5"><div class="addon"><div class="ahd"><span class="anum">Add-on 5</span>And anything else you can think of</div><div class="abd"><p>Once the core works, the ideas don't stop &mdash; and they're all built from blocks you already have.</p><h3>Keep asking until the input makes sense</h3><p>A <span class="ic">while</span> loop re-prompts until the height is a real, positive number. (A blank or letters cast to <span class="ic">0</span>, so this catches those too.)</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#advanced">keep asking until correct</a> (page 1)</div><pre class="code"><span class="co-ty">String</span> h = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;How tall is &quot;</span> + name + <span class="co-st">&quot; (in feet)?&quot;</span>);
+<span class="co">while</span> (<span class="co-ty">int</span>(h) &lt;= <span class="co-nu">0</span>) {            <span class="co-cm">// keep asking until it&#x27;s a real, positive number</span>
+  h = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;Please enter a height greater than 0:&quot;</span>);
+}
+heights.<span class="co-fn">append</span>(<span class="co-ty">int</span>(h));</pre><h3>A quick summary at the end</h3><p>Reuse the array patterns: a list already knows its <span class="ic">.size()</span> (the count pattern), and a findMax loop reports the tallest available coaster.</p><div class="uses"><b>Building blocks:</b> <a href="create-task-requirements.html#patterns">the array patterns</a> (page 1)</div><pre class="code"><span class="co-cm">// how many matched? (the &quot;count&quot; pattern -- a list already knows its size)</span>
+<span class="co-fn">println</span>(<span class="co-st">&quot;That&#x27;s &quot;</span> + wantToRide.<span class="co-fn">size</span>() + <span class="co-st">&quot; coasters you can ride!&quot;</span>);
+
+<span class="co-cm">// which available coaster is tallest? (the &quot;find an extreme&quot; pattern)</span>
+<span class="co-ty">int</span> tallest = heights.<span class="co-fn">get</span>(<span class="co-nu">0</span>);
+<span class="co-ty">String</span> tallestName = coasters.<span class="co-fn">get</span>(<span class="co-nu">0</span>);
+<span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; heights.<span class="co-fn">size</span>(); i++) {
+  <span class="co">if</span> (heights.<span class="co-fn">get</span>(i) &gt; tallest) {
+    tallest = heights.<span class="co-fn">get</span>(i);
+    tallestName = coasters.<span class="co-fn">get</span>(i);   <span class="co-cm">// keep the name in step with the height</span>
+  }
+}
+<span class="co-fn">println</span>(<span class="co-st">&quot;Tallest available: &quot;</span> + tallestName + <span class="co-st">&quot; at &quot;</span> + tallest + <span class="co-st">&quot; ft&quot;</span>);</pre><p>…and on it goes: a goodbye message, a favorites list, sorting by height &mdash; whatever your idea needs. The point is that all of it is <i>extra</i>.</p></div></div></section><section id="play"><span class="secnum">07</span><h2>Try the fully-loaded version</h2><p>Everything above, working together. The table <i>is</i> the three parallel lists. Add your own coaster (name, type by button, height), then pick a type and a max thrill and see what you can ride.</p><div class="demo" id="play-demo"><h4>1 &mdash; the coasters in the list</h4><table class="ptab" id="pTab"></table><h4>2 &mdash; add your own (optional)</h4><div class="row"><input type="text" id="pName" placeholder="coaster name" style="font-family:'IBM Plex Mono',monospace;font-size:14px;padding:6px 10px;border:2px solid var(--ink);border-radius:8px;width:170px"><span>type:</span><button class="btn b-blue seg" id="pAddSteel">steel</button><button class="btn seg" id="pAddWood">wooden</button><input type="text" id="pHeight" placeholder="height (ft)" style="font-family:'IBM Plex Mono',monospace;font-size:14px;padding:6px 10px;border:2px solid var(--ink);border-radius:8px;width:110px"><button class="btn b-ink" id="pAdd">Add coaster</button></div><div id="pAddMsg" style="font-size:13px;color:var(--mut);min-height:18px;margin-top:4px"></div><h4>3 &mdash; find coasters to ride</h4><div class="row"><span style="width:88px">I want:</span><button class="btn b-blue seg" data-type="steel">steel</button><button class="btn seg" data-type="wooden">wooden</button></div><div class="row"><span style="width:88px">max thrill:</span><button class="btn b-teal seg" data-thrill="0">mild</button><button class="btn b-gold seg" data-thrill="1">moderate</button><button class="btn seg" data-thrill="2">extreme</button></div><div class="row"><button class="btn" id="pFind">Show what I can ride</button></div><div class="console" id="pOut">pick a type and a max thrill, then hit the button</div></div></section><section id="point"><span class="secnum">08</span><h2>The point</h2><p>Every feature on this page is <b>optional</b>. The version on page 3 already met every Create&nbsp;Task requirement before any of this existed &mdash; and that's the whole lesson:</p><ol class="steps"><li><b>Meet the requirements first.</b> A list, a procedure with a used parameter, sequencing/selection/iteration, a call, input, output. Get it working and saved.</li><li><b>Then</b>, with time to spare, layer on extras &mdash; menus, user input, new data, helpers.</li><li>Chase features before the core works and you can run out of time with nothing that scores.</li></ol><div class="tip"><span class="callhd">remember</span> Requirements first, polish second. Page 3 already scores &mdash; this page is just the fun you earn afterward.</div></section><div class="foot">you’ve got this — make it yours ✨</div></div></div><script>
+function safe(name, fn){ try{ fn(); }catch(e){ console.error('['+name+']', e); } }
+safe('scrollspy', function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.sidebar nav a'));
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function spy(){
+    var y = window.scrollY + 130, idx = 0;
+    for (var i=0;i<secs.length;i++){ if (secs[i] && secs[i].offsetTop <= y) idx = i; }
+    for (var j=0;j<links.length;j++){ links[j].classList.toggle('active', j===idx); }
+  }
+  window.addEventListener('scroll', spy, {passive:true});
+  window.addEventListener('load', spy);
+  spy();
+});
+
+safe('thrillCheck', function(){
+  var thrillNames=['mild','moderate','extreme'];
+  function rank(ft){ if(ft>200){return 2;} else if(ft>=130){return 1;} else {return 0;} }
+  var inp=document.getElementById('tlH'), out=document.getElementById('tlOut');
+  function run(){
+    var ft=parseInt(inp.value,10);
+    if(isNaN(ft)){ out.textContent='enter a number'; out.style.color='var(--coral)'; return; }
+    out.textContent=thrillNames[rank(ft)]+' ('+ft+' ft)'; out.style.color='var(--ink)';
+  }
+  document.getElementById('tlBtn').addEventListener('click', run);
+  inp.addEventListener('keydown', function(e){ if(e.key==='Enter') run(); });
+  run();
+});
+
+safe('playground', function(){
+  var names=['Millenium Force','The Beast','Gemini','Gatekeeper'];
+  var wooden=[0,1,1,0];
+  var heights=[310,110,125,170];
+  var thrillNames=['mild','moderate','extreme'];
+  function thrillRank(ft){ if(ft>200){return 2;} else if(ft>=130){return 1;} else {return 0;} }
+
+  var tab=document.getElementById('pTab');
+  function renderTable(){
+    var h='<tr><th>i</th><th>coasters</th><th>wooden</th><th>heights</th><th>thrill</th></tr>';
+    for(var i=0;i<names.length;i++){
+      h+='<tr><td class="idx">'+i+'</td><td>'+names[i]+'</td><td>'+wooden[i]+'</td><td>'+heights[i]+' ft</td><td>'+thrillNames[thrillRank(heights[i])]+'</td></tr>';
+    }
+    tab.innerHTML=h;
+  }
+
+  // add flow
+  var addType=null;
+  var aS=document.getElementById('pAddSteel'), aW=document.getElementById('pAddWood');
+  function setAddType(t,btn){ addType=t; aS.classList.toggle('on',btn===aS); aW.classList.toggle('on',btn===aW); }
+  aS.addEventListener('click', function(){ setAddType(0,aS); });
+  aW.addEventListener('click', function(){ setAddType(1,aW); });
+  document.getElementById('pAdd').addEventListener('click', function(){
+    var nm=document.getElementById('pName').value.trim();
+    var ht=parseInt(document.getElementById('pHeight').value,10);
+    var msg=document.getElementById('pAddMsg');
+    if(nm===''){ msg.textContent='Enter a name first.'; return; }
+    if(addType===null){ msg.textContent='Pick steel or wooden.'; return; }
+    if(isNaN(ht) || ht<=0){ msg.textContent='Enter a height greater than 0.'; return; }
+    names.push(nm); wooden.push(addType); heights.push(ht);
+    msg.textContent='Added "'+nm+'" \u2014 all three lists grew together.';
+    document.getElementById('pName').value=''; document.getElementById('pHeight').value='';
+    setAddType(null,null);
+    renderTable();
+  });
+
+  // find flow
+  var selType=null, selThrill=null;
+  var typeBtns=document.querySelectorAll('#play-demo [data-type]');
+  var thrillBtns=document.querySelectorAll('#play-demo [data-thrill]');
+  for(var i=0;i<typeBtns.length;i++){ typeBtns[i].addEventListener('click', function(){
+    selType=this.getAttribute('data-type')==='wooden';
+    for(var k=0;k<typeBtns.length;k++){ typeBtns[k].classList.remove('on'); }
+    this.classList.add('on');
+  }); }
+  for(var j=0;j<thrillBtns.length;j++){ thrillBtns[j].addEventListener('click', function(){
+    selThrill=parseInt(this.getAttribute('data-thrill'),10);
+    for(var k=0;k<thrillBtns.length;k++){ thrillBtns[k].classList.remove('on'); }
+    this.classList.add('on');
+  }); }
+  document.getElementById('pFind').addEventListener('click', function(){
+    var out=document.getElementById('pOut');
+    if(selType===null || selThrill===null){ out.textContent='Pick a type and a max thrill first.'; return; }
+    var lines='Out of the available coasters, you can ride:\n', count=0;
+    for(var i=0;i<names.length;i++){
+      var typeMatch=(selType===true && wooden[i]===1) || (selType===false && wooden[i]===0);
+      if(typeMatch && thrillRank(heights[i])<=selThrill){
+        count++;
+        lines+=count+': '+names[i]+' - '+thrillNames[thrillRank(heights[i])]+' thrill ('+heights[i]+' ft)\n';
+      }
+    }
+    if(count===0){ lines+='(nothing matched \u2014 try a higher thrill or the other type)'; }
+    out.textContent=lines.replace(/\n$/,'');
+  });
+
+  renderTable();
+});
+</script></body></html>

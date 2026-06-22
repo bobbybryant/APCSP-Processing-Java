@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Worked Example — RollerCoasterFilter</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet"><style>
+:root{
+  --cream:#fbfaf0; --ink:#1a1a2e; --coral:#e8725a; --teal:#4a9b8e;
+  --gold:#d4a83a; --blue:#4a7fc1;
+  --coral-lt:#f8d4cb; --teal-lt:#cfe7e2; --gold-lt:#f2e3b3; --blue-lt:#cfdef0;
+  --gold-d:#a8801f; --paper:#ffffff; --mut:#6b6b7d;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background-color:var(--cream);
+  background-image:
+    linear-gradient(to right, rgba(74,127,193,.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(74,127,193,.10) 1px, transparent 1px);
+  background-size:24px 24px;
+  font-family:'DM Sans',system-ui,sans-serif;
+  color:var(--ink); line-height:1.6; font-size:16px;
+}
+
+/* ---- sidebar ---- */
+.sidebar{position:fixed; top:0; left:0; width:248px; height:100vh; overflow-y:auto;
+  padding:26px 16px 40px; border-right:2px solid var(--ink); background:var(--cream); z-index:5;}
+.sidebar .brand{font-family:'Fraunces',serif; font-weight:600; font-size:21px; line-height:1.05;
+  color:var(--ink); margin-bottom:4px;}
+.sidebar .brand span{display:block; font-family:'Caveat',cursive; font-weight:700; font-size:20px;
+  color:var(--coral); transform:rotate(-2deg); margin-top:2px;}
+.sidebar .switch{margin:16px 0 18px; display:flex; flex-direction:column; gap:6px;}
+.sidebar .switch a.sw{display:block; text-decoration:none; font-family:'DM Sans'; font-weight:700;
+  font-size:13px; color:var(--ink); padding:7px 10px; border:2px solid var(--ink);
+  border-radius:8px; background:#fff; box-shadow:3px 3px 0 var(--ink);}
+.sidebar .switch a.sw.cur{background:var(--gold); }
+.sidebar .switch a.sw:hover{background:var(--gold-lt);}
+.sidebar nav{margin-top:4px;}
+.sidebar nav a{display:block; padding:6px 10px; color:var(--ink); text-decoration:none;
+  border-left:4px solid transparent; font-size:13.5px; border-radius:0 7px 7px 0; line-height:1.3;}
+.sidebar nav a .tnum{font-family:'IBM Plex Mono',monospace; color:var(--mut); margin-right:9px; font-size:12px;}
+.sidebar nav a:hover{background:var(--blue-lt);}
+.sidebar nav a.active{border-left-color:var(--coral); background:var(--coral-lt); font-weight:600;}
+.sidebar nav a.active .tnum{color:var(--coral);}
+
+/* ---- shell ---- */
+.wrap{margin-left:248px;}
+.shell{max-width:900px; margin:0 auto; padding:46px 40px 30px;}
+header.page{margin-bottom:30px;}
+header.page h1{font-family:'Fraunces',serif; font-weight:600; font-size:42px; line-height:1.05; margin:6px 0 10px;}
+header.page .lead{font-size:18px; color:#2a2a3e; max-width:62ch;}
+
+/* ---- sections ---- */
+section{background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+  padding:26px 30px; margin:0 0 28px; box-shadow:6px 6px 0 var(--ink); scroll-margin-top:20px;}
+section h2{font-family:'Fraunces',serif; font-weight:600; font-size:26px; margin:0 0 4px; line-height:1.1;}
+section h3{font-family:'Fraunces',serif; font-weight:600; font-size:18px; margin:22px 0 8px;}
+section .secnum{font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--coral); font-weight:600; letter-spacing:1px;}
+p{margin:10px 0;}
+ul,ol{margin:10px 0; padding-left:22px;} li{margin:5px 0;}
+b,strong{font-weight:700;}
+a.inl{color:var(--blue); font-weight:600;}
+
+/* ---- tags ---- */
+.tag{display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.6px;
+  text-transform:uppercase; padding:3px 12px; background:var(--coral); color:#fff;
+  border-radius:4px 16px 16px 4px; font-weight:600; vertical-align:middle; margin:0 4px 4px 0;}
+.tag.t-teal{background:var(--teal);} .tag.t-gold{background:var(--gold); color:var(--ink);}
+.tag.t-blue{background:var(--blue);} .tag.t-ink{background:var(--ink);}
+
+/* ---- inline code ---- */
+.ic{font-family:'IBM Plex Mono',monospace; background:var(--blue-lt); padding:1px 6px;
+  border-radius:5px; font-size:.88em; color:var(--ink);}
+
+/* ---- code blocks ---- */
+pre{margin:14px 0; overflow-x:auto; font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.65;
+  tab-size:2;}
+pre.code{background:#fdfcf3; border:2px solid var(--ink); border-radius:10px; padding:15px 18px;}
+pre.recipe{background:var(--ink); color:#f3f3e9; border:2px solid var(--ink); border-radius:10px;
+  padding:16px 19px; box-shadow:6px 6px 0 var(--coral);}
+/* light tokens */
+.co{color:var(--coral); font-weight:600;}
+.co-ty{color:var(--blue); font-weight:600;}
+.co-fn{color:var(--teal); font-weight:600;}
+.co-nu{color:var(--gold-d);}
+.co-cm{color:var(--mut); font-style:italic;}
+.co-st{color:#2f8074;}
+/* dark-block token overrides */
+pre.recipe .co{color:#ff9d86;}
+pre.recipe .co-ty{color:#9cc0f0;}
+pre.recipe .co-fn{color:#86cabd;}
+pre.recipe .co-nu{color:#f0cf7a;}
+pre.recipe .co-cm{color:#9090a3;}
+pre.recipe .co-st{color:#9bd3c8;}
+
+/* ---- callouts ---- */
+.note,.warn,.try,.tip{padding:12px 16px; border-radius:0 10px 10px 0; margin:14px 0;}
+.note{border-left:5px solid var(--blue); background:var(--blue-lt);}
+.warn{border-left:5px solid var(--coral); background:var(--coral-lt);}
+.try{border-left:5px solid var(--teal); background:var(--teal-lt);}
+.tip{border-left:5px solid var(--gold); background:var(--gold-lt);}
+.note b,.warn b,.try b,.tip b{font-weight:700;}
+.callhd{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.6px; text-transform:uppercase;
+  font-weight:600; display:block; margin-bottom:3px;}
+
+/* ---- buttons ---- */
+button.btn{font-family:'DM Sans',sans-serif; font-weight:700; background:var(--coral); color:#fff;
+  border:2px solid var(--ink); border-radius:8px; padding:8px 14px; cursor:pointer; font-size:14px;
+  box-shadow:3px 3px 0 var(--ink); margin:4px 6px 4px 0;}
+button.btn:hover{filter:brightness(1.04);}
+button.btn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+button.btn.b-teal{background:var(--teal);} button.btn.b-blue{background:var(--blue);}
+button.btn.b-gold{background:var(--gold); color:var(--ink);} button.btn.b-ink{background:var(--ink);}
+
+/* ---- demo box ---- */
+.demo{border:2px dashed var(--ink); border-radius:12px; padding:16px 18px; background:#fff; margin:16px 0;}
+.demo canvas{background:#fff; border:2px solid var(--ink); border-radius:8px; display:block; margin:4px 0 10px;}
+.demo canvas:focus{outline:3px solid var(--gold); outline-offset:2px;}
+.readout{font-family:'IBM Plex Mono',monospace; font-size:14px; background:var(--ink); color:#f3f3e9;
+  display:inline-block; padding:5px 12px; border-radius:7px; margin:4px 0;}
+.bigout{font-family:'IBM Plex Mono',monospace; font-size:30px; font-weight:600; color:var(--coral);
+  display:inline-block; min-width:46px; text-align:center; vertical-align:middle;}
+.demo .row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:6px 0;}
+input[type=range]{accent-color:var(--coral); height:22px;}
+
+/* ---- list-algorithm tiles ---- */
+#algoRow,#listRow{margin:8px 0 4px;}
+.tile{display:inline-block; width:34px; height:34px; line-height:31px; text-align:center;
+  font-family:'IBM Plex Mono',monospace; font-weight:600; border:2px solid var(--ink); border-radius:7px;
+  margin:3px; background:#fff; transition:background .08s;}
+.tile.hl{background:var(--gold);}
+.tile.match{background:var(--teal); color:#fff;}
+
+/* ---- annotated highlighter ---- */
+pre.anno .hl{border-radius:4px; padding:1px 0;}
+pre.anno.show-param .hl-param,
+pre.anno.show-cond  .hl-cond,
+pre.anno.show-loop  .hl-loop,
+pre.anno.show-call  .hl-call{background:var(--gold-lt); box-shadow:0 0 0 2px var(--gold);}
+
+/* ---- quiz ---- */
+.q{border:2px solid var(--ink); border-radius:10px; padding:14px 16px; margin:14px 0; background:#fdfcf3;}
+.q .qfb{display:none; margin-top:10px; padding:10px 14px; border-radius:8px; font-size:14.5px;}
+.q .qfb.good{background:var(--teal-lt); border-left:5px solid var(--teal);}
+.q .qfb.bad{background:var(--coral-lt); border-left:5px solid var(--coral);}
+
+/* ---- checklist ---- */
+.ck{list-style:none; padding:0; margin:10px 0;}
+.ck li{display:flex; align-items:flex-start; gap:12px; border:2px solid var(--ink); border-radius:10px;
+  padding:11px 14px; margin:8px 0; background:#fdfcf3;}
+.ck input{width:22px; height:22px; accent-color:var(--teal); margin-top:1px; flex:0 0 auto; cursor:pointer;}
+.ck label{cursor:pointer; font-size:15px;}
+.ckbarwrap{border:2px solid var(--ink); border-radius:9px; background:#fff; height:30px; overflow:hidden; margin:14px 0 6px;}
+#ckBar{height:100%; width:0; background:var(--teal); color:#fff; font-family:'IBM Plex Mono',monospace;
+  font-weight:600; text-align:right; padding-right:10px; line-height:30px; transition:width .25s;}
+#ckMsg{display:none; font-family:'Caveat',cursive; font-size:26px; color:var(--teal); transform:rotate(-1deg); margin-top:8px;}
+
+/* ---- footer ---- */
+.foot{font-family:'Caveat',cursive; font-size:25px; color:var(--ink); text-align:center;
+  transform:rotate(-1.5deg); margin:34px 0 14px; opacity:.85;}
+.kbd{font-family:'IBM Plex Mono',monospace; border:2px solid var(--ink); border-bottom-width:3px;
+  border-radius:6px; padding:1px 8px; background:#fff; font-size:13px; font-weight:600;}
+</style></head><body><aside class="sidebar"><div class="brand">AP CSP<span>create task kit</span></div><div class="switch"><a class="sw" href="create-task-requirements.html">① Requirements</a><a class="sw" href="processing-reference.html">② Reference</a><a class="sw cur" href="worked-example.html">③ Worked example</a><a class="sw" href="going-further.html">④ Going further</a></div><nav><a href="#example"><span class="tnum">1</span>The example program</a><a href="#design"><span class="tnum">2</span>Why it's built this way</a><a href="#ppr"><span class="tnum">3</span>Its Project Reference</a><a href="#y25q1"><span class="tnum">4</span>2025 — example output</a><a href="#y25q2a"><span class="tnum">5</span>2025 — Boolean expression</a><a href="#y25q2b"><span class="tnum">6</span>2025 — logic error</a><a href="#y25q2c"><span class="tnum">7</span>2025 — a bigger list</a><a href="#y26q1"><span class="tnum">8</span>2026 — documentation</a><a href="#y26q2a"><span class="tnum">9</span>2026 — when the loop stops</a><a href="#y26q2b"><span class="tnum">10</span>2026 — a breaking test</a><a href="#y26q2c"><span class="tnum">11</span>2026 — abstraction</a></nav></aside><div class="wrap"><div class="shell">
+<style>
+.console{font-family:'IBM Plex Mono',monospace; font-size:14px; background:var(--ink); color:#e9e9f1;
+  padding:14px 16px; border-radius:10px; white-space:pre; line-height:1.55; margin:10px 0;
+  box-shadow:5px 5px 0 rgba(26,26,46,.22);}
+.qcard{border:2px solid var(--ink); border-radius:12px; margin:16px 0; background:#fff;
+  box-shadow:6px 6px 0 var(--ink); overflow:hidden;}
+.qcard .qhd{padding:11px 18px; font-family:'Fraunces',serif; font-weight:600; font-size:18px;
+  color:var(--cream); display:flex; align-items:center; gap:11px;}
+.qcard.y25 .qhd{background:var(--blue);}
+.qcard.y26 .qhd{background:var(--teal);}
+.qcard .qhd .qnum{font-family:'IBM Plex Mono',monospace; font-size:11px; background:var(--cream);
+  color:var(--ink); padding:2px 10px; border-radius:4px 12px 12px 4px; letter-spacing:.5px;}
+.qcard .qbd{padding:16px 20px;}
+.qcard .qbd > *:first-child{margin-top:0;}
+.qprompt{background:var(--cream); border:1px dashed var(--ink); border-radius:8px;
+  padding:10px 14px; font-size:14.5px;}
+.qprompt .callhd{display:block; margin-bottom:4px;}
+.ans{margin:14px 0 4px;}
+.ans .lbl{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase;
+  letter-spacing:.6px; color:var(--coral); font-weight:700; display:block; margin-bottom:5px;}
+.why{background:var(--gold-lt); border-left:5px solid var(--gold); border-radius:0 10px 10px 0;
+  padding:11px 15px; margin-top:14px; font-size:14.5px;}
+.why .callhd{display:block; margin-bottom:4px;}
+</style>
+<h1>Worked example: RollerCoasterFilter</h1><p class="lede">One tiny program, taken apart every way the exam can ask. Below is a complete Create&nbsp;Task-style program, then model answers to all four 2025 prompts and all four 2026 prompts &mdash; each with the reasoning behind it. This is a worked example to learn the moves from; your own project is still your own.</p><section id="example"><span class="secnum">01</span><h2>The example program</h2><p><span class="ic">RollerCoasterFilter</span> asks whether you want steel or wooden coasters, then prints the ones you can ride. It is deliberately small &mdash; readable in a minute &mdash; yet it still contains every required Create&nbsp;Task ingredient, which is exactly what makes it easy to point at when the prompts ask about your code.</p><pre class="code"><span class="co">import</span> javax.swing.JOptionPane;
+
+<span class="co-ty">StringList</span> coasters = <span class="co">new</span> <span class="co-ty">StringList</span>(<span class="co-st">&quot;Millenium Force&quot;</span>, <span class="co-st">&quot;The Beast&quot;</span>, <span class="co-st">&quot;Gemini&quot;</span>, <span class="co-st">&quot;Gatekeeper&quot;</span>);
+<span class="co-ty">IntList</span> wooden = <span class="co">new</span> <span class="co-ty">IntList</span>(<span class="co-nu">0</span>, <span class="co-nu">1</span>, <span class="co-nu">1</span>, <span class="co-nu">0</span>);
+<span class="co-ty">StringList</span> wantToRide = <span class="co">new</span> <span class="co-ty">StringList</span>();
+
+<span class="co-ty">void</span> <span class="co-fn">findCoasters</span>(<span class="co-ty">boolean</span> madeOfWood) {
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; coasters.<span class="co-fn">size</span>(); i++) {
+    <span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span>) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+    } <span class="co">else</span> <span class="co">if</span> (madeOfWood == <span class="co">false</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">0</span>) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+    }
+  }
+
+  <span class="co-fn">println</span>(<span class="co-st">&quot;Out of the available coasters, you can ride:&quot;</span>);
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; wantToRide.<span class="co-fn">size</span>(); i++) {
+    <span class="co-fn">println</span>((i + <span class="co-nu">1</span>) + <span class="co-st">&quot;: &quot;</span> + wantToRide.<span class="co-fn">get</span>(i));
+  }
+}
+
+<span class="co-ty">void</span> <span class="co-fn">setup</span>() {
+  <span class="co-ty">String</span> input = JOptionPane.<span class="co-fn">showInputDialog</span>(<span class="co-st">&quot;What type of coaster do you want? Enter 1 for steel, or 2 for wooden&quot;</span>);
+  <span class="co-ty">int</span> ans = <span class="co-ty">int</span>(input);
+  <span class="co">if</span> (ans == <span class="co-nu">1</span>) {
+    <span class="co-fn">findCoasters</span>(<span class="co">false</span>);
+  } <span class="co">else</span> <span class="co">if</span> (ans == <span class="co-nu">2</span>) {
+    <span class="co-fn">findCoasters</span>(<span class="co">true</span>);
+  } <span class="co">else</span> {
+    JOptionPane.<span class="co-fn">showMessageDialog</span>(<span class="co">null</span>, <span class="co-st">&quot;That wasn&#x27;t a valid input. Goodbye!&quot;</span>);
+  }
+}</pre><h3>Try it</h3><p>Pick a type and watch what the program prints. (Wooden: The Beast, Gemini. Steel: Millenium Force, Gatekeeper.)</p><div class="demo"><div class="row"><button class="btn b-blue" id="rcSteel">Enter 1 &mdash; steel</button><button class="btn" id="rcWood">Enter 2 &mdash; wooden</button></div><div class="console" id="rcOut"></div></div></section><section id="design"><span class="secnum">02</span><h2>Why it's built this way</h2><p>Every design choice maps to a requirement. Here is the tour.</p><h3>A list &mdash; and a parallel list</h3><p><span class="ic">coasters</span> holds the names; <span class="ic">wooden</span> holds a matching <span class="ic">0</span>/<span class="ic">1</span> for each one (1 = wooden). They are <b>parallel lists</b>: index <span class="ic">i</span> in each is about the same coaster. That satisfies the collection requirement and keeps related data tidy without a separate variable per coaster.</p><h3>A procedure with a parameter that actually matters</h3><p><span class="ic">findCoasters(boolean madeOfWood)</span> is the student-developed procedure. The parameter <span class="ic">madeOfWood</span> isn't decoration &mdash; it decides which coasters qualify, so the same procedure produces two different results depending on what you pass in.</p><h3>Sequencing, selection, and iteration &mdash; all inside it</h3><p>Inside <span class="ic">findCoasters</span>: it runs steps in order (filter, then print a header, then print results) &mdash; that's <b>sequencing</b>; it chooses with <span class="ic">if / else if</span> &mdash; that's <b>selection</b>; and it walks the lists with <span class="ic">for</span> loops &mdash; that's <b>iteration</b>. One procedure covers all three.</p><h3>Calling it, driven by input</h3><p><span class="ic">setup()</span> asks the user for 1 or 2, converts the text with <span class="ic">int()</span>, and calls <span class="ic">findCoasters(false)</span> or <span class="ic">findCoasters(true)</span>. The <span class="ic">else</span> handles anything else, so a stray input doesn't break the program.</p><h3>Input in, output out</h3><p><span class="ic">JOptionPane</span> gathers the input; <span class="ic">println</span> produces the visible output. Both are easy to talk about in a written response.</p><div class="tip"><span class="callhd">the takeaway</span>Small and clear beats big and tangled. Because each requirement lives in an obvious spot, every prompt below has a clean place to point.</div></section><section id="ppr"><span class="secnum">03</span><h2>Its Personalized Project Reference</h2><p>When you submit the Create&nbsp;Task you also assemble a <b>Personalized Project Reference</b> (PPR): short excerpts of your own code, split into a <b>List</b> section and a <b>Procedure</b> section, each with two parts. Every prompt below points at one of these four excerpts, so step one is always knowing which piece of code is which. Here they are for this program:</p><h3>List section &mdash; part (i): storing the data</h3><p>How the data gets into the list.</p><pre class="code"><span class="co-ty">StringList</span> coasters = <span class="co">new</span> <span class="co-ty">StringList</span>(<span class="co-st">&quot;Millenium Force&quot;</span>, <span class="co-st">&quot;The Beast&quot;</span>, <span class="co-st">&quot;Gemini&quot;</span>, <span class="co-st">&quot;Gatekeeper&quot;</span>);
+<span class="co-ty">IntList</span> wooden = <span class="co">new</span> <span class="co-ty">IntList</span>(<span class="co-nu">0</span>, <span class="co-nu">1</span>, <span class="co-nu">1</span>, <span class="co-nu">0</span>);</pre><h3>List section &mdash; part (ii): using the data</h3><p>The list being read to build the result.</p><pre class="code"><span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; coasters.<span class="co-fn">size</span>(); i++) {
+  <span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span>) {
+    wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+  } <span class="co">else</span> <span class="co">if</span> (madeOfWood == <span class="co">false</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">0</span>) {
+    wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+  }
+}</pre><h3>Procedure section &mdash; part (i): the procedure</h3><p>A student-written procedure with a used parameter plus sequencing, selection, and iteration.</p><pre class="code"><span class="co-ty">void</span> <span class="co-fn">findCoasters</span>(<span class="co-ty">boolean</span> madeOfWood) {
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; coasters.<span class="co-fn">size</span>(); i++) {
+    <span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span>) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+    } <span class="co">else</span> <span class="co">if</span> (madeOfWood == <span class="co">false</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">0</span>) {
+      wantToRide.<span class="co-fn">append</span>(coasters.<span class="co-fn">get</span>(i));
+    }
+  }
+
+  <span class="co-fn">println</span>(<span class="co-st">&quot;Out of the available coasters, you can ride:&quot;</span>);
+  <span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; wantToRide.<span class="co-fn">size</span>(); i++) {
+    <span class="co-fn">println</span>((i + <span class="co-nu">1</span>) + <span class="co-st">&quot;: &quot;</span> + wantToRide.<span class="co-fn">get</span>(i));
+  }
+}</pre><h3>Procedure section &mdash; part (ii): calling it</h3><p>Where the procedure runs, with the argument chosen by the user's input.</p><pre class="code"><span class="co">if</span> (ans == <span class="co-nu">1</span>) {
+  <span class="co-fn">findCoasters</span>(<span class="co">false</span>);
+} <span class="co">else</span> <span class="co">if</span> (ans == <span class="co-nu">2</span>) {
+  <span class="co-fn">findCoasters</span>(<span class="co">true</span>);
+}</pre></section><section id="y25q1"><span class="secnum">04</span><h2>2025 written response</h2><p>Four prompts, answered for this program. The 2025 set is in blue.</p><div class="qcard y25"><div class="qhd"><span class="qnum">2025 &middot; 1</span>Example output</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Give one example of your program's output and explain what part of the program's functionality it shows.</div><div class="ans"><span class="lbl">answer</span><p>If the user enters <span class="ic">2</span>, the program calls <span class="ic">findCoasters(true)</span> and prints:</p><div class="console">Out of the available coasters, you can ride:
+1: The Beast
+2: Gemini</div><p>This shows the program's core feature: <b>filtering the list by coaster type</b>. The two coasters printed are exactly the ones whose <span class="ic">wooden</span> value is <span class="ic">1</span> (The Beast and Gemini), so the output demonstrates that the selection inside <span class="ic">findCoasters</span> kept only wooden coasters as the loop scanned the list.</p></div><div class="why"><span class="callhd">why this answer</span>Q1 wants a <i>specific</i> output plus a tie to a named feature. So I fix a concrete input (2), show the exact text it prints, and explain <i>why those two</i> &mdash; pointing at the filtering behavior rather than saying a vague "it lists some coasters."</div></div></div></section><section id="y25q2a"><div class="qcard y25"><div class="qhd"><span class="qnum">2025 &middot; 2A</span>The Boolean expression</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Look at the first selection (<span class="ic">if</span>) statement in your procedure. Identify its Boolean expression, give specific value(s) that make it evaluate to <span class="ic">true</span>, and explain why.</div><div class="ans"><span class="lbl">answer</span><p>The first selection statement is the opening <span class="ic">if</span> inside <span class="ic">findCoasters</span>. Its Boolean expression is:</p><pre class="code">madeOfWood == <span class="co">true</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span></pre><p>It is <span class="ic">true</span> when <span class="ic">madeOfWood</span> is <span class="ic">true</span> <b>and</b> <span class="ic">wooden.get(i)</span> is <span class="ic">1</span>. For example, the user enters <span class="ic">2</span> (so <span class="ic">madeOfWood</span> is <span class="ic">true</span>) and <span class="ic">i</span> is <span class="ic">1</span>, where <span class="ic">wooden.get(1)</span> is <span class="ic">1</span> (The Beast). Both sides are true, so the whole expression is true and that coaster is added to <span class="ic">wantToRide</span>.</p></div><div class="why"><span class="callhd">why this answer</span>The operator is <span class="ic">&&</span> (logical AND), which is only true when <i>both</i> sides are true. So a complete answer has to pin down a value for the parameter <b>and</b> an index where <span class="ic">wooden</span> is 1 &mdash; then explain that the AND needs both.</div></div></div></section><section id="y25q2b"><div class="qcard y25"><div class="qhd"><span class="qnum">2025 &middot; 2B</span>Introducing a logic error</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Describe a change another programmer could make inside your procedure that would create a <b>logic error</b>, and describe how the procedure's behavior would change.</div><div class="ans"><span class="lbl">answer</span><p>Change the <span class="ic">else if</span> test from <span class="ic">== true</span> to <span class="ic">== false</span>:</p><pre class="code">} <span class="co">else</span> <span class="co">if</span> (madeOfWood == <span class="co">false</span> &amp;&amp; wooden.<span class="co-fn">get</span>(i) == <span class="co-nu">1</span>) {   <span class="co-cm">// was: == true</span></pre><p>Now both branches only fire for wooden coasters. When the user asks for <b>steel</b> (<span class="ic">madeOfWood</span> is <span class="ic">false</span>), the first branch is skipped, but the <span class="ic">else if</span> &mdash; <span class="ic">madeOfWood == false && wooden.get(i) == 1</span> &mdash; now matches the <i>wooden</i> coasters. So a steel request would wrongly print The Beast and Gemini, and the steel coasters would never appear. The program still runs without crashing; it just produces the wrong list.</p></div><div class="why"><span class="callhd">why this answer</span>A <i>logic</i> error runs fine but gives wrong output &mdash; so I pick a one-character condition change that compiles and runs. I deliberately avoid something like changing <span class="ic">&lt;</span> to <span class="ic">&lt;=</span>, because that crashes with an out-of-bounds error &mdash; that's a runtime error, not a logic error.</div></div></div></section><section id="y25q2c"><div class="qcard y25"><div class="qhd"><span class="qnum">2025 &middot; 2C</span>If the list grows</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Suppose another programmer adds several elements to the end of the list. Explain how the part (ii) code segment would need to change &mdash; or, if no change is needed, explain why.</div><div class="ans"><span class="lbl">answer</span><p><b>No change is needed.</b> The loop is bounded by <span class="ic">coasters.size()</span>, not a fixed number like <span class="ic">4</span>. <span class="ic">.size()</span> always reports the current number of elements, so adding coasters to the end just makes the loop run more times and process the new ones automatically.</p><p>One honest caveat: the parallel <span class="ic">wooden</span> list would need a matching <span class="ic">0</span> or <span class="ic">1</span> added for each new coaster so the indices still line up &mdash; but that's new <i>data</i>, not a change to the part (ii) <i>code</i>.</p></div><div class="why"><span class="callhd">why this answer</span>This is the payoff of writing <span class="ic">i &lt; coasters.size()</span> instead of <span class="ic">i &lt; 4</span>. Because <span class="ic">.size()</span> adapts on its own, the answer is "no change," and the explanation is simply <i>why</i>: the loop bound tracks the list's real length.</div></div></div></section><section id="y26q1"><span class="secnum">08</span><h2>2026 written response</h2><p>The same program against the 2026 set (in teal).</p><div class="qcard y26"><div class="qhd"><span class="qnum">2026 &middot; 1</span>Useful documentation</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Describe one piece of documentation you could include with your program, and explain how another programmer could use it to better understand a particular code segment.</div><div class="ans"><span class="lbl">answer</span><p>A header comment above <span class="ic">findCoasters</span> describing what it does, its parameter, and its hidden dependency:</p><pre class="code"><span class="co-cm">// findCoasters(madeOfWood): scans the coasters list and adds every coaster</span>
+<span class="co-cm">// whose type matches madeOfWood (true = wooden, false = steel) to the</span>
+<span class="co-cm">// wantToRide list, then prints them. Needs the parallel &quot;wooden&quot; list to</span>
+<span class="co-cm">// stay lined up with &quot;coasters&quot; (same length, same order).</span>
+<span class="co-ty">void</span> <span class="co-fn">findCoasters</span>(<span class="co-ty">boolean</span> madeOfWood) {</pre><p>Reading just that comment, another programmer immediately learns three things they'd otherwise have to reverse-engineer: what <span class="ic">madeOfWood</span> means (<span class="ic">true</span> = wooden), what the procedure produces (it fills <span class="ic">wantToRide</span> and prints it), and the rule that <span class="ic">wooden</span> must stay parallel to <span class="ic">coasters</span>. That lets them call and modify it safely without tracing the whole loop.</p></div><div class="why"><span class="callhd">why this answer</span>Q1 wants a specific documentation artifact tied to a specific segment &mdash; not "comments are good." A procedure header comment is the natural choice, and I connect it to <i>this</i> code's real confusion points: the meaning of the boolean and the parallel-list dependency.</div></div></div></section><section id="y26q2a"><div class="qcard y26"><div class="qhd"><span class="qnum">2026 &middot; 2A</span>When the loop stops</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>For the first iteration statement in your procedure, identify the variable(s) that determine when it stops, give specific values that stop it, and explain why. If there are no such variables, explain how it stops.</div><div class="ans"><span class="lbl">answer</span><p>The first iteration statement is the opening <span class="ic">for</span> loop:</p><pre class="code"><span class="co">for</span> (<span class="co-ty">int</span> i = <span class="co-nu">0</span>; i &lt; coasters.<span class="co-fn">size</span>(); i++)</pre><p>The values that control it are the counter <span class="ic">i</span> and <span class="ic">coasters.size()</span> (currently <span class="ic">4</span>). The loop keeps going while <span class="ic">i &lt; coasters.size()</span>. It stops when <span class="ic">i</span> reaches <span class="ic">4</span>: at that point <span class="ic">4 &lt; 4</span> is <span class="ic">false</span>, so the loop ends.</p><p><span class="ic">i</span> starts at <span class="ic">0</span> and rises by <span class="ic">1</span> each pass, so it visits every index <span class="ic">0</span> through <span class="ic">3</span> exactly once before the test fails.</p></div><div class="why"><span class="callhd">why this answer</span>The prompt asks for the controlling variable(s), an exact stopping value, and the reason. So I name <i>both</i> <span class="ic">i</span> and the <span class="ic">.size()</span> it's compared against, give <span class="ic">i == 4</span> as the value where the condition flips false, and explain the counting.</div></div></div></section><section id="y26q2b"><div class="qcard y26"><div class="qhd"><span class="qnum">2026 &middot; 2B</span>A test case that breaks it</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Write a call to your procedure with specific argument(s) that the procedure accepts but that makes it behave incorrectly; describe and explain the incorrect behavior. If that's not possible, explain why.</div><div class="ans"><span class="lbl">answer</span><p>For a single call, this is <b>not possible</b>, and explaining why earns the point. <span class="ic">findCoasters</span> takes one <span class="ic">boolean</span>, so the only arguments it accepts are <span class="ic">true</span> and <span class="ic">false</span> &mdash; and both are intended, handled values (<span class="ic">true</span> &rarr; wooden, <span class="ic">false</span> &rarr; steel). There is no "bad" boolean to pass, so no accepted single call produces wrong behavior.</p></div><div class="note"><span class="callhd">an honest aside</span>The program does have a real weakness: <span class="ic">wantToRide</span> is a global that is never cleared, so calling <span class="ic">findCoasters</span> twice (say <span class="ic">true</span> then <span class="ic">false</span>) lets the second call's output still contain the first call's coasters. But that's caused by <i>repeated calls and shared state</i>, not by the argument of a single call &mdash; so it doesn't fit this prompt's "a call with specific argument(s)" framing.</div><div class="why"><span class="callhd">why this answer</span>When a parameter's entire domain is handled, the correct, rubric-friendly answer is the "not possible" branch &mdash; you earn credit by explaining that both boolean values are valid and handled by design. (I flag the global-state bug separately so the analysis stays honest, but it isn't what this specific prompt is asking for.)</div></div></div></section><section id="y26q2c"><div class="qcard y26"><div class="qhd"><span class="qnum">2026 &middot; 2C</span>Abstraction &amp; the list</div><div class="qbd"><div class="qprompt"><span class="callhd">the prompt, in short</span>Explain how the list uses abstraction to manage complexity. Then describe how you'd adjust the part (ii) code segment to keep the same behavior if the list were removed &mdash; or, if that isn't possible, explain why.</div><div class="ans"><span class="lbl">answer &mdash; the abstraction</span><p>One name, <span class="ic">coasters</span>, stands in for all four coaster names. <span class="ic">coasters.get(i)</span> and <span class="ic">coasters.size()</span> let a single loop handle <i>any</i> number of coasters, so the rest of the program never has to know how many there are or name them individually. The list hides that detail behind one name and an index &mdash; that's the abstraction.</p></div><div class="ans"><span class="lbl">answer &mdash; without the list</span><p>It is possible, but only by hard-coding a separate variable per coaster and giving up the loop. The part (ii) loop becomes a hand-written sequence &mdash; one <span class="ic">if</span> per coaster:</p><pre class="code"><span class="co-ty">String</span> coaster0 = <span class="co-st">&quot;Millenium Force&quot;</span>;  <span class="co-ty">int</span> wooden0 = <span class="co-nu">0</span>;
+<span class="co-ty">String</span> coaster1 = <span class="co-st">&quot;The Beast&quot;</span>;        <span class="co-ty">int</span> wooden1 = <span class="co-nu">1</span>;
+<span class="co-ty">String</span> coaster2 = <span class="co-st">&quot;Gemini&quot;</span>;           <span class="co-ty">int</span> wooden2 = <span class="co-nu">1</span>;
+<span class="co-ty">String</span> coaster3 = <span class="co-st">&quot;Gatekeeper&quot;</span>;       <span class="co-ty">int</span> wooden3 = <span class="co-nu">0</span>;
+
+<span class="co-cm">// part (ii) loses its loop -- one hand-written if per coaster instead:</span>
+<span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden0 == <span class="co-nu">1</span>) { wantToRide.<span class="co-fn">append</span>(coaster0); }
+<span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden1 == <span class="co-nu">1</span>) { wantToRide.<span class="co-fn">append</span>(coaster1); }
+<span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden2 == <span class="co-nu">1</span>) { wantToRide.<span class="co-fn">append</span>(coaster2); }
+<span class="co">if</span> (madeOfWood == <span class="co">true</span> &amp;&amp; wooden3 == <span class="co-nu">1</span>) { wantToRide.<span class="co-fn">append</span>(coaster3); }
+<span class="co-cm">// ...plus the matching steel checks. Add a coaster -&gt; add more lines by hand.</span></pre><p>Same behavior, but every coaster you add now means more code written by hand. That repetition is exactly the complexity the list removes.</p></div><div class="why"><span class="callhd">why this answer</span>2C wants both halves: the abstraction explanation <i>and</i> a concrete without-list rewrite. So I explain "one name for many" plus <span class="ic">get</span>/<span class="ic">size</span>, then show the expanded version &mdash; individual variables and repeated <span class="ic">if</span>s with no loop &mdash; to make the saved complexity visible.</div></div></div></section><div class="foot">you’ve got this — make it yours ✨</div></div></div><script>
+function safe(name, fn){ try{ fn(); }catch(e){ console.error('['+name+']', e); } }
+safe('scrollspy', function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.sidebar nav a'));
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function spy(){
+    var y = window.scrollY + 130, idx = 0;
+    for (var i=0;i<secs.length;i++){ if (secs[i] && secs[i].offsetTop <= y) idx = i; }
+    for (var j=0;j<links.length;j++){ links[j].classList.toggle('active', j===idx); }
+  }
+  window.addEventListener('scroll', spy, {passive:true});
+  window.addEventListener('load', spy);
+  spy();
+});
+
+safe('rcDemo', function(){
+  var coasters=['Millenium Force','The Beast','Gemini','Gatekeeper'];
+  var wooden=[0,1,1,0];
+  var out=document.getElementById('rcOut');
+  function run(madeOfWood){
+    var ride=[];
+    for(var i=0;i<coasters.length;i++){
+      if(madeOfWood===true && wooden[i]===1){ ride.push(coasters[i]); }
+      else if(madeOfWood===false && wooden[i]===0){ ride.push(coasters[i]); }
+    }
+    var lines='Out of the available coasters, you can ride:\n';
+    for(var i=0;i<ride.length;i++){ lines+=(i+1)+': '+ride[i]+'\n'; }
+    out.textContent=lines.replace(/\n$/,'');
+  }
+  document.getElementById('rcSteel').addEventListener('click', function(){ run(false); });
+  document.getElementById('rcWood').addEventListener('click', function(){ run(true); });
+  run(false);
+});
+</script></body></html>
