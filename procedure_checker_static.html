@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Does My Procedure Count? — Create Task Self-Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbfaf0;
+    --ink:#1A1A2E;
+    --ink-soft:#4b4b63;
+    --coral:#E8725A;  --coral-lt:#FBE6E0;
+    --teal:#4A9B8E;   --teal-lt:#DCEFEA;
+    --gold:#D4A83A;   --gold-lt:#F6ECC9;
+    --blue:#4A7FC1;   --blue-lt:#E0E9F6;
+    --card:#fffdf6;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background-color:var(--cream);
+    background-image:
+      linear-gradient(rgba(74,127,193,0.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,127,193,0.10) 1px, transparent 1px);
+    background-size:26px 26px;
+    color:var(--ink);
+    font-family:'DM Sans', system-ui, sans-serif;
+    line-height:1.55;
+    padding:48px 24px 80px;
+  }
+  .wrap{ max-width:880px; margin:0 auto; }
+
+  /* ---------- header ---------- */
+  header{ margin-bottom:36px; }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:3rem;
+    line-height:1.04;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  .caveat-sub{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:1.7rem;
+    color:var(--coral);
+    margin:0 0 14px;
+    transform:rotate(-1.2deg);
+    display:inline-block;
+  }
+  .lede{ font-size:1.05rem; color:var(--ink-soft); max-width:660px; margin:0; }
+
+  h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.5rem;
+    margin:40px 0 16px;
+  }
+
+  /* ---------- reference checklist cards ---------- */
+  .ref-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .ref{
+    background:var(--card);
+    border:2px solid var(--ink);
+    border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink);
+    padding:18px 20px 20px;
+  }
+  .ref .num{
+    display:inline-block;
+    font-family:'DM Sans', sans-serif;
+    font-weight:700;
+    font-size:.78rem;
+    letter-spacing:.06em;
+    padding:4px 13px;
+    border:2px solid var(--ink);
+    border-radius:4px 16px 16px 4px;
+    margin-bottom:10px;
+    color:var(--ink);
+  }
+  .ref h3{ font-family:'Fraunces', serif; font-weight:600; font-size:1.12rem; margin:0 0 6px; }
+  .ref p{ margin:0; font-size:.95rem; color:var(--ink-soft); }
+  .num.coral{ background:var(--coral-lt); }
+  .num.blue{ background:var(--blue-lt); }
+  .num.teal{ background:var(--teal-lt); }
+  .num.gold{ background:var(--gold-lt); }
+  code{ font-family:'IBM Plex Mono', monospace; font-size:.86em; background:rgba(26,26,46,0.06); padding:1px 5px; border-radius:4px; }
+
+  /* ---------- dark "rule" card ---------- */
+  .recipe{
+    background:var(--ink);
+    color:var(--cream);
+    border:2px solid var(--ink);
+    border-radius:12px;
+    box-shadow:6px 6px 0 var(--coral);
+    padding:20px 24px;
+    margin-top:22px;
+    font-size:1.02rem;
+  }
+  .recipe b{ color:var(--gold); font-weight:700; }
+  .recipe .rk{ font-family:'Caveat', cursive; font-weight:700; font-size:1.35rem; color:var(--teal); display:block; margin-bottom:2px; transform:rotate(-1deg); }
+
+  /* ---------- checker panel ---------- */
+  .panel{
+    background:var(--card);
+    border:2px solid var(--ink);
+    border-radius:14px;
+    box-shadow:6px 6px 0 var(--ink);
+    padding:22px 24px 24px;
+    margin-top:18px;
+  }
+  textarea{
+    width:100%;
+    min-height:300px;
+    resize:vertical;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:.92rem;
+    line-height:1.5;
+    color:var(--ink);
+    background:#fffefb;
+    border:2px solid var(--ink);
+    border-radius:10px;
+    padding:14px 16px;
+    tab-size:2;
+  }
+  textarea:focus-visible{ outline:3px solid var(--blue); outline-offset:2px; }
+
+  .actions{ display:flex; align-items:center; gap:16px; margin-top:18px; flex-wrap:wrap; }
+  .btn{
+    font-family:'DM Sans', sans-serif;
+    font-weight:700;
+    font-size:1.02rem;
+    color:#fff;
+    background:var(--coral);
+    border:2px solid var(--ink);
+    border-radius:10px;
+    box-shadow:4px 4px 0 var(--ink);
+    padding:12px 26px;
+    cursor:pointer;
+    transition:transform .05s ease, box-shadow .05s ease;
+  }
+  .btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .btn:disabled{ opacity:.55; cursor:default; transform:none; box-shadow:4px 4px 0 var(--ink); }
+  .btn:focus-visible{ outline:3px solid var(--blue); outline-offset:3px; }
+  .ghost{
+    font-family:'DM Sans', sans-serif; font-weight:700; font-size:.92rem;
+    background:var(--cream); color:var(--ink);
+    border:2px solid var(--ink); border-radius:9px;
+    padding:11px 18px; cursor:pointer;
+  }
+  .ghost:focus-visible{ outline:3px solid var(--blue); outline-offset:3px; }
+  .disclaimer{ font-size:.84rem; color:var(--ink-soft); max-width:360px; }
+  .status{ margin-top:14px; font-weight:600; min-height:1.2em; }
+  .status.err{ color:var(--coral); }
+
+  /* ---------- results ---------- */
+  .overall{
+    border:2px solid var(--ink);
+    border-radius:12px;
+    padding:18px 22px;
+    margin:8px 0 20px;
+    box-shadow:6px 6px 0 var(--ink);
+  }
+  .overall.teal{ background:var(--teal-lt); }
+  .overall.gold{ background:var(--gold-lt); }
+  .overall.coral{ background:var(--coral-lt); }
+  .ov-head{ font-family:'Fraunces', serif; font-weight:700; font-size:1.5rem; }
+  .ov-sub{ color:var(--ink-soft); margin-top:2px; }
+
+  .seg-grid{ display:grid; gap:16px; }
+  .seg{
+    background:var(--card);
+    border:2px solid var(--ink);
+    border-left-width:9px;
+    border-radius:12px;
+    box-shadow:6px 6px 0 var(--ink);
+    padding:16px 20px 18px;
+  }
+  .seg.pass{ border-left-color:var(--teal); }
+  .seg.partial{ border-left-color:var(--gold); }
+  .seg.fail{ border-left-color:var(--coral); }
+  .seg-top{ display:flex; align-items:center; gap:12px; }
+  .seg-tag{
+    font-family:'DM Sans', sans-serif; font-weight:700; font-size:.78rem;
+    padding:3px 12px; border:2px solid var(--ink); border-radius:4px 16px 16px 4px;
+  }
+  .seg-tag.coral{ background:var(--coral-lt); }
+  .seg-tag.blue{ background:var(--blue-lt); }
+  .seg-tag.teal{ background:var(--teal-lt); }
+  .seg-tag.gold{ background:var(--gold-lt); }
+  .seg h3{ font-family:'Fraunces', serif; font-weight:600; font-size:1.12rem; margin:0; flex:1; }
+  .badge{
+    font-family:'DM Sans', sans-serif; font-weight:700; font-size:.74rem; letter-spacing:.05em;
+    padding:4px 11px; border:2px solid var(--ink); border-radius:7px; color:#fff;
+  }
+  .badge.pass{ background:var(--teal); }
+  .badge.partial{ background:var(--gold); color:var(--ink); }
+  .badge.fail{ background:var(--coral); }
+  .evidence{ font-size:.88rem; color:var(--ink-soft); margin:10px 0 0; }
+  .checks{ list-style:none; padding:0; margin:12px 0 0; }
+  .checks li{ font-size:.92rem; padding:3px 0; display:flex; align-items:flex-start; gap:9px; }
+  .checks .ck{ font-weight:700; width:1.1em; flex-shrink:0; }
+  .checks li.ok{ color:var(--ink); }
+  .checks li.ok .ck{ color:var(--teal); }
+  .checks li.no{ color:var(--ink-soft); }
+  .checks li.no .ck{ color:var(--coral); }
+  .feedback{ margin:12px 0 0; font-size:.95rem; }
+
+  /* ---------- footer ---------- */
+  .foot{
+    margin-top:48px; text-align:center;
+    font-family:'Caveat', cursive; font-weight:700; font-size:1.3rem;
+    color:var(--ink-soft); transform:rotate(-1.4deg);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Does My Procedure Count?</h1>
+    <div class="caveat-sub">your Create Task four-piece self-check</div>
+    <p class="lede">Paste your Processing code and find out which of the four required pieces are in your program, and what's still missing. It checks structure only &mdash; it will not write or fix any code for you. That part stays yours.</p>
+  </header>
+
+  <h2>The four pieces you need</h2>
+  <div class="ref-grid">
+    <div class="ref">
+      <span class="num coral">PIECE 1</span>
+      <h3>A procedure you wrote</h3>
+      <p>One function &mdash; <b>not</b> <code>setup</code>, <code>draw</code>, or <code>mousePressed</code> &mdash; that has a parameter you actually use, an <code>if</code>, and a loop, all in the same body.</p>
+    </div>
+    <div class="ref">
+      <span class="num blue">PIECE 2</span>
+      <h3>A call to it</h3>
+      <p>Somewhere your program runs that procedure by name, away from where you defined it.</p>
+    </div>
+    <div class="ref">
+      <span class="num teal">PIECE 3</span>
+      <h3>A list that stores data</h3>
+      <p>An array or an <code>IntList</code> / <code>StringList</code> / <code>FloatList</code> that actually holds values.</p>
+    </div>
+    <div class="ref">
+      <span class="num gold">PIECE 4</span>
+      <h3>Using that list</h3>
+      <p>Read it or loop through it &mdash; <code>get(i)</code>, <code>[i]</code>, <code>.size()</code> &mdash; not just declare it.</p>
+    </div>
+  </div>
+
+  <div class="recipe">
+    <span class="rk">the one most people miss &darr;</span>
+    A procedure only counts when <b>one</b> function you wrote has <b>a parameter you use</b>, <b>an if</b>, and <b>a loop</b> &mdash; all together. A parameter on a function that only draws, or a loop that lives in <code>draw()</code>, does not check the box.
+  </div>
+
+  <h2>Check your project</h2>
+  <div class="panel">
+    <textarea id="codeInput" placeholder="Paste your full Processing (.pde) code here…" spellcheck="false"></textarea>
+    <div class="actions">
+      <button class="btn" id="checkBtn">Check my code</button>
+      <button class="ghost" id="clearBtn">Clear</button>
+      <span class="disclaimer">Quick structural scan. It checks the four pieces &mdash; not whether the code compiles or runs.</span>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <section id="results" hidden>
+    <h2>Your results</h2>
+    <div class="overall" id="overall"></div>
+    <div class="seg-grid" id="segs"></div>
+  </section>
+
+  <div class="foot">structure check &middot; not a code writer &middot; the thinking is yours</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  function safe(name, fn){
+    return function(){
+      try { return fn.apply(this, arguments); }
+      catch (e) { console.error("[" + name + "]", e); setStatus("Something glitched. Try again.", "err"); }
+    };
+  }
+  function $(s){ return document.querySelector(s); }
+  function escapeHtml(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  function escapeReg(s){ return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
+  // ================= ANALYZER (pure, offline) =================
+  function cleanCode(src){
+    var out = "", i = 0, n = src.length, st = "code";
+    while(i < n){
+      var c = src[i], d = src[i+1];
+      if(st === "code"){
+        if(c === "/" && d === "/"){ st = "line"; i += 2; continue; }
+        if(c === "/" && d === "*"){ st = "block"; i += 2; continue; }
+        if(c === '"'){ st = "str"; out += '"'; i++; continue; }
+        if(c === "'"){ st = "chr"; out += "'"; i++; continue; }
+        out += c; i++; continue;
+      }
+      if(st === "line"){ if(c === "\n"){ st = "code"; out += "\n"; } i++; continue; }
+      if(st === "block"){ if(c === "*" && d === "/"){ st = "code"; i += 2; out += " "; continue; } if(c === "\n") out += "\n"; i++; continue; }
+      if(st === "str"){ if(c === "\\"){ i += 2; continue; } if(c === '"'){ st = "code"; out += '"'; i++; continue; } i++; continue; }
+      if(st === "chr"){ if(c === "\\"){ i += 2; continue; } if(c === "'"){ st = "code"; out += "'"; i++; continue; } i++; continue; }
+    }
+    return out;
+  }
+  function matchBrace(s, open){
+    var depth = 0;
+    for(var i = open; i < s.length; i++){
+      if(s[i] === "{") depth++;
+      else if(s[i] === "}"){ depth--; if(depth === 0) return i; }
+    }
+    return s.length - 1;
+  }
+  function paramNames(p){
+    p = (p || "").trim();
+    if(!p) return [];
+    return p.split(",").map(function(x){
+      var m = x.trim().match(/([A-Za-z_]\w*)\s*(\[\s*\])?\s*$/);
+      return m ? m[1] : null;
+    }).filter(Boolean);
+  }
+  var EVENTS = { setup:1, draw:1, settings:1, mousePressed:1, mouseReleased:1, mouseClicked:1,
+    mouseDragged:1, mouseMoved:1, mouseWheel:1, mouseEntered:1, mouseExited:1,
+    keyPressed:1, keyReleased:1, keyTyped:1 };
+  function findFunctions(clean){
+    var fns = [];
+    var re = /(^|[\n;{}])([ \t]*)((?:public|private|protected|static|final)\s+)*([A-Za-z_]\w*(?:\s*\[\s*\])?)\s+([A-Za-z_]\w*)\s*\(([\s\S]*?)\)\s*\{/g;
+    var m;
+    while((m = re.exec(clean))){
+      var ret = m[4], name = m[5], params = m[6];
+      if(/^(if|for|while|switch|catch|return|else|do|new)$/.test(ret)){ re.lastIndex = m.index + m[0].length; continue; }
+      var braceIdx = m.index + m[0].length - 1;
+      var end = matchBrace(clean, braceIdx);
+      fns.push({ name:name, ret:ret, params:paramNames(params),
+        body:clean.substring(braceIdx + 1, end), defStart:m.index, defEnd:end, isEvent:!!EVENTS[name] });
+      re.lastIndex = end;
+    }
+    return fns;
+  }
+  function readsList(clean, name){
+    var n = escapeReg(name);
+    if(new RegExp("\\b" + n + "\\s*\\.\\s*get\\s*\\(").test(clean)) return true;
+    if(new RegExp("\\b" + n + "\\s*\\.\\s*size\\s*\\(").test(clean)) return true;
+    var re = new RegExp("\\b" + n + "\\s*\\[[^\\]]*\\]\\s*(=(?!=))?", "g");
+    var m;
+    while((m = re.exec(clean))){ if(!m[1]) return true; }
+    return false;
+  }
+  function mkProc(status, f){
+    function missMsg(){
+      var miss = [];
+      if(!f.usesParam) miss.push(f.params.length ? "use one of its parameters in the body" : "add a parameter and use it");
+      if(!f.hasIf) miss.push("add an if / else decision");
+      if(!f.hasLoop) miss.push("add a for or while loop");
+      return f.name + "() is closest, but you still need to " + miss.join(", and ") + " — all inside this one function.";
+    }
+    return {
+      id:"procedure", status:status, evidence:f.name + "()",
+      checks:[
+        { label:"Has a parameter you actually use", ok:!!f.usesParam },
+        { label:"Makes a decision (if / else)", ok:!!f.hasIf },
+        { label:"Repeats with a loop (for / while)", ok:!!f.hasLoop },
+        { label:"Is your own function, not setup/draw/mousePressed", ok:true }
+      ],
+      feedback: status === "pass"
+        ? "Nice — " + f.name + "() has a parameter, a decision, and a loop, all together."
+        : missMsg()
+    };
+  }
+  function analyze(code){
+    var clean = cleanCode(code);
+    var fns = findFunctions(clean);
+    var nonEvent = fns.filter(function(f){ return !f.isEvent; });
+
+    nonEvent.forEach(function(f){
+      f.hasIf = /\bif\s*\(/.test(f.body);
+      f.hasLoop = /\bfor\s*\(/.test(f.body) || /\bwhile\s*\(/.test(f.body);
+      f.usesParam = f.params.some(function(p){ return new RegExp("\\b" + escapeReg(p) + "\\b").test(f.body); });
+      f.score = (f.usesParam ? 1 : 0) + (f.hasIf ? 1 : 0) + (f.hasLoop ? 1 : 0);
+    });
+
+    var passFn = nonEvent.filter(function(f){ return f.usesParam && f.hasIf && f.hasLoop; })[0];
+    var best = passFn || nonEvent.slice().sort(function(a, b){
+      if(b.score !== a.score) return b.score - a.score;
+      var ap = a.params.length > 0 ? 1 : 0, bp = b.params.length > 0 ? 1 : 0;
+      if(bp !== ap) return bp - ap;
+      return a.defStart - b.defStart;
+    })[0];
+
+    var procSeg;
+    if(passFn) procSeg = mkProc("pass", passFn);
+    else if(best) procSeg = mkProc("partial", best);
+    else {
+      var evLogic = fns.filter(function(f){ return f.isEvent && /\bif\s*\(/.test(f.body) && (/\bfor\s*\(/.test(f.body) || /\bwhile\s*\(/.test(f.body)); });
+      procSeg = {
+        id:"procedure", status:"fail", evidence:"-",
+        checks:[
+          { label:"Has a parameter you actually use", ok:false },
+          { label:"Makes a decision (if / else)", ok:false },
+          { label:"Repeats with a loop (for / while)", ok:false },
+          { label:"Is your own function, not setup/draw/mousePressed", ok:false }
+        ],
+        feedback: evLogic.length
+          ? "Your if and loop are inside " + evLogic[0].name + "() — move that logic into your own named function that takes a parameter."
+          : "Write your own function (not setup/draw/mousePressed) that takes a parameter, makes a decision, and loops."
+      };
+    }
+
+    var callSeg;
+    if(best){
+      var nm = best.name;
+      var count = (clean.match(new RegExp("\\b" + escapeReg(nm) + "\\s*\\(", "g")) || []).length;
+      var called = count >= 2;
+      callSeg = { id:"call", status:called ? "pass" : "fail", evidence:nm + "()", checks:[],
+        feedback: called ? "You call " + nm + "() in your program." : "You define " + nm + "() but never call it — run it somewhere." };
+    } else {
+      callSeg = { id:"call", status:"fail", evidence:"-", checks:[], feedback:"Once you have your own procedure, call it by name somewhere." };
+    }
+
+    var arrays = [], lists = [], mm;
+    var reArr = /\b(?:String|int|float|boolean|char|double|long|color)\s*\[\s*\]\s*([A-Za-z_]\w*)/g;
+    var reArr2 = /\b(?:String|int|float|boolean|char|double|long|color)\s+([A-Za-z_]\w*)\s*\[\s*\]/g;
+    var reList = /\b(?:IntList|StringList|FloatList)\s+([A-Za-z_]\w*)/g;
+    while((mm = reArr.exec(clean))) arrays.push(mm[1]);
+    while((mm = reArr2.exec(clean))) arrays.push(mm[1]);
+    while((mm = reList.exec(clean))) lists.push(mm[1]);
+    var allNames = arrays.concat(lists).filter(function(v, i, a){ return a.indexOf(v) === i; });
+
+    var hasAnyList = allNames.length > 0;
+    var stored = /=\s*\{/.test(clean) ||
+                 /new\s+(?:IntList|StringList|FloatList)\s*\(\s*[^)\s]/.test(clean) ||
+                 /\.\s*append\s*\(/.test(clean) ||
+                 /\b[A-Za-z_]\w*\s*\[[^\]]*\]\s*=(?!=)/.test(clean);
+
+    var storeSeg;
+    if(hasAnyList && stored) storeSeg = { id:"list_store", status:"pass", evidence:allNames[0], checks:[], feedback:"You store values in a list/array." };
+    else if(hasAnyList) storeSeg = { id:"list_store", status:"partial", evidence:allNames[0], checks:[], feedback:"You've declared a list/array but haven't put any values in it yet." };
+    else storeSeg = { id:"list_store", status:"fail", evidence:"-", checks:[], feedback:"Add a list or array (String[], IntList, StringList, …) that holds your data." };
+
+    var usedName = null;
+    for(var i = 0; i < allNames.length; i++){ if(readsList(clean, allNames[i])){ usedName = allNames[i]; break; } }
+    var useSeg;
+    if(usedName) useSeg = { id:"list_use", status:"pass", evidence:usedName, checks:[], feedback:"You read from " + usedName + " (get(i) / [i] / size())." };
+    else if(hasAnyList) useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"You have a list but never read from it — loop through it with get(i) or [i]." };
+    else useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"Once you have a list, read or loop through its elements." };
+
+    var segments = [procSeg, callSeg, storeSeg, useSeg];
+    var passCount = segments.filter(function(s){ return s.status === "pass"; }).length;
+    var overall = passCount === 4 ? "ready" : (passCount === 3 ? "almost" : "not_yet");
+    var found = fns.length > 0 || hasAnyList;
+    var summary = !found ? "I couldn't find Processing code to check — paste your full .pde file."
+      : overall === "ready" ? "All four pieces are here — you're set."
+      : overall === "almost" ? "One piece to go." : "A few pieces still to add.";
+
+    return { found:found, overall:overall, summary:summary, segments:segments };
+  }
+  // ================= /ANALYZER =================
+
+  var SEG_META = {
+    procedure:  { n:"PIECE 1", title:"A procedure you wrote",  color:"coral" },
+    call:       { n:"PIECE 2", title:"A call to it",           color:"blue"  },
+    list_store: { n:"PIECE 3", title:"A list that stores data", color:"teal" },
+    list_use:   { n:"PIECE 4", title:"Using that list",        color:"gold"  }
+  };
+  var ORDER = ["procedure", "call", "list_store", "list_use"];
+  var STATUS = {
+    pass:    { cls:"pass",    label:"GOT IT" },
+    partial: { cls:"partial", label:"ALMOST" },
+    fail:    { cls:"fail",    label:"MISSING" }
+  };
+
+  function setStatus(msg, kind){
+    var el = $("#status");
+    el.textContent = msg || "";
+    el.className = "status" + (kind ? " " + kind : "");
+  }
+
+  function runCheck(){
+    var code = $("#codeInput").value.trim();
+    if(!code){ setStatus("Paste your code first.", "err"); $("#results").hidden = true; return; }
+    var btn = $("#checkBtn");
+    btn.disabled = true; btn.textContent = "Checking…";
+    setTimeout(safe("analyze", function(){
+      var result = analyze(code);
+      renderResult(result);
+      if(!result.found) setStatus(result.summary, "err"); else setStatus("", "");
+      btn.disabled = false; btn.textContent = "Check my code";
+    }), 30);
+  }
+
+  function renderResult(result){
+    var byId = {};
+    (result.segments || []).forEach(function(s){ byId[s.id] = s; });
+    var passCount = ORDER.filter(function(id){ return byId[id] && byId[id].status === "pass"; }).length;
+
+    var ov = $("#overall");
+    var cls = "coral", head = "Not yet";
+    if(result.overall === "ready" || passCount === 4){ cls = "teal"; head = "You're ready"; }
+    else if(result.overall === "almost" || passCount === 3){ cls = "gold"; head = "So close"; }
+    ov.className = "overall " + cls;
+    ov.innerHTML = '<div class="ov-head">' + head + '</div>' +
+      '<div class="ov-sub">' + passCount + ' of 4 pieces in place' +
+      (result.summary ? ' &middot; ' + escapeHtml(result.summary) : '') + '</div>';
+
+    var wrap = $("#segs");
+    wrap.innerHTML = "";
+    ORDER.forEach(function(id){
+      var meta = SEG_META[id];
+      var s = byId[id] || { status:"fail", feedback:"Not found.", evidence:"-", checks:[] };
+      var st = STATUS[s.status] || STATUS.fail;
+
+      var checksHtml = "";
+      if(id === "procedure" && Array.isArray(s.checks) && s.checks.length){
+        checksHtml = '<ul class="checks">' + s.checks.map(function(c){
+          var ok = !!c.ok;
+          return '<li class="' + (ok ? "ok" : "no") + '"><span class="ck">' +
+                 (ok ? "\u2713" : "\u2717") + '</span>' + escapeHtml(c.label) + '</li>';
+        }).join("") + '</ul>';
+      }
+      var evHtml = (s.evidence && s.evidence !== "-" && s.evidence !== "\u2014")
+        ? '<div class="evidence">checked: <code>' + escapeHtml(s.evidence) + '</code></div>' : "";
+
+      var card = document.createElement("div");
+      card.className = "seg " + st.cls;
+      card.innerHTML =
+        '<div class="seg-top">' +
+          '<span class="seg-tag ' + meta.color + '">' + meta.n + '</span>' +
+          '<h3>' + escapeHtml(meta.title) + '</h3>' +
+          '<span class="badge ' + st.cls + '">' + st.label + '</span>' +
+        '</div>' + evHtml + checksHtml +
+        '<p class="feedback">' + escapeHtml(s.feedback || "") + '</p>';
+      wrap.appendChild(card);
+    });
+
+    $("#results").hidden = false;
+    $("#results").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  $("#checkBtn").addEventListener("click", safe("check", runCheck));
+  $("#clearBtn").addEventListener("click", safe("clear", function(){
+    $("#codeInput").value = ""; $("#results").hidden = true; setStatus("", ""); $("#codeInput").focus();
+  }));
+})();
+</script>
+</body>
+</html>
