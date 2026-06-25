@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Does My Procedure Count? — Create Task Self-Check</title>
+<title>Does My Procedure Count? — Create Task Self-Check (v2)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
@@ -426,6 +426,14 @@
       callSeg = { id:"call", status:"fail", evidence:"-", checks:[], feedback:"Once you have your own procedure, call it by name somewhere." };
     }
 
+    // pieces 3 & 4 must concern the SAME list (just as the call must hit the same procedure)
+    function listStored(name){
+      var n = escapeReg(name);
+      return new RegExp("\\b" + n + "\\s*=\\s*\\{").test(clean) ||                                                  // name = { ... }
+             new RegExp("\\b" + n + "\\s*=\\s*new\\s+(?:IntList|StringList|FloatList)\\s*\\(\\s*[^)\\s]").test(clean) || // = new IntList(values)
+             new RegExp("\\b" + n + "\\s*\\.\\s*append\\s*\\(").test(clean) ||                                       // name.append(
+             new RegExp("\\b" + n + "\\s*\\[[^\\]]*\\]\\s*=(?!=)").test(clean);                                      // name[i] =
+    }
     var arrays = [], lists = [], mm;
     var reArr = /\b(?:String|int|float|boolean|char|double|long|color)\s*\[\s*\]\s*([A-Za-z_]\w*)/g;
     var reArr2 = /\b(?:String|int|float|boolean|char|double|long|color)\s+([A-Za-z_]\w*)\s*\[\s*\]/g;
@@ -435,23 +443,48 @@
     while((mm = reList.exec(clean))) lists.push(mm[1]);
     var allNames = arrays.concat(lists).filter(function(v, i, a){ return a.indexOf(v) === i; });
 
+    // aliasing: `x = someList;` means reading x also counts as using someList (same underlying array)
+    var aliasOf = {}, am, reAlias = /([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)\s*[;,)]/g;
+    while((am = reAlias.exec(clean))){ if(allNames.indexOf(am[2]) >= 0){ (aliasOf[am[1]] = aliasOf[am[1]] || []).push(am[2]); } }
+    function usedEff(name, seen){
+      seen = seen || {};
+      if(seen[name]) return false; seen[name] = true;
+      if(readsList(clean, name)) return true;
+      for(var x in aliasOf){ if(aliasOf[x].indexOf(name) >= 0 && usedEff(x, seen)) return true; }
+      return false;
+    }
+
+    var info = allNames.map(function(name){ return { name:name, stored:listStored(name), used:usedEff(name) }; });
     var hasAnyList = allNames.length > 0;
-    var stored = /=\s*\{/.test(clean) ||
-                 /new\s+(?:IntList|StringList|FloatList)\s*\(\s*[^)\s]/.test(clean) ||
-                 /\.\s*append\s*\(/.test(clean) ||
-                 /\b[A-Za-z_]\w*\s*\[[^\]]*\]\s*=(?!=)/.test(clean);
+    var both = info.filter(function(x){ return x.stored && x.used; });
+    var storedOnly = info.filter(function(x){ return x.stored && !x.used; });
+    var usedOnly = info.filter(function(x){ return !x.stored && x.used; });
+    // feature one list: prefer a list that is BOTH stored and used, then stored-only, then used-only
+    var featured = both[0] || storedOnly[0] || usedOnly[0] || info[0] || null;
 
-    var storeSeg;
-    if(hasAnyList && stored) storeSeg = { id:"list_store", status:"pass", evidence:allNames[0], checks:[], feedback:"You store values in a list/array." };
-    else if(hasAnyList) storeSeg = { id:"list_store", status:"partial", evidence:allNames[0], checks:[], feedback:"You've declared a list/array but haven't put any values in it yet." };
-    else storeSeg = { id:"list_store", status:"fail", evidence:"-", checks:[], feedback:"Add a list or array (String[], IntList, StringList, …) that holds your data." };
+    var storeSeg, useSeg;
+    if(!hasAnyList){
+      storeSeg = { id:"list_store", status:"fail", evidence:"-", checks:[], feedback:"Add a list or array (String[], IntList, StringList, …) that holds your data." };
+      useSeg  = { id:"list_use",  status:"fail", evidence:"-", checks:[], feedback:"Once you have a list, read or loop through its elements." };
+    } else {
+      // PIECE 3 — data stored in the featured list
+      if(featured.stored) storeSeg = { id:"list_store", status:"pass", evidence:featured.name, checks:[], feedback:"You store values in " + featured.name + "." };
+      else storeSeg = { id:"list_store", status:"partial", evidence:featured.name, checks:[], feedback:"You've declared " + featured.name + " but haven't put any values in it yet." };
 
-    var usedName = null;
-    for(var i = 0; i < allNames.length; i++){ if(readsList(clean, allNames[i])){ usedName = allNames[i]; break; } }
-    var useSeg;
-    if(usedName) useSeg = { id:"list_use", status:"pass", evidence:usedName, checks:[], feedback:"You read from " + usedName + " (get(i) / [i] / size())." };
-    else if(hasAnyList) useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"You have a list but never read from it — loop through it with get(i) or [i]." };
-    else useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"Once you have a list, read or loop through its elements." };
+      // PIECE 4 — the SAME list being used
+      if(featured.stored && featured.used){
+        useSeg = { id:"list_use", status:"pass", evidence:featured.name, checks:[], feedback:"You read from " + featured.name + " — the same list you store in." };
+      } else if(featured.stored && !featured.used){
+        var otherUsed = usedOnly[0] || both[0];
+        if(otherUsed && otherUsed.name !== featured.name){
+          useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"Pieces 3 and 4 must be the SAME list. You store data in " + featured.name + ", but you read from " + otherUsed.name + " — store and use the one list." };
+        } else {
+          useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:"You store data in " + featured.name + " but never read it back — loop through " + featured.name + " with get(i) or [i]." };
+        }
+      } else {
+        useSeg = { id:"list_use", status:"fail", evidence:"-", checks:[], feedback:featured.name + " is read but you never store anything in it — Pieces 3 and 4 must be the same, filled list." };
+      }
+    }
 
     var segments = [procSeg, callSeg, storeSeg, useSeg];
     var passCount = segments.filter(function(s){ return s.status === "pass"; }).length;
