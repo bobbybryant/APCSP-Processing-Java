@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An interactive AP CSP lesson on for loops in Processing Java: start at 0, use less than, add 1. Trace loops, explore FencePost, random, int, and modulo.">
+<title>For Loops — Processing Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,600&family=DM+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f1e4; --paper-2:#efe8d6; --card:#fffef9;
+    --ink:#1d2b30; --ink-soft:#3e5158;
+    --grid:#d2dde0; --grid-bold:#bfd0d4;
+    --line:#ddd3bd; --line-strong:#c7b78f;
+    --red:#e8502b; --red-deep:#c33e1d;
+    --blue:#2f6bff; --green:#169d6b; --green-deep:#0f7d52;
+    --teal:#1f857a; --amber:#e0991a; --gold:#e5a93a; --magenta:#a4318f;
+    --highlight:#ffe08a;
+    --code-bg:#fcfbf3; --code-edge:#e9b3ab; --code-text:#26323d;
+    --t-com:#7d9b6e; --t-type:#e8502b; --t-kw:#a4318f; --t-builtin:#2f6bff;
+    --t-fn:#c6841a; --t-num:#169d6b; --t-str:#169d6b; --t-var:#26323d;
+    --shadow:3px 4px 0 rgba(38,50,61,.07);
+    --shadow-hard:5px 5px 0 var(--ink);
+    --display:'Fraunces',Georgia,serif;
+    --body:'DM Sans',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+    --hand:'Caveat',cursive;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body); color:var(--ink); line-height:1.62; font-size:16px;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+      linear-gradient(var(--grid-bold) 1px,transparent 1px),
+      linear-gradient(90deg,var(--grid-bold) 1px,transparent 1px);
+    background-size:25px 25px,25px 25px,125px 125px,125px 125px;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--red);color:var(--paper);}
+
+  /* ---------- FIXED LEFT TOC ---------- */
+  nav.toc{
+    position:fixed;left:0;top:0;width:248px;height:100vh;
+    background:rgba(246,241,228,.97);
+    border-right:2px solid var(--line-strong);
+    padding:28px 20px;overflow-y:auto;z-index:20;
+  }
+  .toc-brand{font-family:var(--display);font-weight:900;font-size:21px;line-height:1.05;color:var(--ink);}
+  .toc-brand .dot{color:var(--red);}
+  .toc-sub{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;margin:4px 0 22px;}
+  nav.toc a{
+    display:block;text-decoration:none;color:var(--ink-soft);
+    font-size:13.5px;font-weight:500;padding:7px 11px;margin:2px 0;
+    border-radius:5px;border-left:3px solid transparent;transition:.13s;
+  }
+  .tnum{font-family:var(--mono);font-size:10.5px;color:#b9b49c;margin-right:8px;font-weight:600;}
+  nav.toc a:hover{background:#ede8da;color:var(--ink);}
+  nav.toc a.active{
+    background:var(--card);color:var(--ink);
+    border-left-color:var(--red);font-weight:700;
+    box-shadow:1px 1px 0 rgba(29,43,48,.08);
+  }
+  nav.toc a.active .tnum{color:var(--red);}
+  .toc-div{height:1px;background:var(--line);margin:16px 4px;}
+  .toc-foot{margin-top:18px;font-family:var(--hand);font-size:19px;line-height:1.2;color:var(--ink-soft);transform:rotate(-2deg);display:block;}
+
+  /* ---------- CONTENT SHELL ---------- */
+  .content{margin-left:248px;}
+  .wrap{max-width:880px;margin:0 auto;padding:0 44px;}
+
+  /* ---------- HERO ---------- */
+  header.hero{position:relative;padding:64px 0 26px;overflow:hidden;}
+  .axis-deco{position:absolute;top:44px;right:34px;width:150px;opacity:.5;}
+  .tag{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);font-weight:600;}
+  h1.title{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,4.4vw,3.1rem);line-height:1.04;margin:14px 0 0;letter-spacing:-.01em;}
+  h1.title .em{color:var(--red);font-style:italic;}
+  .lede{font-size:18px;color:var(--ink-soft);max-width:640px;margin:16px 0 0;}
+  .hero-meta{margin-top:18px;display:flex;gap:9px;flex-wrap:wrap;}
+  .chip{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;padding:5px 11px;border:1.5px solid var(--line-strong);border-radius:20px;background:var(--card);color:var(--ink-soft);}
+
+  /* ---------- SECTIONS ---------- */
+  main{padding-bottom:60px;}
+  section{margin:56px 0;scroll-margin-top:24px;}
+  .section-tag{
+    display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;
+    letter-spacing:.12em;color:#fff;background:var(--ink);
+    padding:5px 12px;border-radius:3px 12px 3px 12px;margin-bottom:13px;
+  }
+  h2{font-family:var(--display);font-weight:600;font-size:34px;line-height:1.14;margin:4px 0 10px;letter-spacing:-.01em;}
+  h3{font-family:var(--display);font-weight:600;font-size:22px;margin:26px 0 6px;}
+  p{margin:11px 0;}
+  .lead{font-size:18px;}
+  ul.clean,ol.clean{margin:12px 0 12px 4px;padding-left:22px;}
+  ul.clean li,ol.clean li{margin:6px 0;}
+  .hl{background:linear-gradient(transparent 56%,var(--highlight) 56%);padding:0 2px;font-weight:600;}
+  code.inline{font-family:var(--mono);font-size:.88em;background:#f0eedd;border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px;color:var(--ink);font-feature-settings:"calt" 0,"liga" 0;}
+  .margin-note{font-family:var(--hand);font-size:23px;color:var(--red);transform:rotate(-3deg);display:inline-block;line-height:1.1;}
+
+  /* ---------- CARDS + CALLOUTS ---------- */
+  .card{background:var(--card);border:1.5px solid var(--line-strong);border-radius:10px;padding:22px 24px;box-shadow:var(--shadow);margin:18px 0;}
+  .callout{border-left:6px solid var(--red);background:#fff6f4;padding:15px 19px;border-radius:0 8px 8px 0;margin:18px 0;}
+  .callout .lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:5px;}
+  .callout b{color:var(--red);}
+  .callout.blue{border-left-color:var(--blue);background:#f1f7fc;} .callout.blue .lbl,.callout.blue b{color:var(--blue);}
+  .callout.green{border-left-color:var(--green);background:#f1faf3;} .callout.green .lbl,.callout.green b{color:var(--green-deep);}
+  .callout.amber{border-left-color:var(--amber);background:#fdf6e6;} .callout.amber .lbl,.callout.amber b{color:#b9810f;}
+
+  /* ---------- CODE BLOCKS (light, with tokenizer) ---------- */
+  figure.code{margin:16px 0;}
+  figure.code figcaption{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--teal);background:var(--paper-2);border:1.5px solid var(--line-strong);border-bottom:none;
+    border-radius:8px 8px 0 0;padding:6px 13px;display:inline-block;font-weight:600;
+  }
+  figure.code pre{
+    margin:0;background:var(--code-bg);border:1.5px solid var(--line-strong);
+    border-left:5px solid var(--code-edge);border-radius:0 8px 8px 8px;
+    padding:15px 17px;overflow-x:auto;
+  }
+  figure.code code{font-family:var(--mono);font-size:13.5px;line-height:1.72;white-space:pre;display:block;color:var(--code-text);font-feature-settings:"calt" 0,"liga" 0;letter-spacing:.03em;}
+  .t-com{color:var(--t-com);font-style:italic;} .t-type{color:var(--t-type);font-weight:700;}
+  .t-kw{color:var(--t-kw);font-weight:700;} .t-builtin{color:var(--t-builtin);font-weight:600;}
+  .t-fn{color:var(--t-fn);font-weight:700;} .t-num{color:var(--t-num);} .t-str{color:var(--t-str);} .t-var{color:var(--t-var);}
+
+  /* ---------- INTERACTIVE DEMOS ---------- */
+  .demo{border:1.5px solid var(--ink);border-radius:12px;background:var(--card);box-shadow:var(--shadow-hard);margin:22px 0;overflow:hidden;}
+  .demo-bar{display:flex;align-items:center;gap:7px;padding:9px 14px;background:var(--ink);}
+  .demo-bar .dot{width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .demo-bar .dot.r{background:#e8502b;} .demo-bar .dot.y{background:#e5a93a;} .demo-bar .dot.g{background:#46c2a5;}
+  .demo-bar .demo-title{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin-left:9px;color:#ccd6cf;}
+  .demo-stage{padding:18px;display:flex;gap:18px;justify-content:center;align-items:flex-start;flex-wrap:wrap;background:var(--paper-2);}
+  .stage-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .stage-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
+  .demo canvas{background:#fffdf7;border:1.5px solid var(--line-strong);border-radius:7px;display:block;cursor:crosshair;}
+  .demo-readout{font-family:var(--mono);font-size:13px;padding:11px 16px;border-top:1.5px dashed var(--line-strong);background:#fbf8ef;color:var(--ink-soft);min-height:42px;display:flex;align-items:center;}
+  .demo-controls{display:flex;gap:11px;padding:13px 16px;border-top:1.5px solid var(--line-strong);flex-wrap:wrap;align-items:center;}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--card);color:var(--ink);border:1.5px solid var(--ink);border-radius:6px;padding:9px 15px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .12s;}
+  .btn:hover{background:var(--paper-2);}
+  .btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--ink);}
+  .btn.on{background:var(--green);color:#fff;border-color:var(--green-deep);box-shadow:2px 2px 0 var(--green-deep);}
+  .hint{font-family:var(--body);font-size:13px;color:var(--ink-soft);font-style:italic;}
+
+  /* ---------- TRUTH TABLE + LOGIC GRID ---------- */
+  .optable{border:1.5px solid var(--line-strong);border-radius:9px;overflow:hidden;margin:14px auto 4px;background:var(--card);font-family:var(--mono);font-size:13px;max-width:340px;width:100%;}
+  .oprow{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:9px 15px;border-top:1.5px solid var(--line);}
+  .oprow:first-child{border-top:none;}
+  .opval{font-weight:700;padding:3px 12px;border-radius:20px;font-size:11px;letter-spacing:.04em;min-width:58px;text-align:center;}
+  .opval.t{background:#d8f3e5;color:var(--green-deep);}
+  .opval.f{background:#ece4d3;color:#9b8f74;}
+  .logic-grid{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;align-items:stretch;margin:20px 0;}
+  .logic-grid .demo{flex:1 1 260px;margin:0;min-width:258px;display:flex;flex-direction:column;}
+  .logic-grid .demo .demo-stage{flex:1;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:3px solid var(--ink);padding:24px 0 56px;text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft);}
+  footer .hand{font-family:var(--hand);font-size:20px;color:var(--red);display:block;margin-bottom:6px;transform:rotate(-1.5deg);}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+:root{--t-com:#526c44;--t-num:#14754f;--t-str:#14754f;--t-fn:#8e5d0e;--red:#c34025;--blue:#2459ce;}
+a{color:var(--blue);text-underline-offset:3px;}button,input,select{font:inherit;}button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:4px;}input,select{accent-color:var(--teal);}input[type=number],select{width:100%;min-height:42px;padding:8px;border:1.5px solid var(--line-strong);border-radius:5px;background:var(--card);color:var(--ink);font-family:var(--mono);font-size:12px;}input[type=range]{width:100%;min-height:36px;}label{display:block;font-size:13px;font-weight:700;}label output{font:700 17px var(--mono);color:var(--teal);}code{font-family:var(--mono);font-size:.9em;}pre code{font-size:13px;}button{touch-action:manipulation;}.wrap{max-width:980px;}nav.toc a.home-link{font-size:12px;padding-left:0;margin:0 0 25px;}nav.toc .tnum{color:#716b56;}nav.toc a.active .tnum{color:var(--red);}.skip-link{position:fixed;left:16px;top:-100px;z-index:99;background:var(--ink);color:white;padding:12px;}.skip-link:focus{top:12px;}.rule-banner{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid var(--ink);border-radius:8px;background:var(--card);box-shadow:var(--shadow-hard);margin:28px 0 16px;}.rule-banner div{text-align:center;padding:15px 8px;border-right:1px solid var(--line-strong);}.rule-banner div:last-child{border:0;}.rule-banner strong{display:block;font:700 clamp(35px,6vw,60px) var(--mono);color:var(--red);line-height:1.25;}.rule-banner span{font-size:14px;font-weight:700;}.three-up,.two-up{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}.two-up{grid-template-columns:repeat(2,minmax(0,1fr));}.three-up .card,.two-up .card{margin:12px 0;padding:18px;}.three-up h3,.two-up h3{font-size:20px;margin:10px 0;}.mini-label{font:600 10px var(--mono);letter-spacing:.08em;color:var(--teal);}.sequence,.number-tape{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0;}.sequence span{font:600 22px var(--mono);display:block;border:1px solid var(--teal);border-radius:5px;padding:10px 17px;background:#ecf5ed;}.sequence .excluded{border-style:dashed;border-color:var(--red);background:#fff1ed;color:var(--red);}.lab-body{padding:22px;}.controls-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:start;}.controls-grid.two{grid-template-columns:repeat(2,minmax(0,1fr));}.controls-grid.three{grid-template-columns:repeat(3,minmax(0,1fr));}.controls-grid label>*{display:block;margin-top:5px;}.controls-grid label>output{display:inline;}.primary{background:var(--ink);color:var(--card);}.primary:hover{background:#36474e;}.phase-track{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0;}.phase-track span{padding:7px 9px;border:1px dashed var(--line-strong);border-radius:4px;font:600 11px var(--mono);}.phase-track .current{background:var(--highlight);border:1px solid var(--ink);}.readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}.readouts>div{padding:12px 8px;text-align:center;background:var(--paper);border:1px solid var(--line-strong);border-radius:6px;}.readouts span{display:block;font-size:11px;color:var(--ink-soft);}.readouts strong{font:600 25px var(--mono);display:block;margin-top:5px;overflow-wrap:anywhere;}.status{background:var(--paper);padding:12px 14px;border-left:3px solid var(--teal);min-height:50px;}.status.error{border-color:var(--red);}.console{background:#1d2b30;color:#f8f2df;padding:16px;border-radius:6px;min-height:80px;font-family:var(--mono);font-size:14px;}.console .mini-label{color:#a9dace;display:block;margin-bottom:10px;}.table-scroll{overflow-x:auto;margin:20px 0;}table{border-collapse:collapse;background:var(--card);width:100%;font-size:14px;}caption{text-align:left;font:600 11px var(--mono);color:var(--teal);padding:0 0 10px;}th,td{text-align:left;border:1px solid var(--line-strong);padding:12px 14px;}th{background:var(--paper-2);}td code{white-space:nowrap;}.number-tape span{min-width:45px;padding:9px 5px;text-align:center;border:1px dashed var(--line-strong);border-radius:5px;color:var(--ink-soft);font:600 16px var(--mono);}.number-tape .visited{background:#dfefe6;border:2px solid var(--teal);color:var(--ink);}.number-tape small{display:block;font:9px var(--body);margin-top:3px;}.range-label{display:grid;grid-template-columns:auto 1fr 25px;align-items:center;gap:14px;margin-bottom:18px;}#fence-canvas{width:100%;height:auto;background:#e9f0f0;cursor:default;}.copy-status{font-size:13px;margin-left:12px;}.conversion output{display:block;font:600 clamp(20px,3vw,30px) var(--mono);margin:10px 0;}.conversion label{max-width:500px;}.histogram{display:flex;align-items:flex-end;gap:4px;margin:20px 0 0;min-height:140px;overflow-x:auto;padding-bottom:8px;}.hist-bin{flex:1;min-width:27px;text-align:center;font:600 10px var(--mono);}.hist-count{display:block;color:var(--ink-soft);height:18px;}.hist-bar{display:block;background:var(--teal);height:0;min-height:2px;width:100%;border-radius:3px 3px 0 0;margin-top:auto;}.hist-space{height:100px;display:flex;align-items:flex-end;}.hist-key{display:block;padding:5px 0;}.mod-tape{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-top:20px;}.mod-cell{border:1px solid var(--line-strong);border-radius:6px;text-align:center;padding:10px 2px;background:var(--paper);}.mod-cell.match{border:2px solid var(--teal);background:#e0f2e6;}.mod-cell b{font:700 22px var(--mono);display:block;}.mod-cell span{font-size:11px;}.mod-cell small{font:10px var(--mono);display:block;}.recap{background:var(--ink);color:var(--card);padding:30px;border-radius:10px;box-shadow:var(--shadow-hard);}.recap .section-tag{background:var(--highlight);color:var(--ink);}.recap pre{white-space:pre-wrap;font-family:var(--mono);padding:20px 0;}.recap h2{color:var(--highlight);}details{background:var(--paper);border:1px solid var(--line-strong);border-radius:6px;padding:14px 18px;margin:18px 0;}summary{cursor:pointer;font-weight:700;}footer p{line-height:1.9;}footer a{white-space:nowrap;}.quiz-options{display:grid;gap:8px;margin:12px 0;}.quiz-options .btn{text-align:left;text-transform:none;line-height:1.5;}.quiz-options .btn[aria-pressed=true]{background:var(--highlight);}.quiz-feedback{min-height:1.6em;}fieldset{min-width:0;}legend{font-weight:700;}.quiz-options label{display:block;padding:8px 10px;}.quiz-option{cursor:pointer;}@media(max-width:1100px){nav.toc{width:220px;padding:25px 15px;}.content{margin-left:220px;}.wrap{padding:0 28px;}.three-up{grid-template-columns:1fr;}.three-up .card{margin:0;}.three-up h3{margin:4px 0;}.three-up p{margin:6px 0;}}@media(max-width:760px){nav.toc{position:relative;width:100%;height:auto;border-right:0;border-bottom:2px solid var(--line-strong);padding:20px;display:flex;flex-wrap:wrap;gap:4px 8px;}.toc-brand,.toc-sub{width:100%;}nav.toc .toc-sub{margin-bottom:5px;}nav.toc a{font-size:12px;padding:6px;margin:0;}nav.toc a.home-link{width:100%;margin-bottom:10px;}.toc-foot,.toc-div{display:none!important;}.content{margin:0;}.wrap{padding:0 20px;}.hero{padding:32px 0 10px!important;}h1.title{font-size:38px;}h2{font-size:29px;}.lede{font-size:17px;}section{margin:42px 0;}.lab-body{padding:16px;}.controls-grid,.controls-grid.three{grid-template-columns:repeat(2,minmax(0,1fr));}.controls-grid.two{grid-template-columns:1fr;}.two-up{grid-template-columns:1fr;}.two-up .card{margin:0;}.readouts{gap:6px;}.readouts strong{font-size:21px;}.readouts span{font-size:10px;}.range-label{grid-template-columns:auto 1fr 25px;font-size:12px;gap:8px;}.mod-tape{grid-template-columns:repeat(4,minmax(0,1fr));}.rule-banner span{font-size:12px;}.rule-banner strong{font-size:38px;}figure.code code{font-size:12px;}.recap{padding:22px;}.demo-controls .btn{flex:1 1 140px;}.demo-title{font-size:10px!important;}.demo-bar{gap:5px;}.demo-bar .dot{flex:none;width:8px;height:8px;}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{animation:none!important;transition:none!important;}}@media print{nav.toc,.skip-link,.demo-controls,.controls-grid,button{display:none!important;}.content{margin:0;}body{background:white;}section{break-inside:avoid;}.wrap{max-width:100%;padding:0;}.demo,.card,.recap{box-shadow:none;}.hero{padding-top:0!important;}}
+
+#trace-output{white-space:pre-wrap;}
+
+#skip-output{white-space:pre-wrap;}
+.fb-presets{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}#fb-num{max-width:160px;display:block;margin-top:5px;}.fb-results pre{min-height:54px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:19px;margin-top:12px;}.fb-results p{font-size:14px;}.fb-full-output[hidden]{display:none;}.fb-full-output pre{max-height:300px;overflow:auto;font-size:14px;white-space:pre;}.fb-full-output h3{font-size:20px;}
+
+
+  #quiz-form .quiz-question{min-width:0;}
+  #quiz-form legend{font-family:var(--body);font-weight:700;font-size:17px;padding:0 7px;max-width:100%;}
+  #quiz-form .quiz-choices{display:grid;gap:8px;margin:10px 0;}
+  #quiz-form .quiz-choice{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;min-height:44px;border:1px solid var(--line-strong);border-radius:6px;cursor:pointer;line-height:1.5;}
+  #quiz-form .quiz-choice:hover{background:var(--paper-2);}
+  #quiz-form .quiz-choice:focus-within{outline:3px solid var(--blue);outline-offset:2px;}
+  #quiz-form input[type="radio"]{flex:0 0 auto;width:18px;height:18px;margin-top:3px;accent-color:var(--teal);}
+  #quiz-form code.inline{white-space:normal;overflow-wrap:anywhere;}
+  #quiz-form .quiz-feedback{padding:10px 12px;border-left:4px solid var(--line-strong);background:var(--paper);margin-bottom:0;}
+  #quiz-form .quiz-feedback[data-result="correct"]{border-color:var(--green);background:#f1faf3;}
+  #quiz-form .quiz-feedback[data-result="retry"]{border-color:var(--red);background:#fff6f4;}
+  .quiz-summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+  #quiz-score{font-weight:700;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to lesson</a>
+<nav class="toc" aria-label="Lesson sections">
+  <a class="home-link" href="index.html">← Course home</a>
+  <div class="toc-brand">For loop<span class="dot">s.</span></div>
+  <div class="toc-sub">AP CSP · Processing (Java)</div>
+  <a href="#default" class="active"><span class="tnum">01</span>Our class default</a>
+  <a href="#trace"><span class="tnum">02</span>Trace a loop</a>
+  <a href="#updates"><span class="tnum">03</span>Updates & skip counting</a>
+  <a href="#fence"><span class="tnum">04</span>The FencePost lab</a>
+  <a href="#random"><span class="tnum">05</span>random() & int()</a>
+  <a href="#modulo"><span class="tnum">06</span>Patterns with modulo</a>
+  <a href="#fizzbuzz"><span class="tnum">07</span>FizzBuzz: two approaches</a>
+  <a href="#practice"><span class="tnum">08</span>Check your understanding</a>
+  <div class="toc-div"></div>
+  <a href="#recap"><span class="tnum">★</span>Quick reference</a>
+  <span class="toc-foot">start at zero.<br>stop before the limit.<br>one step at a time.</span>
+</nav>
+<div class="content">
+<header class="hero"><div class="wrap">
+  <span class="tag">AP CSP · Processing (Java Mode)</span>
+  <h1 class="title">One set of instructions.<br><span class="em">A whole row of possibilities.</span></h1>
+  <p class="lede">A <code class="inline">for</code> loop repeats a block of code. Build a fence, trace each pass, and make our class counting pattern a habit.</p>
+  <div class="hero-meta"><span class="chip">for ( ; ; )</span><span class="chip">FencePost</span><span class="chip">random() · int() · %</span></div>
+  <div class="rule-banner" aria-label="Our class default: start at zero, use less than, add one">
+    <div><strong>0</strong><span>start at zero</span></div><div><strong>&lt;</strong><span>single less than</span></div><div><strong>+1</strong><span>change by one</span></div>
+  </div>
+  <p class="margin-note">The pattern to make automatic ↑</p>
+</div></header>
+<main class="wrap" id="main">
+<noscript><div class="callout">Enable JavaScript to use the interactive labs. The explanations and code examples are still available below.</div></noscript>
+<section id="default">
+  <span class="section-tag">01 — OUR CLASS DEFAULT</span>
+  <h2>Start at <span class="hl">0</span>. Use <span class="hl">&lt;</span>. Add <span class="hl">1</span>.</h2>
+  <p class="lead">Unless the problem gives us a reason to change it, this is our starting pattern:</p>
+  <figure class="code"><figcaption>Five repetitions · our class default</figcaption><pre><code class="proc">for (int i = 0; i &lt; 5; i++) {
+  println(i);
+}</code></pre></figure>
+  <div class="three-up">
+    <div class="card"><span class="mini-label">INITIALIZE · ONCE</span><h3><code>int i = 0</code></h3><p>Create an integer counter and start it at zero.</p></div>
+    <div class="card"><span class="mini-label">TEST · BEFORE EACH PASS</span><h3><code>i &lt; 5</code></h3><p>Run the body only while the counter is less than 5.</p></div>
+    <div class="card"><span class="mini-label">UPDATE · AFTER EACH PASS</span><h3><code>i++</code></h3><p>Add exactly 1. Then go back and test again.</p></div>
+  </div>
+  <div class="sequence" aria-label="The loop prints zero, one, two, three, four"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span class="excluded">5 ✕</span></div>
+  <p><b>Five repetitions. Last value used: 4.</b> After the last update, the test <code class="inline">5 &lt; 5</code> is false. The body does not run with 5.</p>
+  <div class="callout"><span class="lbl">A classroom convention</span>Processing lets you choose other starts, comparisons, and steps. <b>Our class default</b> is zero, a single less-than sign, and an increase of one. It is a pattern we write, not something Processing fills in for us.</div>
+  <p>The variable name is your choice: <code class="inline">i</code>, <code class="inline">q</code>, or <code class="inline">post</code>. Keep the same name throughout the loop. Two semicolons separate the three parts; there is <b>no semicolon after the closing parenthesis</b>.</p>
+</section>
+<section id="trace">
+  <span class="section-tag">02 — WATCH THE ORDER</span>
+  <h2>Test first. Run the body. Update.</h2>
+  <p>Use <b>Next step</b> to slow the loop down. Watch the failed test at the end: it matters just as much as the successful ones.</p>
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Loop trace · one operation at a time</span></div>
+    <div class="lab-body">
+      <div class="controls-grid">
+        <label>Start <select id="trace-start"><option value="0">0 · class default</option><option value="1">1</option><option value="5">5</option></select></label>
+        <label>Comparison <select id="trace-op"><option value="lt">&lt; · class default</option><option value="lte">&lt;= · includes the limit</option></select></label>
+        <label>Limit <input id="trace-limit" type="number" min="0" max="12" step="1" value="5"></label>
+        <label>Update <select id="trace-step"><option value="1">i++ · add 1</option><option value="2">i += 2</option><option value="3">i += 3</option></select></label>
+      </div>
+      <figure class="code"><figcaption>Code being traced</figcaption><pre><code id="trace-code"></code></pre></figure>
+      <div class="phase-track" aria-label="Loop execution order"><span data-phase="init">1. Initialize</span><span data-phase="test">2. Test</span><span data-phase="body">3. Body</span><span data-phase="update">4. Update ↵</span></div>
+      <div class="readouts"><div><span>Counter i</span><strong id="trace-counter">—</strong></div><div><span>Body runs</span><strong id="trace-count">0</strong></div><div><span>Test result</span><strong id="trace-test">—</strong></div></div>
+      <p class="status" id="trace-status" role="status">Ready. Initialize the counter to begin.</p>
+      <div class="console"><span class="mini-label">PRINT OUTPUT</span><div id="trace-output">No output yet.</div></div>
+    </div>
+    <div class="demo-controls"><button class="btn primary" id="trace-next">Next step →</button><button class="btn" id="trace-play">Auto play</button><button class="btn" id="trace-reset">Reset trace</button><button class="btn" id="trace-default">Restore class default</button></div>
+  </div>
+  <p><code class="inline">print(i + " ")</code> prints the counter followed by a space, keeping the values on the same line. <code class="inline">println()</code> would start a new line after each value.</p>
+  <div class="callout blue"><span class="lbl">Try three experiments</span>Run the default. Then change <code class="inline">&lt;</code> to <code class="inline">&lt;=</code> and count the extra pass. Finally, set both start and limit to 5 with <code class="inline">&lt;</code>: the first test fails, so the body runs <b>zero times</b>.</div>
+  <p>A counter declared inside the loop header is only available inside that loop. The last trace value is shown to explain the failed test; <code class="inline">print(i + " ");</code> after this loop would be outside <code class="inline">i</code>’s scope.</p>
+</section>
+<section id="updates">
+  <span class="section-tag">03 — THREE WAYS TO ADD ONE</span>
+  <h2>Same update. Different notation.</h2>
+  <p>For an <code class="inline">int</code> counter used as a standalone update, all three lines below increase the stored value by one.</p>
+  <div class="table-scroll"><table><caption>Three equivalent standalone integer updates</caption><thead><tr><th>Write it</th><th>Read it</th><th>If variable was 4</th></tr></thead><tbody><tr><td><code>variable++;</code></td><td>Increment by one.</td><td>Now it is 5.</td></tr><tr><td><code>variable += 1;</code></td><td>Add one and store it back.</td><td>Now it is 5.</td></tr><tr><td><code>variable = variable + 1;</code></td><td>Calculate the old value plus one, then assign.</td><td>Now it is 5.</td></tr></tbody></table></div>
+  <p><code class="inline">++</code> always adds <b>exactly 1</b>. With <code class="inline">+=</code> or the longer assignment, change the amount to skip count: <code class="inline">i += 3</code> and <code class="inline">i = i + 3</code> both add 3.</p>
+  <div class="demo"><div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Skip-count lab · stop before 12</span></div>
+    <div class="lab-body"><div class="controls-grid two"><label>Amount to add <input id="skip-step" type="range" min="1" max="5" value="1"><output id="skip-step-value" for="skip-step">1</output></label><label>Notation <select id="skip-style"><option value="short">i += amount</option><option value="long">i = i + amount</option><option value="increment">i++ · always adds 1</option></select></label></div>
+      <figure class="code"><figcaption>Generated loop</figcaption><pre><code id="skip-code"></code></pre></figure><div id="skip-tape" class="number-tape" aria-label="Visited and skipped counter values"></div><div class="console"><span class="mini-label">PRINT OUTPUT</span><div id="skip-output">0 1 2 3 4 5 6 7 8 9 10 11 </div></div><p id="skip-status" class="status" role="status"></p>
+    </div>
+  </div>
+  <div class="callout"><span class="lbl">Keep the old value in the update</span><code class="inline">i = 3</code> assigns 3 each time; it does not add 3. With <code class="inline">i &lt; 12</code>, that mistake prevents the loop from reaching the stopping point. <code class="inline">i += 0</code> also makes no progress.</div>
+  <details><summary>One detail for later: using ++ inside a larger expression</summary><p><code class="inline">i++</code> uses the old value in the expression, then increases <code class="inline">i</code>. These three forms have the same effect as standalone integer updates; do not assume they produce the same expression value everywhere.</p></details>
+</section>
+<section id="fence">
+  <span class="section-tag">04 — FROM OUR FENCEPOST ASSIGNMENT</span>
+  <h2>Count the posts. Calculate the pixels.</h2>
+  <p class="lead">The assignment’s loop uses <code class="inline">q = 0</code>, <code class="inline">q &lt; 20</code>, and <code class="inline">q++</code>. That gives us <b>20 posts</b>, with indices <b>0 through 19</b>.</p>
+  <div class="demo"><div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">FencePost · the assignment in action</span></div>
+    <div class="lab-body">
+      <label class="range-label" for="fence-count">Number of posts <input id="fence-count" type="range" min="0" max="20" step="1" value="20"><output id="fence-count-value" for="fence-count">20</output></label>
+      <canvas id="fence-canvas" width="1000" height="600" role="img" aria-label="FencePost preview. Twenty white posts; even indices are eligible for randomly placed black knots.">FencePost preview. Use the text readout below for the number of posts, eligible indices, and knots.</canvas>
+      <p class="hint">Numbers beneath the posts are learning labels. “E” marks an even index eligible for a knot; the original sketch has no labels.</p>
+      <p id="fence-status" class="status" role="status"></p>
+      <div class="readouts"><div><span>Posts drawn</span><strong id="fence-drawn">20</strong></div><div><span>Eligible for a knot</span><strong id="fence-eligible">10</strong></div><div><span>Actual knots this run</span><strong id="fence-knots">—</strong></div></div>
+    </div>
+    <div class="demo-controls"><button class="btn" id="fence-reset">Clear posts</button><button class="btn" id="fence-next">Draw next post →</button><button class="btn primary" id="fence-all">Draw all / new fence</button><button class="btn" id="fence-restore">Restore 20 posts</button></div>
+  </div>
+  <div class="two-up"><div class="card"><span class="mini-label">THE COUNTER</span><h3><code>q++</code></h3><p>Visits the next post: <b>0, 1, 2, 3…</b><br>It changes by one every time.</p></div><div class="card"><span class="mini-label">THE POSITION</span><h3><code>q * 50 + 5</code></h3><p>Places posts at <b>5, 55, 105, 155…</b> pixels.<br>Multiplication creates the spacing.</p></div></div>
+  <p>Do not change the assignment’s update to <code class="inline">q += 50</code>. With the test <code class="inline">q &lt; 20</code>, that would draw only the post at <code class="inline">q = 0</code>; the next value, 50, would fail the test.</p>
+  <figure class="code"><figcaption>FencePost.pde · original assignment code</figcaption><pre><code class="proc" id="fence-source">void setup() {
+  size(1000, 600);
+  rect(0, 365, width, 20);
+  rect(0, 405, width, 20);
+  for (int q = 0; q &lt; 20; q++) {
+    if (q % 2 == 0) {
+      makeONEFencePost(q * 50 + 5, 350, true);
+    } else {
+      makeONEFencePost(q * 50 + 5, 350, false);
+    }
+  }
+}
+
+void makeONEFencePost(int x, int y, boolean imperfect) {
+  fill(255);
+  rect(x, y, 30, 100);
+  triangle(x, y, x + 15, y - 20, x + 30, y);
+  if (imperfect &amp;&amp; random(100) &lt; 30) {
+    fill(0);
+    ellipse(x + 15, y + random(20, 80), 12, 25);
+  }
+}</code></pre></figure>
+  <button class="btn" id="copy-fence">Copy Processing code</button><span class="copy-status" id="copy-status" role="status"></span>
+  <div class="callout green"><span class="lbl">Follow one call</span>When <code class="inline">q = 4</code>, <code class="inline">4 % 2 == 0</code> is true, so the call is <code class="inline">makeONEFencePost(205, 350, true)</code>. The function receives those values as <code class="inline">x</code>, <code class="inline">y</code>, and <code class="inline">imperfect</code>.</div>
+  <p><code class="inline">imperfect</code> means <b>eligible</b>, not guaranteed. Even indices get a 30% chance of a knot. Odd indices receive <code class="inline">false</code>, so <code class="inline">&amp;&amp;</code> skips the random test and the knot is never drawn. Ten eligible posts do <b>not</b> guarantee three knots.</p>
+  <p>Both rails are drawn once before the loop. <code class="inline">setup()</code> runs once, and its loop completes all 20 repetitions in that call. The step buttons slow down the demonstration for learning; they are not how Processing automatically animates a <code class="inline">for</code> loop.</p>
+</section>
+<section id="random">
+  <span class="section-tag">05 — RANDOM VALUES, PRECISE BOUNDARIES</span>
+  <h2>Include the low. Exclude the high.</h2>
+  <p><code class="inline">random()</code> returns a <b>float</b>, even when its arguments are integers.</p>
+  <div class="table-scroll"><table><caption>Processing random ranges, when low is less than high</caption><thead><tr><th>Call</th><th>Possible values</th><th>In FencePost</th></tr></thead><tbody><tr><td><code>random(high)</code></td><td><b>0 ≤ result &lt; high</b></td><td><code>random(100) &lt; 30</code> gives a 30% chance.</td></tr><tr><td><code>random(low, high)</code></td><td><b>low ≤ result &lt; high</b></td><td><code>random(20, 80)</code> gives a knot offset from 20 up to, but not including, 80.</td></tr></tbody></table></div>
+  <h3><code>int(floatParameter)</code> removes the fractional part</h3>
+  <p>It truncates <b>toward zero</b>. It does not round to the nearest integer. The parameter is the float value you pass in; you do not literally have to name a variable <code class="inline">floatParameter</code>.</p>
+  <div class="card conversion"><label for="convert-value">Try a float <input id="convert-value" type="range" min="-9.9" max="9.9" step="0.1" value="4.9"></label><output id="convert-output" for="convert-value" aria-live="polite">int(4.9) → 4</output><p>Compare <code class="inline">int(4.9) → 4</code> with <code class="inline">int(-4.9) → -4</code>.</p></div>
+  <div class="demo"><div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Random sampler · float in, integer out</span></div>
+    <div class="lab-body">
+      <div class="controls-grid three"><label>Form <select id="random-mode"><option value="one">random(high)</option><option value="two">random(low, high)</option></select></label><label>Low <input id="random-low" type="number" min="0" max="19" step="1" value="0" disabled></label><label>High (excluded) <input id="random-high" type="number" min="1" max="20" step="1" value="6"></label></div>
+      <figure class="code"><figcaption>Two operations</figcaption><pre><code id="random-code"></code></pre></figure>
+      <p id="random-range" class="status" role="status"></p>
+      <div class="readouts" role="status" aria-live="polite" aria-atomic="true"><div><span>Latest float (4 decimals shown)</span><strong id="random-float">—</strong></div><div><span>After int()</span><strong id="random-int">—</strong></div><div><span>Samples</span><strong id="random-total">0</strong></div></div>
+      <div id="random-bars" class="histogram" aria-label="Sample counts for possible integers"></div>
+      <p class="hint">The bars count observed integers. Random results vary; equal probabilities do not mean equal counts in every batch. Changing the range clears the samples. This lab uses nonnegative integer bounds.</p>
+    </div>
+    <div class="demo-controls"><button class="btn primary" id="random-one">Sample once</button><button class="btn" id="random-hundred">Sample 100</button><button class="btn" id="random-die">Try a die: 1–6</button><button class="btn" id="random-clear">Clear samples</button></div>
+  </div>
+  <div class="callout"><span class="lbl">Common boundary mistake</span><code class="inline">int(random(6))</code> produces <b>0–5</b>. To get a die roll from <b>1–6</b>, use <code class="inline">int(random(1, 7))</code>. The excluded high bound must be 7.</div>
+  <figure class="code"><figcaption>Extension · replace the loop inside setup() with this</figcaption><pre><code class="proc">int postCount = int(random(10, 21)); // 10 through 20
+for (int q = 0; q &lt; postCount; q++) {
+  makeONEFencePost(q * 50 + 5, 350, q % 2 == 0);
+}</code></pre></figure>
+  <p>Choose <code class="inline">postCount</code> <b>before</b> the loop so the limit stays fixed. Putting a fresh <code class="inline">random()</code> call in the test would choose a new limit each time the condition is checked.</p>
+</section>
+<section id="modulo">
+  <span class="section-tag">06 — REPEATING PATTERNS</span>
+  <h2><code>%</code> means “what is the remainder?”</h2>
+  <p><code class="inline">7 % 3</code> is <b>1</b>: two groups of 3 fit into 7, with 1 left over. For the nonnegative counters we use here, <code class="inline">i % 3</code> cycles through <b>0, 1, 2, 0, 1, 2…</b>.</p>
+  <div class="demo"><div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Remainder lab · every index is still visited</span></div>
+    <div class="lab-body"><label for="mod-divisor">Divide by <select id="mod-divisor"><option value="2">2 · even / odd</option><option value="3">3 · cycle of three</option><option value="4">4 · cycle of four</option><option value="5">5 · cycle of five</option></select></label><div id="mod-tape" class="mod-tape"></div><p id="mod-status" class="status" role="status"></p><figure class="code"><figcaption>Choose behavior without skipping an index</figcaption><pre><code id="mod-code"></code></pre></figure></div>
+  </div>
+  <div class="callout blue"><span class="lbl">An index is not an ordinal</span><code class="inline">q % 2 == 0</code> selects indices <b>0, 2, 4…</b> — the <b>first, third, fifth…</b> physical posts. Index 0 counts as even. If you mean the third, sixth, ninth physical posts, test <code class="inline">(q + 1) % 3 == 0</code>.</div>
+  <div class="two-up"><div class="card"><h3>Skip counting</h3><p><code class="inline">q += 2</code> visits 0, 2, 4… The body never runs for the skipped odd indices.</p></div><div class="card"><h3>Modulo in the body</h3><p><code class="inline">q++</code> visits every index. <code class="inline">q % 2</code> helps choose what to do at each one.</p></div></div>
+</section>
+<section id="fizzbuzz">
+  <span class="section-tag">07 — A SEPARATE EXAMPLE: FIZZBUZZ</span>
+  <h2>Same rules. Two ways to organize the decisions.</h2>
+  <p class="lead">Go through the numbers 1–100. Print <b>Fizz</b> for a multiple of 3, <b>Buzz</b> for a multiple of 5, and <b>FizzBuzz</b> for a multiple of both. Otherwise, print the number.</p>
+  <div class="callout blue"><span class="lbl">Keep our class default</span>Both examples use <code class="inline">for (int i = 0; i &lt; 100; i++)</code>. The counter visits 0–99; <code class="inline">int num = i + 1;</code> gives us the game’s numbers 1–100. We still <b>start at 0, use &lt;, and add 1</b>.</div>
+
+  <h3>1. Classic: choose one branch</h3>
+  <p>An <code class="inline">if / else if / else</code> chain runs only the <b>first matching branch</b>. Check the combined case first: a multiple of both 3 and 5 also passes either individual test.</p>
+  <figure class="code"><figcaption>Classic FizzBuzz · combined case first</figcaption><pre><code class="proc">for (int i = 0; i &lt; 100; i++) {
+  int num = i + 1;
+
+  if (num % 3 == 0 &amp;&amp; num % 5 == 0) {
+    println("FizzBuzz");
+  } else if (num % 3 == 0) {
+    println("Fizz");
+  } else if (num % 5 == 0) {
+    println("Buzz");
+  } else {
+    println(num);
+  }
+}</code></pre></figure>
+  <p><code class="inline">&amp;&amp;</code> means <b>both tests must be true</b>. Using <code class="inline">||</code> would accept either test and incorrectly call 3 or 5 “FizzBuzz.” After the combined case, the individual 3 and 5 branches can trade places without changing the result.</p>
+
+  <h3>2. Build a string: let both checks contribute</h3>
+  <p>Start with an empty string for each number. Two <b>independent <code>if</code> statements</b> add the matching words. Then a separate final decision prints the completed string or the number.</p>
+  <figure class="code"><figcaption>Build the output · append first, print once</figcaption><pre><code class="proc">for (int i = 0; i &lt; 100; i++) {
+  int num = i + 1;
+  String out = "";
+
+  if (num % 3 == 0) {
+    out += "Fizz";
+  }
+  if (num % 5 == 0) {
+    out += "Buzz";
+  }
+
+  if (out != "") {
+    println(out);
+  } else {
+    println(num);
+  }
+}</code></pre></figure>
+  <p>For 15, the string grows <code class="inline">"" → "Fizz" → "FizzBuzz"</code>. For 7, neither word is added, so <code class="inline">out</code> remains <code class="inline">""</code> and the final <code class="inline">else</code> prints 7.</p>
+  <p>This version removes the special combined branch. Here <code class="inline">out += "Fizz"</code> appends text, just as <code class="inline">i += 1</code> adds to an integer. “Improved” means easier to extend with more word rules, not necessarily faster.</p>
+
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">FizzBuzz lab · follow one number</span></div>
+    <div class="lab-body">
+      <label for="fb-num">Number to inspect (1–100) <input id="fb-num" type="number" min="1" max="100" step="1" value="15"></label>
+      <div class="fb-presets" aria-label="Useful numbers to test"><button class="btn" type="button" data-fb-number="3">Try 3</button><button class="btn" type="button" data-fb-number="5">Try 5</button><button class="btn" type="button" data-fb-number="15">Try 15</button><button class="btn" type="button" data-fb-number="7">Try 7</button></div>
+      <p id="fb-tests" class="status" role="status"></p>
+      <div class="two-up fb-results" aria-live="polite" aria-atomic="true">
+        <div class="card"><span class="mini-label">CLASSIC · FIRST MATCH WINS</span><p id="fb-classic-path"></p><pre class="console" id="fb-classic-output"></pre></div>
+        <div class="card"><span class="mini-label">BUILD A STRING · CHECK BOTH</span><p id="fb-builder-path"></p><pre class="console" id="fb-builder-output"></pre></div>
+      </div>
+      <p class="hint">Each version uses println(), so each result goes on its own line. The two panels compare the two programs.</p>
+      <button class="btn" type="button" id="fb-run" aria-expanded="false" aria-controls="fb-full-output">Run both versions: 1–100</button>
+      <div id="fb-full-output" class="two-up fb-full-output" hidden><div><h3>Classic output</h3><pre id="fb-classic-all" class="console" tabindex="0" aria-label="Classic output for numbers 1 through 100"></pre></div><div><h3>String-building output</h3><pre id="fb-builder-all" class="console" tabindex="0" aria-label="String-building output for numbers 1 through 100"></pre></div></div>
+      <p id="fb-run-status" role="status"></p>
+    </div>
+  </div>
+
+  <h3>What happens when the conditionals are wrong?</h3>
+  <p>Keep an eye on <b>which tests are reached</b> and <b>which <code>if</code> owns an <code>else</code></b>. Choose a mistake below, then use the test buttons or the number field above to test it. A mistake can produce the right answer for some numbers.</p>
+  <div class="demo">
+    <div class="demo-bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="demo-title">Find the bug · compare with the correct result</span></div>
+    <div class="lab-body">
+      <label for="fb-pitfall">Mistake to investigate <select id="fb-pitfall"><option value="order">Classic: check 3 before checking both</option><option value="or">Classic: use || instead of &amp;&amp;</option><option value="elseif">Builder: make the second check else if</option><option value="dangling">Print directly: attach else to only the second if</option><option value="reverse">Builder: append Buzz before Fizz</option><option value="reset">Builder: reset out before the loop</option></select></label>
+      <div class="fb-presets" aria-label="Test numbers for the selected mistake"><button class="btn" type="button" data-fb-number="3">Try 3</button><button class="btn" type="button" data-fb-number="5">Try 5</button><button class="btn" type="button" data-fb-number="15">Try 15</button><button class="btn" type="button" data-fb-number="7">Try 7</button></div>
+      <figure class="code"><figcaption>Intentionally incorrect · inspect the selected number</figcaption><pre><code id="fb-bug-code"></code></pre></figure>
+      <div class="two-up fb-results" aria-live="polite" aria-atomic="true"><div class="card"><span class="mini-label">THIS VERSION PRINTS</span><pre class="console" id="fb-bug-output"></pre></div><div class="card"><span class="mini-label">CORRECT RESULT</span><pre class="console" id="fb-expected"></pre></div></div>
+      <p id="fb-bug-status" class="status" role="status"></p>
+      <p id="fb-bug-explanation"></p>
+    </div>
+  </div>
+  <div class="callout"><span class="lbl">The conditional determines the plan</span>In the <b>classic chain</b>, put the combined case first because only one branch runs. In the <b>string-building version</b>, use two independent checks so both words can be added, add Fizz before Buzz, and print once after both checks.</div>
+  <ul class="clean"><li><b>Reset inside the loop:</b> <code class="inline">String out = "";</code> gives each number a fresh start. Outside the loop, earlier text carries into later numbers.</li><li><b>Use += to append:</b> changing the second append to <code class="inline">out = "Buzz";</code> replaces “Fizz,” so 15 becomes “Buzz.”</li><li><b>Keep the final else with the final if:</b> it belongs to <code class="inline">if (out != "")</code>, after both word checks.</li></ul>
+</section>
+
+<section id="practice"><span class="section-tag">08 — YOUR TURN</span><h2>Predict. Check. Explain.</h2><p>Choose an answer and use the feedback to check your reasoning. You can retry any question.</p>
+
+<form id="quiz-form" aria-label="For loops self-check">
+  <fieldset class="card quiz-question" data-quiz-question="1" aria-describedby="quiz-feedback-1">
+    <legend>1. Which header uses our class default for 20 repetitions?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-1" value="a"><span><code class="inline">for (int q = 1; q &lt; 20; q++)</code></span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-1" value="b"><span><code class="inline">for (int q = 0; q &lt; 20; q++)</code></span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-1" value="c"><span><code class="inline">for (int q = 0; q &lt;= 20; q++)</code></span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-1" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="2" aria-describedby="quiz-feedback-2">
+    <legend>2. With <code class="inline">q = 0; q &lt; 20; q++</code>, when does the loop stop?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-2" value="a"><span>The body runs for 0 through 19. Then <code class="inline">20 &lt; 20</code> is false.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-2" value="b"><span>The body runs for 0 through 20. Then <code class="inline">21 &lt; 20</code> is false.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-2" value="c"><span>The body runs for 0 through 18. Then <code class="inline">19 &lt; 20</code> is false.</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-2" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="3" aria-describedby="quiz-feedback-3">
+    <legend>3. Start at 0 and keep <code class="inline">q &lt; 20</code>. Which pair of updates both visit 0, 3, 6, 9, 12, 15, 18?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-3" value="a"><span><code class="inline">q++</code> and <code class="inline">q += 1</code></span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-3" value="b"><span><code class="inline">q = 3</code> and <code class="inline">q + 3</code></span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-3" value="c"><span><code class="inline">q += 3</code> and <code class="inline">q = q + 3</code></span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-3" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="4" aria-describedby="quiz-feedback-4">
+    <legend>4. FencePost uses <code class="inline">x = q * 50 + 5</code>. When <code class="inline">q</code> is 4, where is the post?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-4" value="a"><span>At x = 4, because the counter is the pixel position.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-4" value="b"><span>At x = 205. The counter increases by 1; neighboring posts are 50 pixels apart.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-4" value="c"><span>At x = 200. The starting offset does not affect later posts.</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-4" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="5" aria-describedby="quiz-feedback-5">
+    <legend>5. Which statement about FencePost's two random calls is correct?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-5" value="a"><span><code class="inline">random(100)</code> can return 100; <code class="inline">random(20, 80)</code> can return 80.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-5" value="b"><span>Both calls return only whole numbers because their parameters are whole numbers.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-5" value="c"><span>Both return floats: from 0 up to but excluding 100, and from 20 up to but excluding 80.</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-5" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="6" aria-describedby="quiz-feedback-6">
+    <legend>6. What does <code class="inline">int(-4.9)</code> return?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-6" value="a"><span>−4</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-6" value="b"><span>−5</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-6" value="c"><span>−4.9</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-6" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="7" aria-describedby="quiz-feedback-7">
+    <legend>7. FencePost passes <code class="inline">true</code> when <code class="inline">q % 2 == 0</code>. Which posts are eligible for a knot?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-7" value="a"><span>Indices 1, 3, 5, …, 19. Those are the odd indices.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-7" value="b"><span>Indices 0, 2, 4, …, 18. The random test still decides whether each eligible post gets a knot.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-7" value="c"><span>Indices 0, 2, 4, …, 18, and every one of those posts must get a knot.</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-7" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <fieldset class="card quiz-question" data-quiz-question="8" aria-describedby="quiz-feedback-8">
+    <legend>8. Ten of the 20 posts are eligible. Does <code class="inline">random(100) &lt; 30</code> guarantee three knots?</legend>
+    <div class="quiz-choices">
+      <label class="quiz-choice"><input type="radio" name="quiz-8" value="a"><span>Yes. The program chooses exactly three eligible posts.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-8" value="b"><span>No. It guarantees six knots because there are 20 posts total.</span></label>
+      <label class="quiz-choice"><input type="radio" name="quiz-8" value="c"><span>No. Each eligible post has its own 30% chance. A drawing can have fewer or more than three knots.</span></label>
+    </div>
+    <p class="quiz-feedback" id="quiz-feedback-8" aria-live="polite">Choose an answer.</p>
+  </fieldset>
+  <div class="card quiz-summary">
+    <output id="quiz-score" aria-live="polite">0 of 8 correct · 0 answered</output>
+    <button class="btn" type="reset" id="quiz-reset">Reset self-check</button>
+  </div>
+</form>
+
+</section>
+<section id="recap"><div class="recap"><span class="section-tag">★ — KEEP THIS PATTERN</span><h2>Zero. Less than. Plus one.</h2><pre><code>for (int i = 0; i &lt; count; i++) {
+  // one item per pass
+}</code></pre><ul class="clean"><li><b>Counter values:</b> 0 through count − 1; count total repetitions when count is a nonnegative integer. If count is 0, the body never runs.</li><li><b>+1 updates:</b> i++, i += 1, and i = i + 1.</li><li><b>Skip counting:</b> i += step or i = i + step.</li><li><b>random(high):</b> float from 0 inclusive to high exclusive.</li><li><b>random(low, high):</b> float from low inclusive to high exclusive, when low &lt; high.</li><li><b>int(floatParameter):</b> remove the fraction toward zero.</li><li><b>Modulo:</b> % gives the remainder; use it for repeating patterns.</li><li><b>FizzBuzz:</b> combined case first in a chain; independent if statements when building the string.</li><li><b>FencePost:</b> q counts by 1; q * 50 + 5 sets the spacing.</li></ul></div></section>
+<footer><span class="hand">Count carefully. Let the loop do the repetition.</span><p><a href="index.html">← Back to course home</a> · <a href="conditionals.html">Review conditionals</a></p><p>Processing Java reference: <a href="https://processing.org/reference/for">for</a> · <a href="https://processing.org/reference/increment">++</a> · <a href="https://processing.org/reference/addassign">+=</a> · <a href="https://processing.org/reference/random_">random()</a> · <a href="https://processing.org/reference/intconvert_">int()</a> · <a href="https://processing.org/reference/modulo">%</a></p><p>Interactive browser models illustrate the Processing code; paste the examples into Processing Java Mode to run the sketches.</p></footer>
+</main></div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const on = (id, event, action) => $(id).addEventListener(event, action);
+  const escapeHTML = text => text.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const originalFence = $('fence-source').textContent;
+  document.querySelectorAll('code.proc').forEach(el => {
+    const source = el.textContent;
+    const tokens = /\/\/[^\n]*|"(?:\\.|[^"\\])*"|\b(?:for|if|else|true|false)\b|\b(?:int|float|void|boolean|String)\b|\b(?:size|rect|triangle|fill|ellipse|print|println|random)\b|\b\d+(?:\.\d+)?\b/g;
+    let html = '', end = 0;
+    for (const match of source.matchAll(tokens)) {
+      html += escapeHTML(source.slice(end, match.index));
+      const token = match[0];
+      const kind = token.startsWith('//') ? 'com' : token.startsWith('"') ? 'str' : /^(int|float|void|boolean|String)$/.test(token) ? 'type' : /^(for|if|else|true|false)$/.test(token) ? 'kw' : /^\d/.test(token) ? 'num' : 'builtin';
+      html += `<span class="t-${kind}">${escapeHTML(token)}</span>`;
+      end = match.index + token.length;
+    }
+    el.innerHTML = html + escapeHTML(source.slice(end));
+  });
+
+  // The tracer models distinct initialization, test, body, and update operations.
+  let timer = null, trace = {};
+  function stopPlay() {
+    if (timer !== null) clearInterval(timer);
+    timer = null;
+    $('trace-play').textContent = 'Auto play';
+  }
+  function traceConfig() {
+    const raw = $('trace-limit').value;
+    const limit = Number(raw);
+    return {start:Number($('trace-start').value),limit,step:Number($('trace-step').value),op:$('trace-op').value,
+      valid:raw.trim() !== '' && Number.isInteger(limit) && limit >= 0 && limit <= 12};
+  }
+  function resetTrace() {
+    stopPlay();
+    const config = traceConfig();
+    trace = {...config, next:'init', i:null, values:[], test:null};
+    const sign = config.op === 'lt' ? '<' : '<=';
+    $('trace-code').textContent = `for (int i = ${config.start}; i ${sign} ${config.valid ? config.limit : '?'}; ${config.step === 1 ? 'i++' : 'i += ' + config.step}) {\n  print(i + " ");\n}`;
+    $('trace-counter').textContent = '—'; $('trace-count').textContent = '0'; $('trace-test').textContent = '—';
+    $('trace-output').textContent = 'No output yet.';
+    $('trace-status').textContent = config.valid ? 'Ready. Initialize the counter to begin.' : 'Enter a whole-number limit from 0 to 12.';
+    $('trace-status').classList.toggle('error',!config.valid);
+    $('trace-next').disabled = $('trace-play').disabled = !config.valid;
+    document.querySelectorAll('[data-phase]').forEach(el => el.classList.remove('current'));
+  }
+  function nextTrace() {
+    if (!trace.valid || trace.next === 'done') return;
+    const phase = trace.next;
+    document.querySelectorAll('[data-phase]').forEach(el => el.classList.toggle('current', el.dataset.phase === phase));
+    let text;
+    if (phase === 'init') {
+      trace.i = trace.start; trace.next = 'test';
+      text = `Initialize once: i starts at ${trace.i}. Next, check the condition.`;
+    } else if (phase === 'test') {
+      trace.test = trace.op === 'lt' ? trace.i < trace.limit : trace.i <= trace.limit;
+      const comparison = `${trace.i} ${trace.op === 'lt' ? '<' : '<='} ${trace.limit}`;
+      $('trace-test').textContent = String(trace.test);
+      if (trace.test) {trace.next = 'body'; text = `${comparison} is true. The body may run with i = ${trace.i}.`;}
+      else {
+        trace.next = 'done'; stopPlay(); $('trace-next').disabled = $('trace-play').disabled = true;
+        text = `${comparison} is false. Stop before the body. ${trace.values.length} body run${trace.values.length === 1 ? '' : 's'}; ${trace.values.length ? 'last value printed: ' + trace.values.at(-1) + '.' : 'nothing was printed.'}`;
+      }
+    } else if (phase === 'body') {
+      trace.values.push(trace.i); trace.next = 'update';
+      $('trace-output').textContent = trace.values.join(' ') + ' ';
+      text = `Body: print(i + " ") prints ${trace.i} followed by a space on the same line. The body has run ${trace.values.length} time${trace.values.length === 1 ? '' : 's'}. Next, update the counter.`;
+    } else {
+      const old = trace.i; trace.i += trace.step; trace.next = 'test';
+      text = `Update: ${old} + ${trace.step} = ${trace.i}. Test again before running the body.`;
+    }
+    $('trace-counter').textContent = trace.i;
+    $('trace-count').textContent = trace.values.length;
+    $('trace-status').textContent = text;
+  }
+  ['trace-start','trace-op','trace-limit','trace-step'].forEach(id => on(id,'input',resetTrace));
+  on('trace-next','click',nextTrace); on('trace-reset','click',resetTrace);
+  on('trace-play','click',() => {if(timer !== null){stopPlay();return;}nextTrace();if(trace.next !== 'done' && trace.valid){timer=setInterval(nextTrace,850);$('trace-play').textContent='Pause';}});
+  on('trace-default','click',()=>{$('trace-start').value='0';$('trace-op').value='lt';$('trace-limit').value='5';$('trace-step').value='1';resetTrace();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopPlay();});
+  resetTrace();
+
+  function renderSkip() {
+    const notation = $('skip-style').value, isIncrement = notation === 'increment';
+    $('skip-step').disabled = isIncrement;
+    const step = isIncrement ? 1 : Number($('skip-step').value);
+    $('skip-step-value').textContent = isIncrement ? '1 (fixed by ++)' : step;
+    const update = isIncrement ? 'i++' : notation === 'long' ? `i = i + ${step}` : `i += ${step}`;
+    $('skip-code').textContent = `for (int i = 0; i < 12; ${update}) {\n  print(i + " ");\n}`;
+    const visited=[]; for(let i=0;i<12;i+=step)visited.push(i);
+    $('skip-tape').innerHTML=Array.from({length:12},(_,i)=>`<span class="${visited.includes(i)?'visited':''}">${i}<small>${visited.includes(i)?'visit':'skip'}</small></span>`).join('');
+    $('skip-output').textContent = visited.join(' ') + ' ';
+    $('skip-status').textContent=`${visited.length} body runs. Next value ${visited.at(-1)+step} fails the test. ${isIncrement?'++ always adds exactly 1.':''}`;
+  }
+  on('skip-step','input',renderSkip);on('skip-style','change',renderSkip);renderSkip();
+
+  // Reproduce the supplied sketch: short-circuit the random test on odd indices.
+  let fencePosts=[];
+  function addPost() {
+    const q=fencePosts.length;
+    if(q>=Number($('fence-count').value))return;
+    const eligible=q%2===0;
+    const knot=eligible && Math.random()*100<30;
+    fencePosts.push({q,x:q*50+5,eligible,knot,offset:knot?20+Math.random()*60:null});
+  }
+  function renderFence() {
+    const canvas=$('fence-canvas'),ctx=canvas.getContext('2d'),count=Number($('fence-count').value);
+    $('fence-count-value').textContent=count;
+    ctx.clearRect(0,0,1000,600);ctx.fillStyle='#ccc';ctx.fillRect(0,0,1000,600);
+    ctx.lineWidth=1;ctx.strokeStyle='#000';ctx.fillStyle='#fff';
+    for(const y of [365,405]){ctx.fillRect(0,y,1000,20);ctx.strokeRect(0,y,1000,20);}
+    for(const post of fencePosts){
+      const {x,q,knot,offset,eligible}=post;
+      ctx.fillStyle='#fff';ctx.strokeStyle='#000';ctx.fillRect(x,350,30,100);ctx.strokeRect(x,350,30,100);
+      ctx.beginPath();ctx.moveTo(x,350);ctx.lineTo(x+15,330);ctx.lineTo(x+30,350);ctx.closePath();ctx.fill();ctx.stroke();
+      if(knot){ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x+15,350+offset,6,12.5,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
+      ctx.fillStyle=eligible?'#145a45':'#29373d';ctx.textAlign='center';ctx.font='bold 17px monospace';ctx.fillText(String(q),x+15,482);
+      if(eligible){ctx.font='14px monospace';ctx.fillText('E',x+15,506);}
+    }
+    ctx.fillStyle='#26323d';ctx.textAlign='left';ctx.font='bold 24px monospace';ctx.fillText('q counts posts: 0, 1, 2, 3…',35,70);ctx.font='20px monospace';ctx.fillText('x = q * 50 + 5 → 5, 55, 105, 155… pixels',35,108);
+    const drawn=fencePosts.length,eligible=fencePosts.filter(p=>p.eligible).length,knots=fencePosts.filter(p=>p.knot).length;
+    $('fence-drawn').textContent=drawn;$('fence-eligible').textContent=eligible;$('fence-knots').textContent=knots;
+    const last=fencePosts.at(-1);
+    const text=last?`Latest post: q = ${last.q}; x = ${last.x}. ${last.eligible ? 'Even index: eligible, ' + (last.knot?'a knot was drawn.':'but this random test did not draw a knot.') : 'Odd index: imperfect is false, so no knot test is made.'} ${drawn===count?'Loop finished.':'Next index: '+drawn+'.'}`:count===0?'0 < 0 is false. No posts are drawn; the rails still appear because they are before the loop.':'Ready to draw q = 0. The rails are already drawn once.';
+    $('fence-status').textContent=text;
+    canvas.setAttribute('aria-label',`${drawn} posts drawn, ${eligible} even-indexed posts eligible for knots, ${knots} knots drawn. ${text}`);
+    $('fence-next').disabled=drawn>=count;
+  }
+  function newFence(){fencePosts=[];for(let q=0;q<Number($('fence-count').value);q++)addPost();renderFence();}
+  on('fence-count','input',newFence);on('fence-all','click',newFence);on('fence-next','click',()=>{addPost();renderFence();});on('fence-reset','click',()=>{fencePosts=[];renderFence();});on('fence-restore','click',()=>{$('fence-count').value='20';newFence();});newFence();
+  on('copy-fence','click',async()=>{
+    try{await navigator.clipboard.writeText(originalFence);$('copy-status').textContent='Copied. Paste into Processing Java Mode.';}
+    catch{const selection=window.getSelection(),range=document.createRange();range.selectNodeContents($('fence-source'));selection.removeAllRanges();selection.addRange(range);$('copy-status').textContent='Code selected. Press Ctrl+C (Windows) or ⌘C (Mac) to copy.';}
+  });
+
+  function convert(){const value=Number($('convert-value').value);$('convert-output').textContent=`int(${value.toFixed(1)}) → ${Math.trunc(value) || 0}`;}
+  on('convert-value','input',convert);convert();
+  let samples=[],counts=[];
+  function randomConfig(){
+    const two=$('random-mode').value==='two',low=two?Number($('random-low').value):0,high=Number($('random-high').value);
+    return {two,low,high,valid:(!two||$('random-low').value.trim()!=='')&&$('random-high').value.trim()!==''&&Number.isInteger(low)&&Number.isInteger(high)&&low>=0&&high<=20&&high>low,
+      expression:two?`random(${$('random-low').value || '?'}, ${$('random-high').value || '?'})`:`random(${$('random-high').value || '?'})`};
+  }
+  function renderRandom(){
+    const {two,low,high,valid,expression}=randomConfig();$('random-low').disabled=!two;
+    $('random-code').textContent=`float raw = ${expression};\nint whole = int(raw);`;
+    $('random-range').textContent=valid?`Float range: ${low} ≤ raw < ${high}. Possible integers: ${Array.from({length:high-low},(_,i)=>i+low).join(', ')}. ${high} is excluded.`:'Enter whole-number bounds with 0 ≤ low < high ≤ 20.';
+    $('random-range').classList.toggle('error',!valid);
+    $('random-one').disabled=$('random-hundred').disabled=!valid;
+    const latest=samples.at(-1);
+    // Truncate the displayed decimals so a rounded display never shows the excluded high bound.
+    $('random-float').textContent=latest===undefined?'—':(Math.floor(latest*10000)/10000).toFixed(4);
+    $('random-int').textContent=latest===undefined?'—':Math.trunc(latest);$('random-total').textContent=samples.length;
+    const max=Math.max(1,...counts);
+    $('random-bars').innerHTML=valid?Array.from({length:high-low},(_,offset)=>{const count=counts[offset]||0;return `<div class="hist-bin" aria-label="${low+offset}: ${count} samples"><span class="hist-count">${count}</span><span class="hist-space"><span class="hist-bar" style="height:${count/max*100}px"></span></span><span class="hist-key">${low+offset}</span></div>`;}).join(''):'';
+  }
+  function clearRandom(){samples=[];const {low,high,valid}=randomConfig();counts=valid?Array(high-low).fill(0):[];renderRandom();}
+  function sampleRandom(n){const {low,high,valid}=randomConfig();if(!valid)return;for(let i=0;i<n;i++){const raw=low+Math.random()*(high-low);samples.push(raw);counts[Math.trunc(raw)-low]++;}renderRandom();}
+  ['random-mode','random-low','random-high'].forEach(id=>on(id,'input',clearRandom));
+  on('random-one','click',()=>sampleRandom(1));on('random-hundred','click',()=>sampleRandom(100));on('random-clear','click',clearRandom);
+  on('random-die','click',()=>{$('random-mode').value='two';$('random-low').value='1';$('random-high').value='7';clearRandom();});clearRandom();
+
+  function renderModulo(){
+    const divisor=Number($('mod-divisor').value),matches=[];
+    $('mod-tape').innerHTML=Array.from({length:12},(_,q)=>{const remainder=q%divisor;if(remainder===0)matches.push(q);return `<div class="mod-cell ${remainder===0?'match':''}"><small>index ${q}</small><b>${remainder}</b><span>${q} % ${divisor}</span><small>${remainder===0?'remainder 0':'remainder '+remainder}</small></div>`;}).join('');
+    $('mod-status').textContent=`All 12 indices are visited. q % ${divisor} == 0 is true at indices ${matches.join(', ')}. The remainders repeat from 0 through ${divisor-1}.`;
+    $('mod-code').textContent=`for (int q = 0; q < 12; q++) {\n  if (q % ${divisor} == 0) {\n    println(q + " has remainder zero");\n  } else {\n    println(q + " has another remainder");\n  }\n}`;
+  }
+  on('mod-divisor','change',renderModulo);renderModulo();
+
+  const sections=[...document.querySelectorAll('main section[id]')];
+  function updateNav(){let current=sections[0].id;for(const section of sections){if(section.getBoundingClientRect().top<=150)current=section.id;}
+    document.querySelectorAll('nav.toc a[href^="#"]').forEach(a=>{const active=a.hash==='#'+current;a.classList.toggle('active',active);if(active)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}
+  window.addEventListener('scroll',updateNav,{passive:true});updateNav();
+})();
+
+</script>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  function classic(num) {
+    if (num % 3 === 0 && num % 5 === 0) return 'FizzBuzz';
+    else if (num % 3 === 0) return 'Fizz';
+    else if (num % 5 === 0) return 'Buzz';
+    else return String(num);
+  }
+  function builder(num) {
+    let out = '';
+    if (num % 3 === 0) out += 'Fizz';
+    if (num % 5 === 0) out += 'Buzz';
+    return out !== '' ? out : String(num);
+  }
+  const bugs = {
+    order: {
+      code:'if (num % 3 == 0) {\n  println("Fizz");\n} else if (num % 3 == 0 && num % 5 == 0) {\n  println("FizzBuzz");\n} else if (num % 5 == 0) {\n  println("Buzz");\n} else {\n  println(num);\n}',
+      run:num=>num%3===0?'Fizz':num%3===0&&num%5===0?'FizzBuzz':num%5===0?'Buzz':String(num),
+      explain:'Try 15. It passes the first test, so the chain prints Fizz and skips the rest. Every number divisible by both is also divisible by 3, so this combined branch is never reached. Move the combined test before either individual test.'
+    },
+    or: {
+      code:'if (num % 3 == 0 || num % 5 == 0) {\n  println("FizzBuzz");\n} else if (num % 3 == 0) {\n  println("Fizz");\n} else if (num % 5 == 0) {\n  println("Buzz");\n} else {\n  println(num);\n}',
+      run:num=>num%3===0||num%5===0?'FizzBuzz':String(num),
+      explain:'Try 3 or 5. || means either test may be true, so the first branch incorrectly prints FizzBuzz for both numbers. Use && to require both divisibility tests. Testing only 15 would miss this bug.'
+    },
+    elseif: {
+      code:'String out = "";\nif (num % 3 == 0) {\n  out += "Fizz";\n} else if (num % 5 == 0) {\n  out += "Buzz";\n}\nif (out != "") {\n  println(out);\n} else {\n  println(num);\n}',
+      run:num=>num%3===0?'Fizz':num%5===0?'Buzz':String(num),
+      explain:'Try 15. The first if adds Fizz, and else if prevents the Buzz check from running. Use two separate if statements when both rules are allowed to contribute.'
+    },
+    dangling: {
+      code:'if (num % 3 == 0) {\n  println("Fizz");\n}\nif (num % 5 == 0) {\n  println("Buzz");\n} else {\n  println(num);\n}',
+      run:num=>{const lines=[];if(num%3===0)lines.push('Fizz');if(num%5===0)lines.push('Buzz');else lines.push(String(num));return lines.join('\n');},
+      explain:'Try 3: this prints Fizz, then 3 on a second line. The else belongs only to the second if, whose test is false. Try 15: it prints Fizz and Buzz on separate lines. Build the string first, then use one final if / else to print exactly once.'
+    },
+    reverse: {
+      code:'String out = "";\nif (num % 5 == 0) {\n  out += "Buzz";\n}\nif (num % 3 == 0) {\n  out += "Fizz";\n}\nif (out != "") {\n  println(out);\n} else {\n  println(num);\n}',
+      run:num=>{let out='';if(num%5===0)out+='Buzz';if(num%3===0)out+='Fizz';return out||String(num);},
+      explain:'Try 15. Both checks still run, but appending happens in code order: Buzz, then Fizz. The result is BuzzFizz. Independent if statements let both rules run; their order still controls the order of the text.'
+    },
+    reset: {
+      code:'String out = ""; // wrong place: only reset once\nfor (int i = 0; i < 100; i++) {\n  int num = i + 1;\n  if (num % 3 == 0) {\n    out += "Fizz";\n  }\n  if (num % 5 == 0) {\n    out += "Buzz";\n  }\n  if (out != "") {\n    println(out);\n  } else {\n    println(num);\n  }\n}',
+      run:num=>{let out='';for(let current=1;current<=num;current++){if(current%3===0)out+='Fizz';if(current%5===0)out+='Buzz';}return out||String(num);},
+      explain:'This preview runs from 1 up to the selected number and shows that number’s output. Try 7: Fizz from 3, Buzz from 5, and Fizz from 6 are still there, so it prints FizzBuzzFizz instead of 7. Move String out = "" inside the loop to reset it every pass.'
+    }
+  };
+  function render() {
+    const raw=$('fb-num').value,num=Number(raw),valid=raw.trim()!==''&&Number.isInteger(num)&&num>=1&&num<=100;
+    const bug=bugs[$('fb-pitfall').value];
+    $('fb-bug-code').textContent=bug.code;
+    $('fb-bug-explanation').textContent=bug.explain;
+    if(!valid){
+      $('fb-tests').textContent='Enter a whole number from 1 to 100.';$('fb-tests').classList.add('error');
+      for(const id of ['fb-classic-output','fb-builder-output','fb-bug-output','fb-expected'])$(id).textContent='—';
+      $('fb-classic-path').textContent=$('fb-builder-path').textContent='Waiting for a valid number.';
+      $('fb-bug-status').textContent='Enter a valid number above to compare the results.';$('fb-bug-status').classList.remove('error');return;
+    }
+    const three=num%3===0,five=num%5===0,expected=classic(num),actual=bug.run(num);
+    $('fb-tests').classList.remove('error');
+    $('fb-tests').textContent=`For num = ${num}: ${num} % 3 = ${num%3} → ${three}; ${num} % 5 = ${num%5} → ${five}. Both tests true? ${three&&five}.`;
+    $('fb-classic-path').textContent=three&&five?'The combined test is true. Print FizzBuzz; skip the other branches.':three?'The combined test is false; the 3 test is true. Print Fizz.':five?'The combined and 3 tests are false; the 5 test is true. Print Buzz.':'All three tests are false. The final else prints the number.';
+    let out='';const steps=['Start with "".'];
+    if(three){out+='Fizz';steps.push('3 test true → "Fizz".');}else steps.push('3 test false → add nothing.');
+    if(five){out+='Buzz';steps.push(`5 test true → "${out}".`);}else steps.push('5 test false → add nothing.');
+    steps.push(out!==''?'out != "" is true: print the string.':'out != "" is false: print the number.');
+    $('fb-builder-path').textContent=steps.join(' ');
+    $('fb-classic-output').textContent=expected+'\n';$('fb-builder-output').textContent=builder(num)+'\n';
+    $('fb-bug-output').textContent=actual+'\n';$('fb-expected').textContent=expected+'\n';
+    $('fb-bug-status').classList.toggle('error',actual!==expected);
+    $('fb-bug-status').textContent=actual===expected?`For ${num}, this version happens to match. Try the suggested numbers below to expose the mistake.`:`For ${num}, this version is incorrect. Compare the printed lines with the correct result.`;
+  }
+  $('fb-num').addEventListener('input',render);$('fb-pitfall').addEventListener('change',render);
+  document.querySelectorAll('[data-fb-number]').forEach(button=>button.addEventListener('click',()=>{$('fb-num').value=button.dataset.fbNumber;render();}));
+  $('fb-run').addEventListener('click',()=>{
+    const panel=$('fb-full-output'),show=panel.hidden;panel.hidden=!show;
+    $('fb-run').setAttribute('aria-expanded',String(show));$('fb-run').textContent=show?'Hide full output':'Run both versions: 1–100';
+    if(show){const a=[],b=[];for(let i=0;i<100;i++){const num=i+1;a.push(classic(num));b.push(builder(num));}
+      $('fb-classic-all').textContent=a.join('\n')+'\n';$('fb-builder-all').textContent=b.join('\n')+'\n';
+      $('fb-run-status').textContent='Both versions print the same 100 lines. Each starts 1, 2, Fizz, 4, Buzz and ends with Buzz for 100.';
+    }else $('fb-run-status').textContent='Full output hidden.';
+  });
+  render();
+})();
+
+</script>
+<script>
+(() => {
+  'use strict';
+  const form = document.getElementById('quiz-form');
+  if (!form) return;
+  const questions = {
+    '1': {
+      answer: 'b',
+      correct: 'Start at 0, use a single less-than sign, and increase by 1. This is our class default pattern; Processing also allows other loop patterns.',
+      retry: 'Our class default starts at 0 and uses <, not <=. Starting at 1 would make 19 visits; including 20 would make 21 visits.'
+    },
+    '2': {
+      answer: 'a',
+      correct: 'The body runs 20 times, for q = 0 through 19. After that final body execution, q++ makes q equal 20. The test fails before the body runs again.',
+      retry: '19 < 20 is true, so index 19 is included. 20 < 20 is false, so index 20 is excluded. The update happens after the body.'
+    },
+    '3': {
+      answer: 'c',
+      correct: 'Both updates add 3 to the current value and store the result. After 18, q becomes 21, and 21 < 20 is false. For adding just 1, q++, q += 1, and q = q + 1 have the same effect as standalone updates.',
+      retry: 'To skip count, add the step to the current value and store it. q++ always adds 1. q = 3 resets q to 3, and q + 3 alone is not a valid Java loop update statement.'
+    },
+    '4': {
+      answer: 'b',
+      correct: '4 * 50 + 5 = 205. q counts the post indices one at a time. Multiplying by 50 controls the pixel spacing, and + 5 sets the starting offset.',
+      retry: 'Substitute 4 for q: 4 * 50 + 5. The counter and the drawing position have different jobs.'
+    },
+    '5': {
+      answer: 'c',
+      correct: 'The low end is included; the high end is excluded. random() returns a float even with integer parameters. For example, int(random(100)) produces an integer from 0 through 99.',
+      retry: 'random(high) begins at 0. random(low, high) begins at low. Both return floats, and neither can return its high endpoint.'
+    },
+    '6': {
+      answer: 'a',
+      correct: 'int(floatParameter) truncates toward zero: it removes the fractional part. Thus int(-4.9) is -4, just as int(4.9) is 4. It does not round to the nearest integer.',
+      retry: 'int() removes the fractional part toward zero. For a negative input, that moves the value closer to zero, not farther from it.'
+    },
+    '7': {
+      answer: 'b',
+      correct: 'Even indices, including 0, have remainder 0 when divided by 2. Passing true makes the post eligible; imperfect && random(100) < 30 still requires the random test to succeed. Odd-index posts are still drawn, but cannot get a knot.',
+      retry: '0 % 2 is 0, 1 % 2 is 1, and the remainders alternate. The imperfect parameter grants eligibility; it does not guarantee a knot.'
+    },
+    '8': {
+      answer: 'c',
+      correct: 'Each of the 10 eligible posts receives a separate random test. Three knots is the expected average over many drawings, not a required total. A single drawing can have anywhere from 0 to 10 knots.',
+      retry: 'A probability is a chance for each eligible post, not a quota for the whole fence. Only 10 posts are eligible, and the random results can vary each time.'
+    }
+  };
+  const currentAnswers = new Map();
+  const score = document.getElementById('quiz-score');
+  const renderScore = () => {
+    const correct = Array.from(currentAnswers.entries()).filter(([id, answer]) => questions[id].answer === answer).length;
+    score.textContent = `${correct} of 8 correct · ${currentAnswers.size} answered`;
+  };
+  form.addEventListener('submit', event => event.preventDefault());
+  form.addEventListener('change', event => {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement) || input.type !== 'radio') return;
+    const fieldset = input.closest('[data-quiz-question]');
+    if (!fieldset) return;
+    const id = fieldset.dataset.quizQuestion;
+    const question = questions[id];
+    if (!question) return;
+    currentAnswers.set(id, input.value);
+    const correct = input.value === question.answer;
+    const feedback = document.getElementById(`quiz-feedback-${id}`);
+    feedback.dataset.result = correct ? 'correct' : 'retry';
+    feedback.textContent = `${correct ? 'Correct. ' : 'Try again. '}${correct ? question.correct : question.retry}`;
+    renderScore();
+  });
+  form.addEventListener('reset', () => {
+    currentAnswers.clear();
+    form.querySelectorAll('.quiz-feedback').forEach(feedback => {
+      feedback.textContent = 'Choose an answer.';
+      delete feedback.dataset.result;
+    });
+    renderScore();
+  });
+})();
+
+</script>
+</body>
+</html>
