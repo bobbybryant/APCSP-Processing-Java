@@ -183,7 +183,7 @@ body{
 .module:nth-child(5){ animation-delay:1.95s; }
 .module:nth-child(6){ animation-delay:2.1s; }
 
-.module:hover{
+.module:hover, .module:focus-visible{
   border-color:var(--green);
   background:rgba(8,28,16,0.88);
   transform:translateY(-5px);
@@ -195,7 +195,7 @@ body{
   background:linear-gradient(100deg, transparent, rgba(25,255,122,.12), transparent);
   transform:skewX(-18deg); transition:left .5s ease;
 }
-.module:hover::after{ left:130%; }
+.module:hover::after, .module:focus-visible::after{ left:130%; }
 
 .module .sym{
   font-family:'Share Tech Mono', monospace;
@@ -218,7 +218,7 @@ body{
   font-size:13px; color:var(--green-dim); letter-spacing:.5px;
   opacity:0; transform:translateX(-6px); transition:opacity .25s, transform .25s, color .25s;
 }
-.module:hover .open{ opacity:1; transform:translateX(0); color:var(--green); }
+.module:hover .open, .module:focus-visible .open{ opacity:1; transform:translateX(0); color:var(--green); }
 .module .open::before{ content:"> "; }
 
 /* footer ---------------------------------------------------------- */
@@ -230,6 +230,21 @@ body{
   display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
 }
 .footer .blink{ animation:blink 1s steps(2) infinite; }
+
+/* Responsive module grid and keyboard access */
+.module:focus-visible{ outline:3px solid var(--cyan); outline-offset:4px; }
+@media (max-width:900px){
+  .screen{ padding:20px 24px; }
+  .modules{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; }
+}
+@media (max-width:560px){
+  body{ height:auto; align-items:flex-start; padding-top:24vh; }
+  .screen{ padding:18px 16px 24px; }
+  .modules{ grid-template-columns:minmax(0, 1fr); gap:14px; }
+  .title{ font-size:28px; }
+  .titlebar .path{ margin-left:3px; font-size:12px; }
+  .module .open{ opacity:1; transform:none; }
+}
 
 /* respect users who prefer no motion */
 @media (prefers-reduced-motion:reduce){
@@ -317,6 +332,12 @@ const MODULES = [
     title: "Conditionals",
     desc:  "Deciding if something should (or should not) happen!",
     href:  "conditionals.html"
+  },
+  {
+    sym:   "for ( ; ; )",
+    title: "For Loops",
+    desc:  "Start at 0, use &lt;, add 1 — trace loops, build a fence, and explore random() and modulo.",
+    href:  "for-loops.html"
   }
   /* ,{
     sym:   "{ }",
